@@ -1,0 +1,11 @@
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Dated snapshots and one-off drafts belong in git history, not as tracked
+# files in the working tree. If you keep a local copy while iterating, put
+# it under a name matching this pattern so it never gets committed again.
+_archive*/
+_scratch*/
