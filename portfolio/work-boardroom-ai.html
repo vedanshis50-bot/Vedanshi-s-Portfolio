@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Boardroom AI &mdash; Vedanshi Singh</title>
+<meta name="description" content="Boardroom AI: an AI working prototype where a product idea has to defend itself in front of six conflicting perspectives before a team commits time, money and development effort.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%236f7d4f'/%3E%3Ctext x='16' y='23' font-family='Arial,sans-serif' font-weight='800' font-size='20' fill='%23ffffff' text-anchor='middle'%3E%3F%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:ital,wght@0,400..700;1,400..700&family=Hanken+Grotesk:ital,wght@0,300..700;1,300..600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #efece3; --bg-raised: #f8f6ef; --text: #24261f; --text-soft: #545848; --gray: #7a7d6b;
+  --border: #dcd9cb; --line-strong: #bebbaa; --accent: #6f7d4f; --accent-text: #56663a; --accent-tint: #e2e7d1;
+  --on-accent: #ffffff; --pen: #b0623f; --ok: #4f7a52;
+  --f-display: "Familjen Grotesk", "Hanken Grotesk", system-ui, sans-serif;
+  --f-body: "Hanken Grotesk", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-mono: "JetBrains Mono", ui-monospace, monospace;
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --r-pill: 999px; --r-lg: 18px; --r-md: 10px;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg) url("assets/textures/paper.webp") repeat; background-size: 900px; color: var(--text); font-family: var(--f-body); font-size: 17px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+img, svg { display: block; max-width: 100%; }
+a { color: inherit; text-decoration: none; }
+h1, h2, h3, p, ul, ol, dl { margin: 0; padding: 0; }
+h1, h2, h3 { font-family: var(--f-display); font-weight: 600; letter-spacing: -0.03em; line-height: 1.08; }
+em { font-style: normal; color: var(--accent-text); }
+:focus-visible { outline: 2.5px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+.wrap { width: min(980px, 100% - clamp(32px, 7vw, 120px)); margin-inline: auto; }
+.mono { font-family: var(--f-mono); font-size: 0.72rem; letter-spacing: 0.07em; text-transform: uppercase; color: var(--gray); }
+
+.case-nav { max-width: 1180px; margin: 0 auto; padding: 24px 20px 0; display: flex; align-items: center; justify-content: space-between; font-family: var(--f-display); }
+.case-nav-mark { font-weight: 700; font-size: 1.1rem; letter-spacing: 0.02em; color: var(--text); }
+.case-nav-mark span { color: var(--accent); }
+.case-nav-back { font-family: var(--f-mono); font-size: 0.76rem; letter-spacing: 0.04em; text-transform: uppercase; color: var(--text-soft); border-bottom: 1px solid var(--line-strong); padding-bottom: 2px; transition: color 0.2s, border-color 0.2s; }
+.case-nav-back:hover { color: var(--accent); border-color: var(--accent); }
+@media (max-width: 860px) { .case-nav { padding: 18px 20px 0; } }
+
+main { padding-bottom: 40px; }
+.sec { padding: clamp(44px, 6vw, 76px) 0; border-top: 1px solid var(--border); }
+.sec:first-of-type { border-top: 0; }
+.sec .mono { margin-bottom: 10px; }
+.sec h2 { font-size: clamp(1.7rem, 3.2vw, 2.5rem); max-width: 18em; text-wrap: balance; }
+.sec p.lede { margin-top: 16px; color: var(--text-soft); font-size: clamp(1.02rem, 1.4vw, 1.18rem); max-width: 62ch; }
+.sec p.body-p { margin-top: 14px; color: var(--text-soft); max-width: 62ch; }
+
+/* hero */
+.b-hero { padding: clamp(50px, 8vw, 90px) 0 clamp(30px, 5vw, 50px); border-top: 0; }
+.b-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+.b-tag { font-family: var(--f-mono); font-size: 0.68rem; letter-spacing: 0.04em; padding: 5px 11px; border: 1px solid var(--line-strong); border-radius: var(--r-pill); color: var(--text-soft); }
+.b-hero h1 { margin-top: 18px; font-size: clamp(2.2rem, 4.6vw, 3.8rem); max-width: 14em; text-wrap: balance; }
+.b-hero .lede { margin-top: 18px; max-width: 46ch; color: var(--text-soft); font-size: clamp(1.05rem, 1.6vw, 1.3rem); }
+.b-meta { margin-top: 28px; display: flex; gap: clamp(20px, 4vw, 46px); flex-wrap: wrap; padding-top: 20px; border-top: 1px solid var(--border); }
+.b-meta div dt { font-family: var(--f-mono); font-size: 0.64rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--gray); }
+.b-meta div dd { margin: 4px 0 0; font-weight: 600; }
+
+/* journey strip */
+.journey { display: flex; overflow-x: auto; gap: 0; margin-top: 26px; padding-bottom: 6px; list-style: none; padding-left: 0; }
+.role-list, .board-qs, .clash { list-style: none; padding-left: 0; }
+.journey li { flex: 0 0 152px; position: relative; padding-right: 22px; }
+.journey li:not(:last-child)::after { content: "\2192"; position: absolute; right: 2px; top: 6px; color: var(--line-strong); }
+.journey b { display: block; font-family: var(--f-mono); font-size: 0.62rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--accent-text); }
+.journey span { display: block; margin-top: 6px; font-size: 0.86rem; color: var(--text-soft); font-style: italic; }
+.journey li:last-child span { color: var(--pen); }
+.callout { margin-top: 24px; padding: 16px 20px; border-left: 3px solid var(--accent); background: var(--accent-tint); border-radius: 0 var(--r-md) var(--r-md) 0; font-weight: 600; }
+.callout.warn { border-color: var(--pen); background: color-mix(in srgb, var(--pen) 10%, var(--bg-raised)); }
+
+/* real-world cost cards */
+.cost-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; margin-top: 24px; }
+.cost-card { padding: clamp(18px, 2.4vw, 24px); border-radius: var(--r-lg); border: 1px solid var(--border); background: color-mix(in srgb, var(--bg-raised) 60%, transparent); }
+.cost-card h3 { font-size: 1.15rem; }
+.cost-card .sub { margin-top: 2px; color: var(--pen); font-size: 0.86rem; font-weight: 600; }
+.cost-card p { margin-top: 12px; color: var(--text-soft); font-size: 0.92rem; }
+.cost-fig { margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--border); font-family: var(--f-mono); font-size: 1.3rem; font-weight: 700; color: var(--text); }
+.cost-fig span { display: block; font-family: var(--f-body); font-size: 0.76rem; font-weight: 400; color: var(--gray); margin-top: 2px; }
+.cost-note { margin-top: 10px; font-size: 0.84rem; color: var(--accent-text); font-weight: 600; }
+@media (max-width: 760px) { .cost-grid { grid-template-columns: 1fr; } }
+
+/* six perspectives */
+.board-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-top: 26px; }
+.board-card { padding: clamp(16px, 2vw, 20px); border-radius: var(--r-lg); border: 1px solid var(--border); background: var(--bg-raised); }
+.board-role { font-family: var(--f-mono); font-size: 0.62rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--on-accent); background: var(--accent); display: inline-block; padding: 4px 10px; border-radius: var(--r-pill); }
+.board-focus { margin-top: 10px; font-weight: 700; font-size: 0.98rem; }
+.board-qs { margin-top: 10px; display: grid; gap: 6px; }
+.board-qs li { font-size: 0.84rem; color: var(--text-soft); padding-left: 14px; position: relative; }
+.board-qs li::before { content: "\201C"; position: absolute; left: 0; color: var(--line-strong); }
+@media (max-width: 760px) { .board-grid { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 480px) { .board-grid { grid-template-columns: 1fr; } }
+
+/* conflict example */
+.clash { margin-top: 22px; display: grid; gap: 10px; }
+.clash li { display: grid; grid-template-columns: 110px 1fr; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 0.92rem; }
+.clash b { font-family: var(--f-mono); font-size: 0.68rem; letter-spacing: 0.04em; text-transform: uppercase; color: var(--accent-text); }
+.clash span { color: var(--text); }
+
+/* session states table */
+.states { margin-top: 24px; display: grid; gap: 0; border-top: 1px solid var(--border); }
+.state-row { display: grid; grid-template-columns: 140px minmax(0,1.4fr) minmax(0,1fr); gap: 18px; padding: 16px 0; border-bottom: 1px solid var(--border); align-items: start; }
+.state-n { font-family: var(--f-mono); font-size: 0.7rem; color: var(--gray); }
+.state-name { display: block; font-weight: 700; font-family: var(--f-display); font-size: 1rem; margin-top: 2px; }
+.state-does { font-size: 0.9rem; color: var(--text-soft); }
+.state-feel { font-size: 0.88rem; color: var(--accent-text); font-style: italic; }
+.state-feel-lbl { display: block; font-family: var(--f-mono); font-size: 0.6rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--gray); font-style: normal; margin-bottom: 3px; }
+@media (max-width: 700px) { .state-row { grid-template-columns: 1fr; gap: 6px; } .state-n { display: none; } }
+
+/* principles */
+.prin-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-top: 24px; }
+.prin-card { padding: 18px; border-radius: var(--r-lg); border: 1px dashed var(--line-strong); }
+.prin-card h3 { font-size: 0.98rem; }
+.prin-card p { margin-top: 8px; font-size: 0.88rem; color: var(--text-soft); }
+@media (max-width: 700px) { .prin-grid { grid-template-columns: 1fr; } }
+
+/* honest reflection */
+.honest { text-align: center; max-width: 68ch; margin-inline: auto; }
+.honest h2 { font-size: clamp(1.7rem, 3.2vw, 2.4rem); }
+.honest p { margin-top: 16px; color: var(--text-soft); }
+.honest p.final { margin-top: 22px; font-family: var(--f-display); font-weight: 600; color: var(--text); font-size: 1.1rem; }
+
+/* role list + close */
+.role-list { margin-top: 22px; display: grid; gap: 10px; }
+.role-list li { padding-left: 22px; position: relative; color: var(--text-soft); font-size: 0.94rem; }
+.role-list li::before { content: ""; position: absolute; left: 0; top: 9px; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); }
+.b-cta { text-align: center; padding: clamp(40px, 6vw, 70px) 0 10px; }
+.btn { display: inline-flex; align-items: center; gap: 10px; min-height: 46px; padding: 0 24px; border-radius: var(--r-pill); font-weight: 700; font-size: 0.96rem; margin-top: 18px; transition: transform 0.3s var(--ease), background 0.25s; background: var(--accent); color: var(--on-accent); }
+.btn:hover { transform: translateY(-2px); background: color-mix(in srgb, var(--accent) 88%, white); }
+
+footer.a-foot { border-top: 1px solid var(--border); padding: 22px 0 40px; }
+.a-foot .wrap { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+.a-foot span { color: var(--gray); font-size: 0.85rem; }
+
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; } }
+</style>
+</head>
+<body>
+<header class="case-nav">
+  <a href="index.html" class="case-nav-mark">VEDANSHI<span>.</span></a>
+  <a href="index.html#work" class="case-nav-back">&larr; Back to portfolio</a>
+</header>
+
+<main>
+  <section class="sec b-hero wrap">
+    <div class="b-tags"><span class="b-tag">AI working prototype</span><span class="b-tag">Product concept</span><span class="b-tag">Decision design</span></div>
+    <h1>Every great product begins with a single idea. But before it deserves to be built, it deserves to be challenged.</h1>
+    <p class="lede">Boardroom AI is a working AI prototype I designed end to end &mdash; a room of six conflicting perspectives an idea has to survive before a team spends real time, money and development effort on it.</p>
+    <dl class="b-meta">
+      <div><dt>Role</dt><dd>Product / UX / UI / Interaction / AI concept &mdash; designed solo</dd></div>
+      <div><dt>Type</dt><dd>AI working prototype, 2026</dd></div>
+      <div><dt>Background</dt><dd>4 years in B2B SaaS</dd></div>
+    </dl>
+  </section>
+
+  <section class="sec wrap">
+    <p class="mono">The real problem</p>
+    <h2>Nobody rejected the idea. It just never got tested.</h2>
+    <p class="lede">This is how most ideas travel today &mdash; six stages, and the same unproven assumption riding along in all of them.</p>
+    <ol class="journey">
+      <li><b>Idea</b><span>&ldquo;I think this could be something.&rdquo;</span></li>
+      <li><b>Belief</b><span>&ldquo;Sounds good, let's do it.&rdquo;</span></li>
+      <li><b>Commitment</b><span>&ldquo;We should build this.&rdquo;</span></li>
+      <li><b>Investment</b><span>&ldquo;We've already invested.&rdquo;</span></li>
+      <li><b>Launch</b><span>&ldquo;Finally &mdash; it's ready.&rdquo;</span></li>
+      <li><b>Reality</b><span>&ldquo;Nobody wanted this.&rdquo;</span></li>
+    </ol>
+    <div class="callout warn">The real loss isn't the idea failing. It's the wasted resources, misaligned teams, missed opportunities and lost trust it takes down with it.</div>
+    <p class="body-p"><em>What if ideas could fight back?</em></p>
+  </section>
+
+  <section class="sec wrap">
+    <p class="mono">The problem</p>
+    <h2>We don't fail because we lack ideas. We fail because we fall in love with them.</h2>
+    <p class="lede">The most dangerous moment in product development isn't when an idea fails. It's when everyone starts agreeing too quickly. The unanswered questions, hidden assumptions and overlooked risks quietly survive every review until they become expensive mistakes.</p>
+  </section>
+
+  <section class="sec wrap">
+    <p class="mono">What it costs when nobody argues back</p>
+    <h2>Two real products, two untested assumptions.</h2>
+    <p class="lede">Not hypothetical risk &mdash; two well-documented, public examples of the exact failure mode Boardroom AI is designed to catch earlier.</p>
+    <div class="cost-grid">
+      <div class="cost-card">
+        <h3>Google+</h3>
+        <p class="sub">Social network &middot; shut down after 8 years</p>
+        <p>Google's answer to Facebook launched on a simple internal logic: bundle a social layer into Gmail, YouTube and Search, and adoption would follow. Millions of accounts were created &mdash; but signups aren't the same as people wanting to be there.</p>
+        <div class="cost-fig">&lt;5 sec<span>average length of 90% of user sessions, by the platform's own later admission</span></div>
+        <p class="cost-note">The assumption never challenged: scale was mistaken for validation. Nobody was in the room to ask for the difference.</p>
+      </div>
+      <div class="cost-card">
+        <h3>Quibi</h3>
+        <p class="sub">Short-form mobile streaming &middot; shut down 6 months after launch</p>
+        <p>Quibi bet everything on one belief: that people wanted premium, 10-minute shows built only for their commute &mdash; watched between a coffee run and a train ride. Leadership had pedigree, Hollywood talent and total conviction. What it never had was a room where someone asked out loud: what if people simply stay on the apps they already open?</p>
+        <div class="cost-fig">$1.75B<span>raised, returned, gone within 6 months</span></div>
+        <p class="cost-note">The assumption never challenged: nobody in the room was assigned to argue against the core bet &mdash; only to help it launch faster.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec wrap">
+    <p class="mono">The reframe</p>
+    <h2>Before you build, make the idea defend itself.</h2>
+    <p class="lede">Every product decision starts as an assumption. Untested, it can survive months of meetings before it becomes an expensive mistake. What if every idea had to prove who it's for, why now, and what could go wrong &mdash; before it got a single hour of work?</p>
+    <p class="body-p">Boardroom AI helps teams challenge ideas before they invest time, money and development effort in them.</p>
+  </section>
+
+  <section class="sec wrap">
+    <p class="mono">Meet the boardroom</p>
+    <h2>So I built a room of six perspectives.</h2>
+    <p class="lede">Different minds, different incentives. One goal: build what actually matters. Their value isn't in six separate answers &mdash; it's in what happens when the answers disagree.</p>
+    <div class="board-grid">
+      <div class="board-card"><span class="board-role">CEO</span><p class="board-focus">Vision and priority</p><ul class="board-qs"><li>Is this a great business?</li><li>Can we win this market?</li><li>Will this still matter in three years?</li></ul></div>
+      <div class="board-card"><span class="board-role">Investor</span><p class="board-focus">ROI and risk</p><ul class="board-qs"><li>What is the upside?</li><li>What are we underestimating?</li><li>Why now and not later?</li></ul></div>
+      <div class="board-card"><span class="board-role">Engineer</span><p class="board-focus">Feasibility and technical truth</p><ul class="board-qs"><li>Can we build this reliably?</li><li>What are the technical risks?</li><li>What will this cost us later?</li></ul></div>
+      <div class="board-card"><span class="board-role">UX Researcher</span><p class="board-focus">User trust</p><ul class="board-qs"><li>What do users truly need?</li><li>What did we not validate?</li><li>What will surprise us later?</li></ul></div>
+      <div class="board-card"><span class="board-role">Customer</span><p class="board-focus">Adoption and trust</p><ul class="board-qs"><li>Will this make my life better?</li><li>What would make me unhappy?</li><li>Why should I choose this?</li></ul></div>
+      <div class="board-card"><span class="board-role">Strategist</span><p class="board-focus">The long game</p><ul class="board-qs"><li>Does this create a real edge?</li><li>How does this fit our strategy?</li><li>What are we saying no to?</li></ul></div>
+    </div>
+    <p class="body-p" style="margin-top:26px;"><b>An idea doesn't get six opinions. It gets cross-examined.</b> Example of the kind of exchange the room is designed to produce:</p>
+    <ul class="clash">
+      <li><b>CEO</b><span>&ldquo;This could be a strong opportunity.&rdquo;</span></li>
+      <li><b>Engineer</b><span>&ldquo;The architecture doesn't support that scale.&rdquo;</span></li>
+      <li><b>Customer</b><span>&ldquo;I'm not convinced anyone needs it.&rdquo;</span></li>
+      <li><b>Investor</b><span>&ldquo;What's the evidence?&rdquo;</span></li>
+      <li><b>Strategist</b><span>&ldquo;If we build this, what are we not building?&rdquo;</span></li>
+    </ul>
+  </section>
+
+  <section class="sec wrap">
+    <p class="mono">The interaction</p>
+    <h2>One decision, start to verdict.</h2>
+    <p class="lede">The interaction isn't one screen, it's a sequence. Here's the path a founder walks, and what each state is designed to make them feel.</p>
+    <div class="states">
+      <div class="state-row"><div class="state-n">01<span class="state-name">Entry</span></div><div class="state-does">States one decision in a single field &mdash; not a product brief, one sentence.</div><div class="state-feel"><span class="state-feel-lbl">Designed to feel</span>Commitment &mdash; name the real question.</div></div>
+      <div class="state-row"><div class="state-n">02<span class="state-name">Board assembles</span></div><div class="state-does">Watches the six members take their seats, one by one.</div><div class="state-feel"><span class="state-feel-lbl">Designed to feel</span>Slight intimidation &mdash; they are prepared.</div></div>
+      <div class="state-row"><div class="state-n">03<span class="state-name">Debate</span></div><div class="state-does">Watches positions move across the room and clash.</div><div class="state-feel"><span class="state-feel-lbl">Designed to feel</span>Tension.</div></div>
+      <div class="state-row"><div class="state-n">04<span class="state-name">Cross-examination</span></div><div class="state-does">Sees a claim challenged with a real comparable, not just an opinion.</div><div class="state-feel"><span class="state-feel-lbl">Designed to feel</span>Pressure &mdash; the assumption is exposed.</div></div>
+      <div class="state-row"><div class="state-n">05<span class="state-name">The turn</span></div><div class="state-does">Watches the room converge as the original question gets reframed.</div><div class="state-feel"><span class="state-feel-lbl">Designed to feel</span>Clarity forming.</div></div>
+      <div class="state-row"><div class="state-n">06<span class="state-name">The verdict</span></div><div class="state-does">Reads the ruling, the vote, and the minority opinion.</div><div class="state-feel"><span class="state-feel-lbl">Designed to feel</span>Clarity &mdash; a ruling, not &ldquo;feedback&rdquo;.</div></div>
+      <div class="state-row"><div class="state-n">07<span class="state-name">Homework</span></div><div class="state-does">Gets specific things to prove before the next session &mdash; not applause.</div><div class="state-feel"><span class="state-feel-lbl">Designed to feel</span>Obligation &mdash; a next step.</div></div>
+    </div>
+  </section>
+
+  <section class="sec wrap">
+    <p class="mono">The design challenge</p>
+    <h2>How do you design disagreement?</h2>
+    <p class="lede">The hard part was never making six AI personas look attractive. It was the information architecture of disagreement &mdash; deciding what a founder sees, what stays hidden, and when tension turns into noise instead of clarity.</p>
+    <div class="prin-grid">
+      <div class="prin-card"><h3>Show what helps a decision, not everything the model says</h3><p>Raw AI output isn't the interface. The room only surfaces what moves a founder from opinion to evidence.</p></div>
+      <div class="prin-card"><h3>Disagreement needs a shape, not a wall of text</h3><p>Six people talking at once is noise. A claim and the comparable that challenges it is a decision aid.</p></div>
+      <div class="prin-card"><h3>A verdict, not a feedback dump</h3><p>What we agree on, what we don't, the biggest risk, the minority opinion, what to prove next &mdash; that's more useful than &ldquo;feasible.&rdquo;</p></div>
+      <div class="prin-card"><h3>Why not just ask one AI?</h3><p>One question gets one general answer. Boardroom AI trades that for structured disagreement &mdash; the value isn't &ldquo;AI knows more,&rdquo; it's that the idea has to survive being cross-examined.</p></div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="wrap honest">
+      <p class="mono">The honest version</p>
+      <h2>The design was never about visuals.</h2>
+      <p>I came in thinking the hard part was making six AI personas look good. It wasn't. The hard part was the information architecture of disagreement: deciding what to show, what to hide, and how to make a founder feel a split without explaining it to them.</p>
+      <p class="final">That's the part I'd carry into any product &mdash; figure out what the interface should make someone feel before deciding what it should look like.</p>
+    </div>
+  </section>
+
+  <section class="sec wrap">
+    <p class="mono">My role</p>
+    <ul class="role-list">
+      <li>Designed the product concept end to end: the six-perspective model, the interaction sequence and the AI persona behaviour.</li>
+      <li>Decided the information architecture of disagreement &mdash; what a founder sees at each state, and what stays hidden until it's useful.</li>
+      <li>Built the working AI prototype and the visual direction, from entry to verdict.</li>
+      <li>This is a working prototype, not a shipped product &mdash; the outcomes above are the design reasoning behind it, not validated business results.</li>
+    </ul>
+  </section>
+
+  <section class="b-cta wrap">
+    <h2>Good ideas don't need more applause. They need better questions.</h2>
+    <a class="btn" href="index.html#work">See the rest of the work <span aria-hidden="true">&rarr;</span></a>
+  </section>
+</main>
+
+<footer class="a-foot">
+  <div class="wrap">
+    <span>Vedanshi Singh &middot; Bengaluru</span>
+    <a class="case-nav-back" href="index.html#contact">Get in touch &rarr;</a>
+  </div>
+</footer>
+</body>
+</html>

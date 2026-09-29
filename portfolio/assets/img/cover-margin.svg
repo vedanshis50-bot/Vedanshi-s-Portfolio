@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 560">
+  <defs>
+    <filter id="grain-m"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2"/><feColorMatrix type="saturate" values="0"/></filter>
+    <linearGradient id="bg-m" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#2A2925"/>
+      <stop offset="100%" stop-color="#0E0E0D"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="560" fill="url(#bg-m)"/>
+  <rect width="800" height="560" filter="url(#grain-m)" opacity="0.07"/>
+  <circle cx="620" cy="120" r="180" fill="#8E82B0" opacity="0.12"/>
+  <circle cx="120" cy="470" r="140" fill="#6F7D52" opacity="0.12"/>
+
+  <!-- confidence gauge arc -->
+  <g transform="translate(400,330)">
+    <path d="M -160 0 A 160 160 0 0 1 160 0" fill="none" stroke="#3a3a35" stroke-width="18" stroke-linecap="round"/>
+    <path d="M -160 0 A 160 160 0 0 1 60 -152" fill="none" stroke="#8E82B0" stroke-width="18" stroke-linecap="round"/>
+    <line x1="0" y1="0" x2="70" y2="-135" stroke="#F6F3EC" stroke-width="5" stroke-linecap="round"/>
+    <circle r="14" fill="#F6F3EC"/>
+    <text x="0" y="46" font-family="Fraunces, serif" font-size="30" fill="#F6F3EC" text-anchor="middle">Yes.</text>
+  </g>
+
+  <!-- wallet / card -->
+  <g transform="translate(140,150) rotate(-10)">
+    <rect width="180" height="112" rx="16" fill="#F6F3EC"/>
+    <rect y="30" width="180" height="26" fill="#2A2925" opacity="0.85"/>
+    <rect x="20" y="72" width="60" height="10" rx="5" fill="#2A2925" opacity="0.4"/>
+    <rect x="20" y="88" width="100" height="8" rx="4" fill="#8A8578"/>
+    <circle cx="150" cy="86" r="16" fill="#6F7D52"/>
+  </g>
+
+  <!-- coin stack -->
+  <g transform="translate(600,420)">
+    <ellipse cx="0" cy="18" rx="46" ry="14" fill="#8A9A66"/>
+    <ellipse cx="0" cy="6" rx="46" ry="14" fill="#A3B47C"/>
+    <ellipse cx="0" cy="-6" rx="46" ry="14" fill="#C9C0E0"/>
+    <text x="0" y="-2" font-family="monospace" font-size="14" fill="#0E0E0D" text-anchor="middle">$</text>
+  </g>
+
+  <text x="40" y="530" font-family="monospace" font-size="15" letter-spacing="2" fill="#F6F3EC" opacity="0.85">MARGIN — BEHAVIORAL FINTECH</text>
+</svg>

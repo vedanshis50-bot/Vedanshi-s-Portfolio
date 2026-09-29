@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 560">
+  <defs>
+    <filter id="grain-l"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2"/><feColorMatrix type="saturate" values="0"/></filter>
+    <linearGradient id="bg-l" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#7A895C"/>
+      <stop offset="100%" stop-color="#59653F"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="560" fill="url(#bg-l)"/>
+  <rect width="800" height="560" filter="url(#grain-l)" opacity="0.06"/>
+  <circle cx="670" cy="90" r="150" fill="#F6F3EC" opacity="0.06"/>
+  <circle cx="90" cy="480" r="110" fill="#0E0E0D" opacity="0.08"/>
+
+  <!-- dotted connector lines -->
+  <g stroke="#F6F3EC" stroke-opacity="0.45" stroke-width="2" stroke-dasharray="2 8" stroke-linecap="round" fill="none">
+    <path d="M 210 250 L 380 200"/>
+    <path d="M 460 260 L 560 340"/>
+  </g>
+
+  <!-- card 1: lead list -->
+  <g transform="translate(120,150) rotate(-8)">
+    <rect width="230" height="150" rx="16" fill="#F6F3EC"/>
+    <rect x="20" y="24" width="120" height="12" rx="6" fill="#2A2925" opacity="0.75"/>
+    <rect x="20" y="48" width="80" height="8" rx="4" fill="#8A8578"/>
+    <rect x="20" y="72" width="190" height="1" fill="#2A2925" opacity="0.12"/>
+    <circle cx="30" cy="96" r="9" fill="#6F7D52"/>
+    <rect x="48" y="90" width="120" height="7" rx="3.5" fill="#2A2925" opacity="0.55"/>
+    <rect x="48" y="102" width="80" height="6" rx="3" fill="#8A8578"/>
+    <circle cx="30" cy="126" r="9" fill="#8E82B0"/>
+    <rect x="48" y="120" width="140" height="7" rx="3.5" fill="#2A2925" opacity="0.55"/>
+    <rect x="48" y="132" width="60" height="6" rx="3" fill="#8A8578"/>
+  </g>
+
+  <!-- card 2: fast entry (highlighted) -->
+  <g transform="translate(370,110) rotate(5)">
+    <rect width="210" height="170" rx="16" fill="#0E0E0D"/>
+    <rect x="18" y="22" width="90" height="10" rx="5" fill="#C9C0E0"/>
+    <rect x="18" y="46" width="174" height="46" rx="10" fill="#232220"/>
+    <rect x="30" y="60" width="90" height="8" rx="4" fill="#F6F3EC" opacity="0.7"/>
+    <rect x="30" y="76" width="60" height="6" rx="3" fill="#9B968A"/>
+    <rect x="18" y="104" width="174" height="34" rx="10" fill="#8A9A66"/>
+    <rect x="30" y="116" width="70" height="10" rx="5" fill="#0E0E0D"/>
+    <circle cx="170" cy="121" r="8" fill="#0E0E0D" opacity="0.5"/>
+  </g>
+
+  <!-- card 3: distribution -->
+  <g transform="translate(500,290) rotate(-4)">
+    <rect width="190" height="130" rx="16" fill="#F6F3EC"/>
+    <circle cx="40" cy="40" r="16" fill="#6F7D52"/>
+    <circle cx="90" cy="40" r="16" fill="#8E82B0" opacity="0.85"/>
+    <circle cx="140" cy="40" r="16" fill="#2A2925" opacity="0.6"/>
+    <rect x="24" y="72" width="142" height="8" rx="4" fill="#2A2925" opacity="0.5"/>
+    <rect x="24" y="90" width="100" height="7" rx="3.5" fill="#8A8578"/>
+    <rect x="24" y="106" width="120" height="7" rx="3.5" fill="#8A8578"/>
+  </g>
+
+  <!-- small phone/call badge -->
+  <g transform="translate(240,370)">
+    <circle r="34" fill="#F6F3EC"/>
+    <path d="M-10,-14 c4,-4 8,-4 10,0 l4,8 c1,3 0,5 -2,7 l-3,3 c3,8 9,14 17,17 l3,-3 c2,-2 4,-3 7,-2 l8,4 c4,2 4,6 0,10 c-6,6 -16,7 -25,2 c-11,-6 -20,-15 -26,-26 c-5,-9 -4,-19 2,-25 z" fill="#59653F" transform="scale(0.8)"/>
+  </g>
+
+  <text x="40" y="530" font-family="monospace" font-size="15" letter-spacing="2" fill="#F6F3EC" opacity="0.85">LEADRAT — CRM WORKFLOW DESIGN</text>
+</svg>

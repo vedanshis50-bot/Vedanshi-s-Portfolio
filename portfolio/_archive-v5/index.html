@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vedanshi Singh — Product Designer</title>
+<meta name="description" content="Vedanshi Singh brings structure to complexity — an interactive product design workspace.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Caveat:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="cursor-dot" id="cursorDot"></div>
+
+<!-- ============ PRELOADER ============ -->
+<div class="preloader" id="preloader">
+  <div class="preloader-mark">Vedanshi<span class="preloader-dot"></span></div>
+</div>
+
+<!-- ============ [INTERACTIVE] 01 — OPENING: DEBUGGING GENERIC PORTFOLIO LANGUAGE ============ -->
+<div class="opening" id="opening">
+  <span class="opening-loader" id="openingLoader">LOADING · 0%</span>
+  <div class="opening-stage">
+    <div class="opening-draft" id="openingDraft">
+      <span class="eyebrow">Product Designer · 4 Years · Bengaluru</span>
+      <h2>Passionately creating innovative digital experiences.</h2>
+      <p>Passionate about clean interfaces, pixel-perfect design, and delightful products.</p>
+      <div class="opening-skills">
+        <span class="chip">Figma</span>
+        <span class="chip">Prototyping</span>
+        <span class="chip">Design Systems</span>
+      </div>
+      <div class="opening-strike" id="openingStrike"></div>
+      <span class="annotation" id="annEvidence" style="top:-10px; left:230px;">Evidence?</span>
+      <span class="annotation" id="annSoWhat" style="top:150px; left:60px;">So what?</span>
+    </div>
+    <div class="opening-reveal" id="openingReveal">
+      <p id="revealLine1">I stopped trying to sound like a designer.</p>
+      <p id="revealLine2">I bring structure to complexity.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ============ NAV ============ -->
+<nav class="nav is-scrolled" id="siteNav">
+  <a href="#top" class="nav-logo">Vedanshi Singh</a>
+  <div class="nav-links">
+    <a href="#work" class="link-underline">Work</a>
+    <a href="#think" class="link-underline">How I Think</a>
+    <a href="#about" class="link-underline">About</a>
+    <a href="#contact" class="link-underline">Contact</a>
+  </div>
+  <div class="nav-right">
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.8A9 9 0 1111.2 3 7 7 0 0021 12.8z"/></svg>
+    </button>
+    <button class="menu-toggle" id="menuToggle" aria-label="Open menu">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+    </button>
+  </div>
+</nav>
+
+<div class="mobile-nav" id="mobileNav">
+  <button class="mobile-nav-close" id="mobileNavClose" aria-label="Close menu">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 6l12 12M18 6L6 18"/></svg>
+  </button>
+  <a href="#work">Work</a>
+  <a href="#think">How I Think</a>
+  <a href="#about">About</a>
+  <a href="#contact">Contact</a>
+</div>
+
+<main>
+
+  <!-- ============ [INTERACTIVE — WOW #1] 02 — HERO: CHAOS TO STRUCTURE ============ -->
+  <section class="hero" id="top">
+    <div class="container">
+      <div class="hero-copy">
+        <span class="eyebrow">Vedanshi Singh — Product Designer — Bengaluru</span>
+        <h1 class="headline-xl" style="margin-top:14px;">I bring structure<br>to complexity.</h1>
+        <p class="lede">Product designer working on complex B2B, SaaS and CRM products — where workflows, rules and real-world constraints make the problem harder than the screen.</p>
+        <div class="hero-chips">
+          <span class="chip">B2B</span>
+          <span class="chip">SaaS</span>
+          <span class="chip">CRM</span>
+          <span class="chip">Systems</span>
+          <span class="chip">Complex workflows</span>
+        </div>
+      </div>
+
+      <!-- Chaos board: click "Organize this" to run the sequence. See script.js #chaosBoard -->
+      <div class="chaos-board" id="chaosBoard" role="group" aria-label="Interactive diagram: messy inputs organizing into a decision system">
+        <div class="chaos-piece" data-role="relevant" style="--x:6%; --y:14%; --r:-6deg;">USER</div>
+        <div class="chaos-piece" data-role="irrelevant" style="--x:58%; --y:8%; --r:4deg;">BUSINESS</div>
+        <div class="chaos-piece" data-role="relevant" style="--x:26%; --y:38%; --r:3deg;">DATA</div>
+        <div class="chaos-piece" data-role="relevant" style="--x:68%; --y:30%; --r:-4deg;">CONSTRAINT</div>
+        <div class="chaos-piece" data-role="irrelevant" style="--x:10%; --y:66%; --r:5deg;">EDGE CASE</div>
+        <div class="chaos-piece" data-role="relevant" style="--x:44%; --y:70%; --r:-3deg;">REQUIREMENT</div>
+        <div class="chaos-piece" data-role="relevant" style="--x:76%; --y:60%; --r:2deg;">RULE</div>
+
+        <p class="chaos-caption" id="chaosCaption">What exactly are we solving?</p>
+
+        <div class="chaos-structure" id="chaosStructure" aria-hidden="true">
+          <div class="structure-node">PROBLEM</div>
+          <div class="structure-arrow">↓</div>
+          <div class="structure-node">DECISION</div>
+          <div class="structure-arrow">↓</div>
+          <div class="structure-node">RULE</div>
+          <div class="structure-arrow">↓</div>
+          <div class="structure-node accent">INTERACTION</div>
+        </div>
+
+        <p class="chaos-conclusion" id="chaosConclusion">The screen comes last.</p>
+
+        <button class="chaos-trigger" id="chaosTrigger">Organize this <span aria-hidden="true">→</span></button>
+      </div>
+
+      <div class="hero-cta-row">
+        <a href="#work" class="btn btn-primary">Explore my work →</a>
+        <span class="mono-tag">Or scroll ↓</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ STATS ============ -->
+  <section class="stats-bar">
+    <div class="container stats-grid">
+      <div class="stat" data-reveal>
+        <div class="stat-num" data-count="4" data-suffix="+">0</div>
+        <div class="stat-label">Years in UX &amp; Product Design</div>
+      </div>
+      <div class="stat" data-reveal>
+        <div class="stat-num" data-count="10" data-suffix="+">0</div>
+        <div class="stat-label">CRM configuration workflows shaped at Leadrat</div>
+      </div>
+      <div class="stat" data-reveal>
+        <div class="stat-num" data-count="1">0</div>
+        <div class="stat-label">Sole designer on Leadrat's assignment system</div>
+      </div>
+      <div class="stat" data-reveal>
+        <div class="stat-num" data-count="2">0</div>
+        <div class="stat-label">Domains bridged — Architecture → Systems</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ [INTERACTIVE — WOW #2] 03 — EXPLORE THE WORK: FINDER WORKSPACE ============ -->
+  <section id="work">
+    <div class="container">
+      <span class="kicker"><span class="page-no">03</span> Explore the work</span>
+      <h2 class="headline-lg" data-reveal>Come explore how I solve problems.</h2>
+
+      <!-- Finder workspace: hover/click a folder to preview. Data lives in script.js PROJECTS -->
+      <div class="finder-window" data-reveal style="margin-top:32px;">
+        <div class="finder-titlebar">
+          <div class="tl-dots"><span></span><span></span><span></span></div>
+          <span class="path">~/vedanshi/work</span>
+        </div>
+        <div class="finder-body">
+          <div class="finder-grid" id="finderGrid">
+            <button class="finder-folder" data-project="leadrat">
+              <svg viewBox="0 0 24 20" fill="none"><path d="M1 3a2 2 0 012-2h5l2 2h11a2 2 0 012 2v11a2 2 0 01-2 2H3a2 2 0 01-2-2z" fill="var(--olive-soft)"/></svg>
+              <span class="folder-name">Leadrat</span>
+              <span class="folder-hint">B2B · CRM · Systems</span>
+            </button>
+            <button class="finder-folder" data-project="lastmile">
+              <svg viewBox="0 0 24 20" fill="none"><path d="M1 3a2 2 0 012-2h5l2 2h11a2 2 0 012 2v11a2 2 0 01-2 2H3a2 2 0 01-2-2z" fill="var(--lavender-soft)"/></svg>
+              <span class="folder-name">Last Mile</span>
+              <span class="folder-hint">Physical world · Routing</span>
+            </button>
+            <button class="finder-folder" data-project="boardroom">
+              <svg viewBox="0 0 24 20" fill="none"><path d="M1 3a2 2 0 012-2h5l2 2h11a2 2 0 012 2v11a2 2 0 01-2 2H3a2 2 0 01-2-2z" fill="#c9a24d"/></svg>
+              <span class="folder-name">Boardroom AI</span>
+              <span class="folder-hint">AI Product · Decisions</span>
+            </button>
+            <button class="finder-folder" data-project="margin">
+              <svg viewBox="0 0 24 20" fill="none"><path d="M1 3a2 2 0 012-2h5l2 2h11a2 2 0 012 2v11a2 2 0 01-2 2H3a2 2 0 01-2-2z" fill="#7a9e8e"/></svg>
+              <span class="folder-name">Margin</span>
+              <span class="folder-hint">Fintech · Behavior</span>
+            </button>
+          </div>
+          <div class="finder-preview" id="finderPreview">
+            <p class="preview-empty">Select a folder to see what's inside ↖</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ [INTERACTIVE — WOW #3 & #4] 04 — LEADRAT WORKSPACE ============ -->
+  <section id="leadrat-workspace" class="surface" style="border-radius:0; border-left:none; border-right:none;">
+    <div class="container">
+      <div class="workspace-header">
+        <span class="kicker"><span class="page-no">04</span> Interactive workspace — Leadrat</span>
+        <h2 class="headline-lg" data-reveal>How do you make complex lead assignment configurable?</h2>
+        <p class="lede" style="margin-top:14px;" data-reveal>Designing a global configuration system for sequential and percentage-based lead distribution across users, teams, properties and projects.</p>
+        <div class="workspace-role-row" data-reveal>
+          <div>Role<strong>Product Designer — Sole Designer</strong></div>
+          <div>Collaboration<strong>PM + Engineering, on the assignment logic</strong></div>
+        </div>
+        <!-- Decision-moment annotation: click to flip the note -->
+        <button class="sticky-annotation" id="stickyAnnotation" data-reveal>
+          <span class="original">I initially treated this as a form problem.</span>
+          <span class="revealed">It was actually a decision-architecture problem.</span>
+        </button>
+      </div>
+
+      <!-- Interaction 1 + 5: configuration model, click-through + progressive disclosure -->
+      <div class="workspace-card" data-reveal>
+        <div class="workbench-titlebar"><div class="tl-dots"><span></span><span></span><span></span></div><span class="filename">assignment-config.fig</span></div>
+        <div class="workspace-body">
+          <span class="workspace-label">The configuration model — click to explore</span>
+
+          <div class="config-row" data-row="base">
+            <span class="config-row-title">Assignment base</span>
+            <div class="config-options">
+              <button class="config-option" data-detail="Leads go to the next agent in line, one at a time.">Sequential</button>
+              <button class="config-option" data-detail="Leads split across agents by target percentage — see the live simulation below ↓" data-scroll-hint="1">Percentage</button>
+            </div>
+            <div class="config-detail"></div>
+          </div>
+
+          <div class="config-row" data-row="assignto">
+            <span class="config-row-title">Assign to</span>
+            <div class="config-options">
+              <button class="config-option" data-detail="The base case — one agent, one queue.">User</button>
+              <button class="config-option" data-detail="Same rules, wider scope — a whole team shares one distribution target.">Team</button>
+              <button class="config-option" data-detail="Leads route by which property they came in on.">Property</button>
+              <button class="config-option" data-detail="Leads route by which project or campaign generated them.">Project</button>
+            </div>
+            <div class="config-detail"></div>
+          </div>
+
+          <div class="config-row">
+            <span class="config-row-title">Primary assignment</span>
+            <button class="rules-toggle-btn" id="rulesToggle" aria-expanded="false" aria-controls="additionalRules">
+              Show additional rules <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+            </button>
+            <div class="additional-rules" id="additionalRules">
+              <div class="config-options">
+                <button class="config-option" data-detail="Stops the same lead reaching two agents at once.">Real-time duplicates</button>
+                <button class="config-option" data-detail="A backup agent, in case the primary can't act in time.">Secondary users</button>
+                <button class="config-option" data-detail="Lets an agent be skipped temporarily — without redesigning the whole assignment logic.">Rotation</button>
+              </div>
+              <div class="config-detail"></div>
+              <p style="font-size:0.82rem; color:var(--dark-muted); margin-top:12px;">Not every rule belongs in the first decision.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Interaction 2: context switch. PLACEHOLDER — replace preview frame with a real screenshot per context. -->
+      <div class="workspace-card" data-reveal>
+        <div class="workbench-titlebar"><div class="tl-dots"><span></span><span></span><span></span></div><span class="filename">assignment-context.fig</span></div>
+        <div class="workspace-body">
+          <span class="workspace-label">One system. Multiple assignment contexts.</span>
+          <div class="context-switch" id="contextSwitch">
+            <button class="context-option is-selected" data-context="user">User</button>
+            <button class="context-option" data-context="team">Team</button>
+            <button class="context-option" data-context="property">Property</button>
+            <button class="context-option" data-context="project">Project</button>
+          </div>
+          <div class="context-preview" id="contextPreview">[ Add real screenshot — User assignment view ]</div>
+        </div>
+      </div>
+
+      <!-- Interaction 3 [WOW #3]: percentage assignment simulation -->
+      <div class="workspace-card" id="simCard" data-reveal>
+        <div class="workbench-titlebar"><div class="tl-dots"><span></span><span></span><span></span></div><span class="filename">percentage-logic.fig</span></div>
+        <div class="workspace-body">
+          <span class="workspace-label">Signature interaction</span>
+          <p class="sim-title">When percentages become a system.</p>
+
+          <div class="sim-agents" id="simAgents">
+            <div class="sim-agent" data-agent="A"><span class="name">Agent A — 50%</span><div class="target"></div><div class="sim-bar-track"><div class="sim-bar-fill" data-fill="A"></div></div><span class="count" data-count-for="A">0 leads</span></div>
+            <div class="sim-agent" data-agent="B"><span class="name">Agent B — 30%</span><div class="target"></div><div class="sim-bar-track"><div class="sim-bar-fill" data-fill="B"></div></div><span class="count" data-count-for="B">0 leads</span></div>
+            <div class="sim-agent" data-agent="C"><span class="name">Agent C — 20%</span><div class="target"></div><div class="sim-bar-track"><div class="sim-bar-fill" data-fill="C"></div></div><span class="count" data-count-for="C">0 leads</span></div>
+          </div>
+
+          <div class="sim-log" id="simLog">Ready — send a lead to begin.</div>
+          <div class="sim-controls">
+            <button class="btn btn-primary btn-sm" id="simNext">Send next lead</button>
+            <button class="btn btn-outline btn-sm" id="simTen">Send 10 leads</button>
+            <button class="btn btn-outline btn-sm" id="simReset">Reset</button>
+          </div>
+          <p class="sim-explainer">The system compares expected distribution with actual assignments and uses the deficit to determine the next assignment. <em>(Simplified portfolio demonstration — not necessarily the production algorithm.)</em></p>
+        </div>
+      </div>
+
+      <!-- Interaction 4 [WOW #4]: live validation -->
+      <div class="workspace-card" data-reveal>
+        <div class="workbench-titlebar"><div class="tl-dots"><span></span><span></span><span></span></div><span class="filename">validation.fig</span></div>
+        <div class="workspace-body">
+          <span class="workspace-label">Change a number. Watch the rule respond.</span>
+          <div class="validate-row"><label for="valA">Agent A</label><input type="number" id="valA" value="50" min="0" max="100"><span>%</span></div>
+          <div class="validate-row"><label for="valB">Agent B</label><input type="number" id="valB" value="30" min="0" max="100"><span>%</span></div>
+          <div class="validate-row"><label for="valC">Agent C</label><input type="number" id="valC" value="15" min="0" max="100"><span>%</span></div>
+          <div class="validate-total">
+            Total: <span class="total-num" id="valTotal">95</span>% <span class="validate-msg" id="valMsg">— total must equal 100%</span>
+          </div>
+          <div class="validate-save-row">
+            <button class="btn btn-primary btn-sm" id="valSave" disabled>Save configuration</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ [INTERACTIVE — WOW #5] 05 — HOW I THINK ============ -->
+  <section id="think">
+    <div class="container">
+      <span class="kicker"><span class="page-no">05</span> How I think</span>
+      <h2 class="headline-lg" data-reveal style="margin-bottom:32px;">Here is the system. Try it.</h2>
+
+      <div class="think-wrap" data-reveal>
+        <div class="think-radial" id="thinkRadial" role="group" aria-label="Click a step to see what it's for">
+          <div class="think-center">The<br>Problem</div>
+          <button class="think-node" style="--nx:50%; --ny:4%;" data-step="conversation">Conversation</button>
+          <button class="think-node" style="--nx:88%; --ny:22%;" data-step="observation">Observation</button>
+          <button class="think-node" style="--nx:94%; --ny:66%;" data-step="research">Research</button>
+          <button class="think-node" style="--nx:70%; --ny:96%;" data-step="mapping">Mapping</button>
+          <button class="think-node" style="--nx:26%; --ny:96%;" data-step="prototype">Prototype</button>
+          <button class="think-node" style="--nx:4%; --ny:66%;" data-step="critique">Critique</button>
+          <button class="think-node" style="--nx:10%; --ny:22%;" data-step="decision">Decision</button>
+        </div>
+        <div class="think-detail" id="thinkDetail">
+          <p class="placeholder-msg">Click any step around the problem →</p>
+        </div>
+      </div>
+
+      <!-- Project-specific process: switching tabs proves the process changes with the problem -->
+      <div style="margin-top:56px;" data-reveal>
+        <span class="kicker">The problem decides the process</span>
+        <div class="process-tabs" id="processTabs">
+          <button class="process-tab is-active" data-process="leadrat">Leadrat</button>
+          <button class="process-tab" data-process="lastmile">Last Mile</button>
+          <button class="process-tab" data-process="boardroom">Boardroom AI</button>
+        </div>
+        <div class="process-path" id="processPath"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ [INTERACTIVE] 06 — ABOUT / JOURNEY ============ -->
+  <section id="about">
+    <div class="container">
+      <span class="kicker"><span class="page-no">06</span> About</span>
+      <h2 class="headline-lg" data-reveal style="margin-bottom:28px;">Architecture → Product → Systems.</h2>
+
+      <div data-reveal>
+        <div class="journey-tabs" id="journeyTabs">
+          <button class="journey-tab is-active" data-journey="architecture">Architecture</button>
+          <button class="journey-tab" data-journey="product">Product</button>
+          <button class="journey-tab" data-journey="systems">Systems</button>
+        </div>
+
+        <div class="journey-panel is-active" data-panel="architecture">
+          <div class="journey-tags"><span class="chip">Structure</span><span class="chip">Constraints</span><span class="chip">Sequence</span><span class="chip">Movement</span></div>
+          <p class="pull-quote">My start was architecture — thinking about space, structure, and how people move through the environments we build.</p>
+        </div>
+        <div class="journey-panel" data-panel="product">
+          <div class="journey-tags"><span class="chip">Users</span><span class="chip">Interfaces</span><span class="chip">Workflows</span></div>
+          <p class="pull-quote">That foundation led me to UX and product design — the same challenge, in a different medium.</p>
+        </div>
+        <div class="journey-panel" data-panel="systems">
+          <div class="journey-tags"><span class="chip">Rules</span><span class="chip">States</span><span class="chip">Relationships</span><span class="chip">Edge cases</span></div>
+          <p class="pull-quote">Over 4+ years, I grew from designing individual screens into thinking about the systems behind them — like the configuration logic at Leadrat.</p>
+        </div>
+      </div>
+
+      <div class="worked-with" style="margin-top:36px;" data-reveal>
+        <span class="mono-tag" style="color:var(--muted); display:block; margin-bottom:14px;">I have worked with</span>
+        <div class="logo-row" style="display:flex; gap:24px; flex-wrap:wrap;">
+          <span class="chip">RSP</span>
+          <span class="chip">Disha Kiran</span>
+          <span class="chip">Leadrat</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ [INTERACTIVE — WOW #6] 07 — AI AS A SPARRING PARTNER ============ -->
+  <section class="surface" style="border-radius:0; border-left:none; border-right:none;">
+    <div class="container">
+      <span class="kicker"><span class="page-no">07</span> AI as a sparring partner</span>
+      <div class="sparring-intro" data-reveal>
+        <h2 class="headline-lg">I use AI to argue more, not think less.</h2>
+        <p class="clarifier">Not user research. Not evidence. Not a replacement for judgement. A way to pressure-test a decision before it ships.</p>
+      </div>
+
+      <div class="sparring" data-reveal>
+        <span class="sparring-tag">Illustrative example — replace with a real exchange</span>
+        <div class="sparring-log" id="sparringLog"></div>
+        <button class="btn btn-outline btn-sm" id="sparringNext">Argue against this decision →</button>
+        <div class="sparring-changed" id="sparringChanged">
+          <strong>What changed:</strong> [Add the real before/after design decision this exchange led to]
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ [INTERACTIVE] 08 — THINGS I WAS WRONG ABOUT (flip cards) ============ -->
+  <section>
+    <div class="container">
+      <span class="kicker"><span class="page-no">08</span> Research notes</span>
+      <h2 class="headline-lg" data-reveal style="margin-bottom:28px;">Things I was wrong about.</h2>
+
+      <div class="flip-grid" data-reveal>
+        <div class="flip-card">
+          <button aria-label="Flip card: a cleaner interface makes a product better">
+            <div class="flip-inner">
+              <div class="flip-front"><span class="tag">I thought...</span><p>"A cleaner interface makes a product better."</p></div>
+              <div class="flip-back"><span class="tag">Then I found / so I changed</span><p>Nicer is not better.</p><small>A salesperson looked at the cleaner screens and still didn't know what to do first. Faster is what mattered — not nicer.</small></div>
+            </div>
+          </button>
+        </div>
+        <div class="flip-card">
+          <button aria-label="Flip card: follow the brief, that's the job">
+            <div class="flip-inner">
+              <div class="flip-front"><span class="tag">I thought...</span><p>"Follow the brief. That's the actual job."</p></div>
+              <div class="flip-back"><span class="tag">Then I found / so I changed</span><p>The brief is a guess.</p><small>If I don't check the guess first, I just solve the wrong problem — neatly. Now I treat every brief as a hypothesis.</small></div>
+            </div>
+          </button>
+        </div>
+        <div class="flip-card">
+          <button aria-label="Flip card: AI is a way to produce faster">
+            <div class="flip-inner">
+              <div class="flip-front"><span class="tag">I thought...</span><p>"AI is a way to produce faster."</p></div>
+              <div class="flip-back"><span class="tag">Then I found / so I changed</span><p>It's for arguing, not answers.</p><small>It kept being right and I still didn't trust it — until I started using it to poke holes in my own ideas instead.</small></div>
+            </div>
+          </button>
+        </div>
+      </div>
+      <p class="flip-hint">Click a card to flip it</p>
+    </div>
+  </section>
+
+  <!-- ============ 09 — TESTIMONIALS (placeholder — awaiting real quotes) ============ -->
+  <section class="surface" style="border-radius:0; border-left:none; border-right:none;">
+    <div class="container">
+      <span class="kicker"><span class="page-no">09</span> Testimonials</span>
+      <h2 class="headline-lg" data-reveal style="margin-bottom:28px;">Don't trust my word. Trust the people I worked with.</h2>
+      <div class="testimonial-grid" data-reveal>
+        <div class="testimonial-card"><p>"[Add a real quote from someone you worked with]"</p><span class="who">[Name — Role, Company]</span></div>
+        <div class="testimonial-card"><p>"[Add a real quote from someone you worked with]"</p><span class="who">[Name — Role, Company]</span></div>
+        <div class="testimonial-card"><p>"[Add a real quote from someone you worked with]"</p><span class="who">[Name — Role, Company]</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ [INTERACTIVE] 10 — CONTACT: TERMINAL ============ -->
+  <section id="contact">
+    <div class="container">
+      <span class="kicker"><span class="page-no">10</span> Contact</span>
+      <h2 class="headline-lg" data-reveal style="margin-bottom:28px;">Let's work on something complicated.</h2>
+
+      <div class="contact-grid-2" data-reveal>
+        <div class="terminal-contact">
+          <div class="workbench-titlebar"><div class="tl-dots"><span></span><span></span><span></span></div><span class="filename">contact.sh</span></div>
+          <div class="terminal-body-lines">
+            <div class="terminal-line-static">~ $ what are you working on?</div>
+            <div class="terminal-input-row">
+              <span class="prompt">›</span>
+              <input type="text" id="terminalInput" placeholder="Type here and press Enter" aria-label="What are you working on?">
+            </div>
+            <div class="terminal-response" id="terminalResponse">
+              <p>Sounds complicated. Let's talk.</p>
+              <!-- PLACEHOLDER contact — replace with real address/profile -->
+              <a href="mailto:vedanshi@example.com" class="btn btn-primary btn-sm">Email me</a>
+              <a href="#" class="btn btn-outline btn-sm">LinkedIn</a>
+            </div>
+          </div>
+        </div>
+        <div class="contact-direct">
+          <span class="mono-tag">Direct</span>
+          <!-- PLACEHOLDER — replace with real email -->
+          <a href="mailto:vedanshi@example.com" class="link-underline">vedanshi@example.com</a>
+          <span class="mono-tag" style="margin-top:8px;">Elsewhere</span>
+          <a href="#" class="link-underline">LinkedIn</a>
+          <a href="#" class="link-underline">Behance</a>
+          <a href="assets/docs/vedanshi-singh-resume.pdf" target="_blank" rel="noopener" class="btn btn-outline btn-sm" style="margin-top:10px; width:fit-content;">View résumé</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="container footer-row">
+    <span>© 2026 Vedanshi Singh</span>
+    <span>Built with Claude Code</span>
+    <a href="#top" class="back-to-top">Back to top <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19V5M5 12l7-7 7 7"/></svg></a>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
