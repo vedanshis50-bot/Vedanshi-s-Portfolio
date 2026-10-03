@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Last Mile prototype | Vedanshi Singh</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+  :root {
+    --bg:        #0C0F14;
+    --card:      #141920;
+    --card2:     #1A2230;
+    --border:    #1F2A38;
+    --orange:    #E07B3F;
+    --orange2:   #F4A668;
+    --teal:      #2DD4BF;
+    --cream:     #F0EBE3;
+    --muted:     #6B7A8D;
+    --muted2:    #8B9BAD;
+    --white:     #FFFFFF;
+    --success:   #22C55E;
+    --radius:    16px;
+    --phone-w:   390px;
+    --phone-h:   760px;
+  }
+
+  html, body {
+    min-height: 100%;
+    background: #070A0E;
+    font-family: 'Sora', sans-serif;
+    color: var(--cream);
+    overflow-x: hidden;
+  }
+
+  /* ── Outer shell ── */
+  .shell {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 40px 20px 60px;
+    background: radial-gradient(ellipse 80% 60% at 50% -10%, #1A2C1A 0%, transparent 60%),
+                radial-gradient(ellipse 60% 40% at 80% 80%, #1A1020 0%, transparent 50%),
+                #070A0E;
+  }
+
+  .brand {
+    text-align: center;
+    margin-bottom: 36px;
+  }
+  .brand-name {
+    font-family: 'DM Serif Display', serif;
+    font-size: 28px;
+    color: var(--cream);
+    letter-spacing: -0.5px;
+  }
+  .brand-tag {
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-top: 4px;
+  }
+
+  /* ── Phone frame ── */
+  .phone-wrap {
+    position: relative;
+    width: var(--phone-w);
+    max-width: 100%;
+  }
+
+  .phone-frame {
+    background: #1A1A1A;
+    border-radius: 52px;
+    padding: 12px;
+    box-shadow:
+      0 0 0 1px #2A2A2A,
+      0 40px 100px rgba(0,0,0,0.6),
+      0 0 60px rgba(224,123,63,0.06);
+  }
+
+  .phone-screen {
+    background: var(--bg);
+    border-radius: 42px;
+    overflow: hidden;
+    height: var(--phone-h);
+    position: relative;
+  }
+
+  /* Dynamic island */
+  .island {
+    position: absolute;
+    top: 14px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 120px;
+    height: 34px;
+    background: #000;
+    border-radius: 20px;
+    z-index: 10;
+  }
+
+  /* Status bar */
+  .status {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 56px 24px 0;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--cream);
+    letter-spacing: 0.01em;
+  }
+  .status-right { display: flex; gap: 6px; align-items: center; font-size: 11px; }
+
+  /* ── SCREENS ── */
+  .screen {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    transition: opacity 0.35s ease, transform 0.35s ease;
+    overflow: hidden;
+  }
+  .screen.hidden {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateX(30px);
+  }
+  .screen.slide-left {
+    transform: translateX(-30px);
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  /* ─────────────────────────────────
+     SCREEN 1, Input
+  ───────────────────────────────── */
+  .s1-header {
+    padding: 64px 24px 20px;
+    flex-shrink: 0;
+  }
+  .s1-arrived {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--orange);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .s1-arrived::before {
+    content: '';
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--orange);
+    display: inline-block;
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.8); }
+  }
+  .s1-station {
+    font-family: 'DM Serif Display', serif;
+    font-size: 26px;
+    color: var(--cream);
+    line-height: 1.2;
+  }
+  .s1-station span { color: var(--orange2); }
+  .s1-sub {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+
+  /* Search */
+  .search-wrap {
+    margin: 0 20px 20px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 13px 16px;
+    flex-shrink: 0;
+    transition: border-color 0.2s;
+  }
+  .search-wrap:focus-within {
+    border-color: var(--orange);
+  }
+  .search-icon { font-size: 16px; flex-shrink: 0; }
+  .search-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    font-family: 'Sora', sans-serif;
+    font-size: 14px;
+    color: var(--cream);
+  }
+  .search-input::placeholder { color: var(--muted); }
+
+  /* Suggestions */
+  .s1-scroll {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0 20px 20px;
+    scrollbar-width: none;
+  }
+  .s1-scroll::-webkit-scrollbar { display: none; }
+
+  .s1-section-label {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  .dest-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 13px 14px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    transition: all 0.18s ease;
+    animation: fadeUp 0.4s ease both;
+  }
+  .dest-card:active { transform: scale(0.98); background: var(--card2); }
+  .dest-card:hover { border-color: var(--orange); background: var(--card2); }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .dest-card:nth-child(1) { animation-delay: 0.05s; }
+  .dest-card:nth-child(2) { animation-delay: 0.1s; }
+  .dest-card:nth-child(3) { animation-delay: 0.15s; }
+  .dest-card:nth-child(4) { animation-delay: 0.2s; }
+  .dest-card:nth-child(5) { animation-delay: 0.25s; }
+
+  .dest-icon {
+    width: 40px; height: 40px;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+  .dest-info { flex: 1; }
+  .dest-name { font-size: 14px; font-weight: 500; color: var(--cream); }
+  .dest-meta { font-size: 11px; color: var(--muted); margin-top: 2px; }
+  .dest-arrow { font-size: 14px; color: var(--muted2); }
+
+  /* ─────────────────────────────────
+     SCREEN 2, Results
+  ───────────────────────────────── */
+  .s2-topbar {
+    padding: 64px 20px 0;
+    flex-shrink: 0;
+  }
+  .s2-back {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    margin-bottom: 14px;
+    width: fit-content;
+  }
+  .s2-back-icon {
+    width: 32px; height: 32px;
+    border-radius: 10px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+    transition: background 0.15s;
+  }
+  .s2-back:active .s2-back-icon { background: var(--card2); }
+  .s2-back-label { font-size: 13px; color: var(--muted); }
+
+  .s2-dest-row {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 4px;
+  }
+  .s2-dest-name {
+    font-family: 'DM Serif Display', serif;
+    font-size: 28px;
+    color: var(--cream);
+    line-height: 1.1;
+  }
+  .s2-count {
+    font-size: 11px;
+    color: var(--muted);
+    background: var(--card);
+    border: 1px solid var(--border);
+    padding: 3px 10px;
+    border-radius: 20px;
+    margin-bottom: 4px;
+  }
+  .s2-from {
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 16px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--border);
+  }
+  .s2-from span { color: var(--orange2); }
+
+  .s2-scroll {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0 20px 20px;
+    scrollbar-width: none;
+  }
+  .s2-scroll::-webkit-scrollbar { display: none; }
+
+  /* Transport card */
+  .transport-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    animation: fadeUp 0.4s ease both;
+  }
+  .transport-card:nth-child(1) { animation-delay: 0.0s; }
+  .transport-card:nth-child(2) { animation-delay: 0.07s; }
+  .transport-card:nth-child(3) { animation-delay: 0.14s; }
+  .transport-card:nth-child(4) { animation-delay: 0.21s; }
+
+  .transport-card.best {
+    border-color: var(--teal);
+    background: linear-gradient(135deg, #141F1D 0%, var(--card) 100%);
+  }
+  .transport-card:active { transform: scale(0.98); }
+
+  .rec-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 9px;
+    font-weight: 700;
+    color: var(--teal);
+    background: rgba(45,212,191,0.1);
+    border: 1px solid rgba(45,212,191,0.25);
+    border-radius: 20px;
+    padding: 3px 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .rec-badge::before { content: '✦'; font-size: 8px; }
+
+  .card-main {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  .card-left { display: flex; align-items: flex-start; gap: 10px; }
+  .card-mode-icon {
+    width: 42px; height: 42px;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    background: var(--card2);
+    border: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+  .card-mode-name { font-size: 15px; font-weight: 600; color: var(--cream); }
+  .card-mode-sub { font-size: 11px; color: var(--muted); margin-top: 2px; }
+  .card-right { text-align: right; }
+  .card-price { font-size: 18px; font-weight: 700; color: var(--cream); }
+  .card-time { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+  .card-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 10px 0;
+  }
+
+  .card-walk {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--muted2);
+    line-height: 1.5;
+  }
+  .walk-icon { font-size: 13px; flex-shrink: 0; margin-top: 1px; }
+
+  .card-tip {
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+    margin-top: 8px;
+    padding: 8px 10px;
+    background: rgba(224,123,63,0.08);
+    border-radius: 8px;
+    font-size: 11px;
+    color: var(--orange2);
+    line-height: 1.4;
+  }
+  .tip-icon { flex-shrink: 0; font-size: 11px; }
+
+  /* ── Detail overlay ── */
+  .overlay {
+    position: absolute;
+    inset: 0;
+    background: var(--bg);
+    border-radius: 42px;
+    z-index: 20;
+    display: flex;
+    flex-direction: column;
+    transition: opacity 0.3s, transform 0.3s;
+    overflow: hidden;
+  }
+  .overlay.hidden {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(40px);
+  }
+  .overlay-header {
+    padding: 64px 20px 16px;
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+  .overlay-close {
+    width: 32px; height: 32px;
+    border-radius: 10px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+    cursor: pointer;
+    margin-bottom: 16px;
+  }
+  .overlay-title { font-family: 'DM Serif Display', serif; font-size: 26px; color: var(--cream); }
+  .overlay-sub { font-size: 12px; color: var(--muted); margin-top: 4px; }
+  .overlay-scroll { flex: 1; overflow-y: auto; padding: 20px; scrollbar-width: none; }
+  .overlay-scroll::-webkit-scrollbar { display: none; }
+
+  .step-row {
+    display: flex;
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+  .step-line-wrap { display: flex; flex-direction: column; align-items: center; }
+  .step-dot {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: var(--card2);
+    border: 2px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px;
+    flex-shrink: 0;
+    color: var(--orange2);
+    font-weight: 600;
+  }
+  .step-dot.active {
+    background: var(--orange);
+    border-color: var(--orange);
+    color: #fff;
+  }
+  .step-connector { width: 1px; flex: 1; background: var(--border); margin: 4px 0; min-height: 20px; }
+  .step-content { flex: 1; padding-top: 4px; }
+  .step-title { font-size: 13px; font-weight: 600; color: var(--cream); margin-bottom: 3px; }
+  .step-desc { font-size: 12px; color: var(--muted); line-height: 1.5; }
+
+  .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 16px; }
+  .info-box {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 12px;
+  }
+  .info-box-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px; }
+  .info-box-value { font-size: 16px; font-weight: 600; color: var(--cream); }
+  .info-box-sub { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+  /* Bottom nav hint */
+  .bottom-hint {
+    flex-shrink: 0;
+    padding: 12px 20px 24px;
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+  }
+  .hint-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--border);
+    transition: background 0.2s;
+  }
+  .hint-dot.active { background: var(--orange); width: 20px; border-radius: 3px; }
+
+  /* ── Below phone ── */
+  .proto-label {
+    text-align: center;
+    margin-top: 28px;
+  }
+  .proto-label p {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+  .proto-label strong { color: var(--orange2); font-weight: 500; }
+
+  .proto-nav {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 16px;
+  }
+  .proto-btn {
+    padding: 9px 20px;
+    border-radius: 20px;
+    font-family: 'Sora', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    transition: all 0.15s;
+  }
+  .proto-btn.primary {
+    background: var(--orange);
+    color: #fff;
+  }
+  .proto-btn.primary:hover { background: var(--orange2); }
+  .proto-btn.ghost {
+    background: transparent;
+    color: var(--muted);
+    border: 1px solid var(--border);
+  }
+  .proto-btn.ghost:hover { border-color: var(--muted2); color: var(--cream); }
+
+  /* Mobile full-screen mode */
+  @media (max-width: 440px) {
+    .shell { padding: 0; background: var(--bg); }
+    .brand { display: none; }
+    .phone-wrap { width: 100%; max-width: 100%; }
+    .phone-frame { border-radius: 0; padding: 0; background: var(--bg); box-shadow: none; }
+    .phone-screen { border-radius: 0; height: 100vh; }
+    .island { display: none; }
+    .proto-label, .proto-nav { display: none; }
+  }
+
+
+  /* Embedded in the case study: the screen fills whatever frame it is given. */
+  html.embed .shell { padding: 0; background: var(--bg); min-height: 100vh; }
+  html.embed .brand, html.embed .proto-label, html.embed .proto-nav, html.embed .island { display: none; }
+  html.embed .phone-wrap { width: 100%; max-width: 100%; }
+  html.embed .phone-frame { border-radius: 0; padding: 0; background: var(--bg); box-shadow: none; }
+  html.embed .phone-screen { border-radius: 0; height: 100vh; }
+  html.embed .overlay { border-radius: 0; }
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <div class="brand">
+    <div class="brand-name">Last Mile</div>
+    <div class="brand-tag">Interactive prototype, KSR Bengaluru</div>
+  </div>
+
+  <div class="phone-wrap">
+    <div class="phone-frame">
+      <div class="phone-screen" id="phoneScreen">
+
+        <div class="island"></div>
+
+        <!-- ── SCREEN 1 ── -->
+        <div class="screen" id="screen1">
+          <div class="s1-header">
+            <div class="s1-arrived">Just arrived</div>
+            <div class="s1-station">KSR Bengaluru<br><span>City Station</span></div>
+            <div class="s1-sub">Platform 6 · Train arrived on time</div>
+          </div>
+
+          <div class="search-wrap">
+            <span class="search-icon">🔍</span>
+            <input class="search-input" placeholder="Where do you want to go?" id="searchInput" oninput="filterDests(this.value)" />
+          </div>
+
+          <div class="s1-scroll">
+            <div class="s1-section-label" id="destLabel">Popular destinations</div>
+            <div id="destList"></div>
+          </div>
+        </div>
+
+        <!-- ── SCREEN 2 ── -->
+        <div class="screen hidden" id="screen2">
+          <div class="s2-topbar">
+            <div class="s2-back" onclick="goBack()">
+              <div class="s2-back-icon">←</div>
+              <span class="s2-back-label">Change destination</span>
+            </div>
+            <div class="s2-dest-row">
+              <div class="s2-dest-name" id="s2DestName">Indiranagar</div>
+              <div class="s2-count" id="s2Count">4 options</div>
+            </div>
+            <div class="s2-from">From <span>KSR Bengaluru City Station</span></div>
+          </div>
+
+          <div class="s2-scroll" id="transportList"></div>
+        </div>
+
+        <!-- ── DETAIL OVERLAY ── -->
+        <div class="overlay hidden" id="overlay">
+          <div class="overlay-header">
+            <div class="overlay-close" onclick="closeOverlay()">✕</div>
+            <div class="overlay-title" id="overlayTitle">Metro</div>
+            <div class="overlay-sub" id="overlaySub">Step by step from your platform</div>
+          </div>
+          <div class="overlay-scroll" id="overlayContent"></div>
+        </div>
+
+        <!-- Nav dots -->
+        <div class="bottom-hint" id="navDots">
+          <div class="hint-dot active" id="dot1"></div>
+          <div class="hint-dot" id="dot2"></div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="proto-label">
+    <p>Tap a destination, see the transport options, then tap any card for step by step directions.<br>
+    <strong>Last Mile, portfolio prototype, KSR Bengaluru</strong></p>
+  </div>
+  <div class="proto-nav">
+    <button class="proto-btn ghost" onclick="goBack()">← Back to input</button>
+    <button class="proto-btn primary" onclick="shareProto()">Share prototype link</button>
+  </div>
+
+</div>
+
+<script>
+// ── DATA ──────────────────────────────────────
+const destinations = [
+  { id: "indiranagar",    name: "Indiranagar",      icon: "🏘️", bg: "#1A2018", cat: "Residential",  km: "9 km" },
+  { id: "mgroad",         name: "MG Road",           icon: "🏢", bg: "#18201A", cat: "Commercial",   km: "6 km" },
+  { id: "koramangala",    name: "Koramangala",       icon: "☕", bg: "#1A2020", cat: "Lifestyle",    km: "11 km" },
+  { id: "electroniccity", name: "Electronic City",   icon: "💻", bg: "#181A20", cat: "Tech hub",     km: "22 km" },
+  { id: "whitefield",     name: "Whitefield",        icon: "🏗️", bg: "#201A18", cat: "IT corridor",  km: "18 km" },
+  { id: "marathahalli",   name: "Marathahalli",      icon: "🏪", bg: "#20181A", cat: "Commercial",   km: "14 km" },
+  { id: "airport",        name: "Kempegowda Airport",icon: "✈️", bg: "#18201A", cat: "Airport",      km: "40 km" },
+];
+
+const transport = {
+  indiranagar: [
+    {
+      mode: "Metro", icon: "🚇", sub: "Purple Line to Indiranagar Stn.",
+      price: "₹40", time: "~28 min", best: true,
+      walk: "Exit Gate 3 · Walk straight 200m · Platform 1 · Board towards Whitefield",
+      tip: "Buy a Smart Card, saves 10% on every trip",
+      steps: [
+        { t: "Exit your platform", d: "Follow 'Metro' signs from Platform 6. Use the underpass, do not exit the station yet." },
+        { t: "Take Gate 3", d: "Walk past the ticket counters. Gate 3 is signed 'Metro / North Exit'. It is about 200m." },
+        { t: "Enter metro station", d: "KSR Metro Station is attached to the railway station. No separate entrance fee." },
+        { t: "Buy ticket or scan card", d: "Token: ₹40 · Smart Card: ₹36. Machines accept UPI and cash." },
+        { t: "Platform 1, Whitefield direction", d: "Take escalator down. Platform 1 is towards Whitefield / Baiyappanahalli." },
+        { t: "Alight at Indiranagar", d: "4 stops from KSR. About 22 minutes. Exit 2 for 100 Feet Road." },
+      ],
+      info: { fare: "₹30 to 60", time: "25 to 32 min", walk: "200m", runs: "05:00 to 23:00" }
+    },
+    {
+      mode: "City Bus", icon: "🚌", sub: "BMTC Route 401",
+      price: "₹12", time: "~50 min", best: false,
+      walk: "Exit Gate 1 · Cross the road · Bus Stop A on your left",
+      tip: null,
+      steps: [
+        { t: "Exit Gate 1, South Exit", d: "This is the main road-facing exit. Walk towards the auto stand, then left." },
+        { t: "Cross at the zebra crossing", d: "Cross Dr. Rajkumar Road at the traffic signal. Takes about 1 min." },
+        { t: "Bus Stop A", d: "The BMTC stop is on your left, marked 'Majestic / KSR'. Look for the blue bus shelter." },
+        { t: "Board Route 401", d: "Runs every 15 to 20 min. Tell the conductor 'Indiranagar'. Pay ₹12 on board." },
+        { t: "Alight at Indiranagar Bus Stop", d: "Near 100 Feet Road junction. Journey is about 45 to 55 min." },
+      ],
+      info: { fare: "₹12", time: "45 to 60 min", walk: "300m", runs: "05:30 to 22:30" }
+    },
+    {
+      mode: "Auto Rickshaw", icon: "🛺", sub: "Prepaid counter · Gate 2",
+      price: "₹90 to 130", time: "~40 min", best: false,
+      walk: "Exit Gate 2 · Prepaid counter is 50m ahead on your right",
+      tip: "Use the prepaid counter inside, metered autos outside charge more",
+      steps: [
+        { t: "Exit Gate 2, East side", d: "Follow signs for 'Prepaid Auto'. Do not exit towards the main road." },
+        { t: "KSRTC Prepaid Counter", d: "Located 50m from Gate 2, inside the station boundary. Look for the green booth." },
+        { t: "Tell your destination", d: "Say 'Indiranagar, 100 Feet Road'. Fixed rate is ₹90 to 130 depending on exact area." },
+        { t: "Get your receipt", d: "Keep the receipt, hand it to the driver at the end, not before." },
+        { t: "Alight and pay", d: "Hand receipt to driver on arrival. No extra payment needed." },
+      ],
+      info: { fare: "₹90 to 130", time: "35 to 50 min", walk: "50m", runs: "All day" }
+    },
+    {
+      mode: "Cab / Rideshare", icon: "🚗", sub: "Ola · Uber · Rapido",
+      price: "₹180 to 240", time: "~35 min", best: false,
+      walk: "Exit Gate 2 · Cab pickup bay is on the right, past the auto stand",
+      tip: "Book before you walk out, pickup spots fill up fast during peak hours",
+      steps: [
+        { t: "Book before you exit", d: "Open Ola or Uber while still inside. Set pickup as 'KSR Railway Station Gate 2'." },
+        { t: "Exit Gate 2", d: "Walk towards the east exit. The pickup bay is signed 'App Cabs / Taxi'." },
+        { t: "Wait at the pickup bay", d: "Stands are separated from autos. Look for the green 'Cab Zone' sign." },
+        { t: "Board and verify", d: "Check driver name and car number matches the app before getting in." },
+      ],
+      info: { fare: "₹180 to 250", time: "30 to 45 min", walk: "100m", runs: "All day" }
+    }
+  ],
+  mgroad: [
+    {
+      mode: "Metro", icon: "🚇", sub: "Purple Line to MG Road Stn.",
+      price: "₹30", time: "~20 min", best: true,
+      walk: "Exit Gate 3 · Metro station attached · Platform 1",
+      tip: "MG Road is the 3rd stop, easy to remember",
+      steps: [
+        { t: "Exit towards Metro (Gate 3)", d: "Follow 'Metro' signs from your platform. 200m walk inside." },
+        { t: "Buy token or scan", d: "₹30 to MG Road. Machines accept UPI." },
+        { t: "Platform 1, Whitefield direction", d: "MG Road is only 3 stops. About 18 minutes." },
+        { t: "Exit at MG Road station", d: "Use Exit 4 for Brigade Road, Exit 2 for Barton Centre." },
+      ],
+      info: { fare: "₹30", time: "18 to 22 min", walk: "200m", runs: "05:00 to 23:00" }
+    },
+    {
+      mode: "Auto Rickshaw", icon: "🛺", sub: "Prepaid counter · Gate 2",
+      price: "₹60 to 90", time: "~30 min", best: false,
+      walk: "Exit Gate 2 · Prepaid counter 50m ahead",
+      tip: "Prepaid only, metered autos often overcharge on this route",
+      steps: [
+        { t: "Exit Gate 2", d: "Follow prepaid auto signs inside the station." },
+        { t: "KSRTC Prepaid Counter", d: "Tell them 'MG Road'. Rate is ₹60 to 90." },
+        { t: "Keep receipt", d: "Hand to driver on arrival." },
+      ],
+      info: { fare: "₹60 to 90", time: "25 to 40 min", walk: "50m", runs: "All day" }
+    },
+    {
+      mode: "Cab / Rideshare", icon: "🚗", sub: "Ola · Uber · Rapido",
+      price: "₹120 to 180", time: "~28 min", best: false,
+      walk: "Exit Gate 2 · Pickup bay on the right",
+      tip: null,
+      steps: [
+        { t: "Book before you exit", d: "Set pickup to KSR Gate 2." },
+        { t: "Wait at pickup bay", d: "Signed 'App Cabs'. East side of station." },
+      ],
+      info: { fare: "₹120 to 180", time: "25 to 35 min", walk: "100m", runs: "All day" }
+    },
+  ]
+};
+
+// Default all other destinations to indiranagar transport for the prototype
+destinations.forEach(d => {
+  if (!transport[d.id]) transport[d.id] = transport.indiranagar;
+});
+
+// ── STATE ──
+let currentDest = null;
+let currentTransport = null;
+
+// ── RENDER DESTINATIONS ──
+function renderDests(list) {
+  const el = document.getElementById('destList');
+  el.innerHTML = list.map(d => `
+    <div class="dest-card" onclick="selectDest('${d.id}')">
+      <div class="dest-icon" style="background:${d.bg}">${d.icon}</div>
+      <div class="dest-info">
+        <div class="dest-name">${d.name}</div>
+        <div class="dest-meta">${d.cat} · ${d.km}</div>
+      </div>
+      <div class="dest-arrow">›</div>
+    </div>
+  `).join('');
+}
+renderDests(destinations);
+
+function filterDests(q) {
+  const label = document.getElementById('destLabel');
+  if (!q) {
+    label.textContent = 'Popular destinations';
+    renderDests(destinations);
+    return;
+  }
+  const filtered = destinations.filter(d =>
+    d.name.toLowerCase().includes(q.toLowerCase()) ||
+    d.cat.toLowerCase().includes(q.toLowerCase())
+  );
+  label.textContent = filtered.length ? 'Results' : 'No results found';
+  renderDests(filtered);
+}
+
+// ── SELECT DESTINATION ──
+function selectDest(id) {
+  currentDest = destinations.find(d => d.id === id);
+  const options = transport[id] || transport.indiranagar;
+
+  document.getElementById('s2DestName').textContent = currentDest.name;
+  document.getElementById('s2Count').textContent = options.length + ' options';
+
+  const list = document.getElementById('transportList');
+  list.innerHTML = options.map((t, i) => `
+    <div class="transport-card ${t.best ? 'best' : ''}" onclick="openDetail(${i}, '${id}')">
+      ${t.best ? '<div class="rec-badge">Recommended</div>' : ''}
+      <div class="card-main">
+        <div class="card-left">
+          <div class="card-mode-icon">${t.icon}</div>
+          <div>
+            <div class="card-mode-name">${t.mode}</div>
+            <div class="card-mode-sub">${t.sub}</div>
+          </div>
+        </div>
+        <div class="card-right">
+          <div class="card-price">${t.price}</div>
+          <div class="card-time">${t.time}</div>
+        </div>
+      </div>
+      <div class="card-divider"></div>
+      <div class="card-walk">
+        <span class="walk-icon">🚶</span>
+        <span>${t.walk}</span>
+      </div>
+      ${t.tip ? `<div class="card-tip"><span class="tip-icon">💡</span>${t.tip}</div>` : ''}
+    </div>
+  `).join('');
+
+  // Transition
+  document.getElementById('screen1').classList.add('slide-left');
+  const s2 = document.getElementById('screen2');
+  s2.classList.remove('hidden');
+  setTimeout(() => s2.style.opacity = 1, 10);
+
+  document.getElementById('dot1').classList.remove('active');
+  document.getElementById('dot2').classList.add('active');
+
+  document.getElementById('s2-scroll') && (document.getElementById('s2-scroll').scrollTop = 0);
+}
+
+// ── BACK ──
+function goBack() {
+  document.getElementById('screen1').classList.remove('slide-left');
+  document.getElementById('screen2').classList.add('hidden');
+  document.getElementById('dot1').classList.add('active');
+  document.getElementById('dot2').classList.remove('active');
+  document.getElementById('searchInput').value = '';
+  filterDests('');
+}
+
+// ── DETAIL OVERLAY ──
+function openDetail(idx, destId) {
+  const options = transport[destId] || transport.indiranagar;
+  const t = options[idx];
+  currentTransport = t;
+
+  document.getElementById('overlayTitle').textContent = t.mode;
+  document.getElementById('overlaySub').textContent = t.sub;
+
+  const content = document.getElementById('overlayContent');
+  content.innerHTML = `
+    <div class="info-grid">
+      <div class="info-box">
+        <div class="info-box-label">Fare</div>
+        <div class="info-box-value">${t.info.fare}</div>
+        <div class="info-box-sub">Typical range</div>
+      </div>
+      <div class="info-box">
+        <div class="info-box-label">Time</div>
+        <div class="info-box-value">${t.info.time}</div>
+        <div class="info-box-sub">Excluding wait</div>
+      </div>
+      <div class="info-box">
+        <div class="info-box-label">Walk from platform</div>
+        <div class="info-box-value">${t.info.walk}</div>
+        <div class="info-box-sub">Approx.</div>
+      </div>
+      <div class="info-box">
+        <div class="info-box-label">Operating hours</div>
+        <div class="info-box-value" style="font-size:13px">${t.info.runs}</div>
+        <div class="info-box-sub">Check app for live</div>
+      </div>
+    </div>
+
+    <div style="margin-top:24px;margin-bottom:12px;font-size:10px;font-weight:600;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase">
+      Step by step from your platform
+    </div>
+
+    ${t.steps.map((s, i) => `
+      <div class="step-row">
+        <div class="step-line-wrap">
+          <div class="step-dot ${i === 0 ? 'active' : ''}">${i + 1}</div>
+          ${i < t.steps.length - 1 ? '<div class="step-connector"></div>' : ''}
+        </div>
+        <div class="step-content">
+          <div class="step-title">${s.t}</div>
+          <div class="step-desc">${s.d}</div>
+        </div>
+      </div>
+    `).join('')}
+
+    ${t.tip ? `
+      <div class="card-tip" style="margin-top:8px;font-size:12px">
+        <span class="tip-icon">💡</span>${t.tip}
+      </div>
+    ` : ''}
+    <div style="height:40px"></div>
+  `;
+
+  document.getElementById('overlay').classList.remove('hidden');
+}
+
+function closeOverlay() {
+  document.getElementById('overlay').classList.add('hidden');
+}
+
+function shareProto() {
+  if (navigator.share) {
+    navigator.share({ title: 'Last Mile Prototype', url: window.location.href });
+  } else {
+    navigator.clipboard.writeText(window.location.href)
+      .then(() => alert('Link copied to clipboard!'));
+  }
+}
+
+// ── optional deep link: ?d=indiranagar&detail=0 opens a state directly ──
+(function(){
+  const P = new URLSearchParams(location.search);
+  if (P.has('embed')) document.documentElement.classList.add('embed');
+  const d = P.get('d');
+  if (d && destinations.find(x => x.id === d)) {
+    selectDest(d);
+    const k = P.get('detail');
+    if (k !== null) openDetail(parseInt(k, 10) || 0, d);
+  }
+})();
+</script>
+</body>
+</html>

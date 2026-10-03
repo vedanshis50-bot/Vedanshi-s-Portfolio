@@ -1,0 +1,448 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Things I couldn't leave alone — Vedanshi Singh</title>
+<meta name="description" content="Vedanshi Singh, product designer in Bengaluru. Four investigations into what sits underneath an interface: a system, a moment, a decision, a commitment.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23131312'/%3E%3Crect x='7' y='7' width='8' height='8' fill='%23f2f1ed'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,300..500;1,6..72,300..400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="fg.css">
+<style>
+/* ---------- masthead: not a hero. A title page. ---------- */
+.mast { padding-top: clamp(36px, 5vw, 76px); padding-bottom: clamp(28px, 3.4vw, 48px); row-gap: 0; }
+.mast-l { grid-column: 1 / span 3; grid-row: 1; margin-bottom: clamp(20px, 2.4vw, 32px); }
+.mast-h { grid-column: 1 / -1; grid-row: 2; font-size: clamp(3.3rem, 10.4vw, 11.2rem); }
+.mast-h span { display: block; }
+.mast-h .l2 { padding-left: calc((100% + var(--col-gap)) / 12 * 3); }
+.mast-intro { grid-column: 9 / span 4; grid-row: 3; margin-top: clamp(18px, 2vw, 28px); display: grid; gap: 14px; }
+.mast-intro .meta { max-width: 34ch; }
+@media (max-width: 900px) {
+  .mast-h .l2 { padding-left: calc((100% + var(--col-gap)) / 12 * 1.5); }
+  .mast-intro { grid-column: 4 / -1; }
+}
+@media (max-width: 560px) {
+  .mast-h .l2 { padding-left: 0.9em; }
+  .mast-intro { grid-column: 1 / -1; }
+}
+
+/* ---------- contents: four investigations, each one set one column deeper ---------- */
+.toc { padding-bottom: clamp(28px, 4vw, 48px); }
+.toc-head { padding-block: 12px; border-top: 1px solid var(--ink); }
+.toc-head h2 { grid-column: 1 / span 4; font-weight: 400; }
+.toc-head .th-u { grid-column: 10 / span 1; }
+.toc-head .th-c { grid-column: 11 / span 2; }
+.entry { border-top: 1px solid var(--rule); position: relative; }
+.entry::before { content: ""; position: absolute; left: 0; top: -1px; height: 2px; width: 0; background: var(--mk); transition: width 0.6s var(--ease); }
+.entry:hover::before, .entry:focus-within::before { width: 100%; }
+.entry > a { text-decoration: none; padding-block: clamp(22px, 3vw, 40px); align-items: start; }
+.e-no { grid-column: 1; padding-top: 1.1em; }
+.e-title { grid-column: calc(2 + var(--step)) / 10; display: block; }
+.e-t { display: block; font-size: clamp(2.5rem, 6vw, 6.2rem); }
+.e-sub { display: block; margin-top: 0.35em; font-style: italic; font-weight: 300; font-size: clamp(1.1rem, 1.7vw, 1.55rem); line-height: 1.25; color: var(--ink-2); max-width: 26ch; }
+.e-under { grid-column: 10 / span 1; padding-top: 1.1em; color: var(--ink); display: flex; align-items: baseline; gap: 7px; }
+.e-under i { width: 7px; height: 7px; background: var(--mk); flex: none; transform: translateY(-1px); }
+.e-ctx { grid-column: 11 / span 2; padding-top: 1.1em; display: grid; gap: 4px; font-size: 14px; color: var(--ink-2); }
+.e-ctx .meta { color: var(--ink-3); }
+.e-trace { margin-top: 10px; font-family: var(--mono); font-size: 11px; line-height: 1.55; color: var(--ink-3); }
+.e-go { margin-top: 12px; font-size: 14px; color: var(--ink); display: inline-flex; gap: 6px; }
+.e-go span { transition: transform 0.4s var(--ease); display: inline-block; }
+.entry:hover .e-go span { transform: translateX(4px); }
+.entry.is-pending .e-go { color: var(--ink-3); }
+.entry.is-pending .e-t { color: color-mix(in srgb, var(--ink) 78%, var(--ground)); }
+@media (max-width: 1100px) {
+  .e-title { grid-column: 2 / 9; padding-left: calc(var(--step) * 4%); }
+  .e-under { grid-column: 9 / span 1; }
+  .e-ctx { grid-column: 10 / span 3; }
+  .toc-head .th-u { grid-column: 9 / span 1; }
+  .toc-head .th-c { grid-column: 10 / span 3; }
+}
+@media (max-width: 760px) {
+  .toc-head .th-u, .toc-head .th-c { display: none; }
+  .e-no { grid-column: 1 / span 2; grid-row: 1; padding-top: 0; }
+  .e-under { grid-column: 3 / span 10; grid-row: 1; padding-top: 0; }
+  .e-title { grid-column: 1 / -1; grid-row: 2; padding-left: 0; margin-top: 12px; }
+  .e-ctx { grid-column: 1 / -1; grid-row: 3; padding-top: 16px; }
+}
+.toc-foot { padding-top: 14px; border-top: 1px solid var(--rule); }
+.toc-foot p { grid-column: 7 / span 6; justify-self: end; text-align: right; font-family: var(--serif); font-style: italic; font-weight: 300; font-size: 1.1rem; color: var(--ink-2); }
+@media (max-width: 760px) { .toc-foot p { grid-column: 1 / -1; justify-self: start; text-align: left; } }
+
+#shiftMorph .m-sheet { fill: var(--ground); stroke: var(--rule); }
+#shiftMorph .m-grid-fine path { stroke: var(--rule); stroke-width: 1; fill: none; }
+#shiftMorph .m-room { stroke: var(--ink); fill: color-mix(in srgb, var(--bp) 10%, transparent); }
+#shiftMorph .m-cols rect { fill: color-mix(in srgb, var(--bp) 12%, transparent); stroke: color-mix(in srgb, var(--bp) 45%, transparent); stroke-width: 0.8; }
+#shiftMorph .m-tokens text { font-family: var(--mono); font-size: 10px; fill: var(--ink-3); }
+#shiftMorph .m-tokens text.acc { fill: var(--bp); letter-spacing: 1px; }
+#shiftMorph .m-door, #shiftMorph .m-circ, #shiftMorph .m-flow path { stroke: var(--bp); }
+#shiftMorph .m-door { fill: none; stroke-width: 1.4; stroke-dasharray: 3 3; }
+#shiftMorph .m-dim path { stroke: var(--ink-3); stroke-width: 1; fill: none; }
+#shiftMorph .m-dimtxt { font-family: var(--mono); font-size: 10px; fill: var(--ink-3); }
+#shiftMorph .m-lbl text, #shiftMorph .m-clbl text { font-family: var(--mono); font-size: 9.5px; letter-spacing: 1px; fill: var(--ink-2); }
+#shiftMorph .m-circ { fill: none; stroke-width: 1.6; stroke-dasharray: 6 6; stroke-linecap: round; }
+#shiftMorph .m-flow path { fill: none; stroke-width: 1.4; stroke-dasharray: 4 4; }
+#shiftMorph .m-shell { fill: var(--ground); stroke: var(--ink); stroke-width: 1.5; }
+#shiftMorph .m-bar { fill: var(--bp); }
+#shiftMorph .u-acc { fill: var(--bp); }
+#shiftMorph .u-acc2 { fill: var(--ink-3); }
+#shiftMorph .u-ink { fill: var(--ink); }
+#shiftMorph .u-soft { fill: color-mix(in srgb, var(--ink) 25%, var(--ground)); }
+#shiftMorph .u-soft-d { fill: color-mix(in srgb, var(--ground) 55%, var(--bp)); }
+#shiftMorph .u-line { fill: none; stroke: var(--rule-strong); stroke-width: 1.2; }
+
+/* ---------- corrections ---------- */
+.notes { row-gap: 0; }
+.notes h2 { grid-column: 1 / span 2; font-weight: 400; padding-top: 0.6em; }
+.notes-intro { grid-column: 3 / span 7; font-family: var(--serif); font-weight: 340; font-size: clamp(1.7rem, 3vw, 2.6rem); line-height: 1.08; letter-spacing: -0.015em; }
+.notes-list { grid-column: 3 / -1; margin-top: clamp(28px, 4vw, 52px); border-top: 1px solid var(--ink); }
+.notes-list li { display: grid; grid-template-columns: 3.2em minmax(0, 4fr) minmax(0, 5fr); column-gap: var(--col-gap); padding: 22px 0 26px; border-bottom: 1px solid var(--rule); }
+.n-no { font-family: var(--mono); font-size: 11.5px; color: var(--ink-3); padding-top: 4px; }
+.n-old { font-size: 15px; color: var(--ink-3); }
+.n-old s { text-decoration-thickness: 1px; color: var(--ink-2); }
+.n-old small { display: block; font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 4px; }
+.n-new { font-family: var(--serif); font-size: clamp(1.5rem, 2.4vw, 2.1rem); font-weight: 340; line-height: 1.08; letter-spacing: -0.015em; }
+.n-new em { font-style: italic; font-weight: 300; }
+.n-why { margin-top: 10px; font-size: 14.5px; color: var(--ink-2); max-width: 52ch; }
+@media (max-width: 900px) { .notes h2, .notes-intro, .notes-list { grid-column: 1 / -1; } .notes-intro { margin-top: 14px; } }
+@media (max-width: 640px) { .notes-list li { grid-template-columns: 2.4em 1fr; } .n-new-wrap { grid-column: 2; margin-top: 12px; } }
+
+/* ---------- colophon: about + the shift + contact ---------- */
+.colo { --bp: #2c4a6e; row-gap: 32px; border-top: 1px solid var(--ink); }
+.colo h2 { font-weight: 400; }
+.colo-about { grid-column: 1 / span 7; display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); column-gap: var(--col-gap); }
+.colo-about h2 { grid-column: 1 / span 2; padding-top: 0.5em; }
+.colo-about .body { grid-column: 3 / span 5; }
+.colo-about .body p:first-child { font-family: var(--serif); font-weight: 340; font-size: clamp(1.35rem, 2vw, 1.75rem); line-height: 1.22; letter-spacing: -0.01em; color: var(--ink); }
+.colo-about .body p + p { margin-top: 16px; color: var(--ink-2); max-width: 54ch; }
+.colo-contact { grid-column: 9 / span 4; display: grid; gap: 18px; align-content: start; }
+.colo-contact h2 { padding-top: 0.5em; }
+.mail { font-family: var(--serif); font-size: clamp(1.4rem, 2.1vw, 1.9rem); font-weight: 340; letter-spacing: -0.01em; text-decoration: none; border-bottom: 1px solid var(--ink); justify-self: start; line-height: 1.2; overflow-wrap: anywhere; }
+.mail:hover { border-bottom-width: 2px; }
+.c-list { display: grid; border-top: 1px solid var(--rule); }
+.c-list li { display: flex; justify-content: space-between; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--rule); font-size: 14.5px; }
+.c-list a { text-decoration: none; }
+.c-list a:hover { text-decoration: underline; text-underline-offset: 3px; }
+.copy { font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-3); }
+.copy:hover { color: var(--ink); }
+.status { display: flex; gap: 8px; align-items: baseline; }
+.status::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--c-commitment); flex: none; }
+
+/* the shift, continuing the same narrative one row down */
+.shift-kicker { grid-column: 3 / span 7; font-family: var(--serif); font-weight: 340; font-size: clamp(1.1rem, 1.6vw, 1.4rem); line-height: 1.3; letter-spacing: -0.01em; color: var(--ink); }
+.shift-kicker em { font-style: italic; font-weight: 300; }
+.shift-copy { grid-column: 3 / span 4; }
+.shift-steps { border-top: 1px solid var(--ink); }
+.shift-steps li { border-bottom: 1px solid var(--rule); }
+.shift-steps button { --p: 0; position: relative; width: 100%; display: grid; grid-template-columns: 30px 1fr; gap: 10px; text-align: left; padding: 15px 0; color: var(--ink-3); transition: color 0.3s var(--ease); font: inherit; background: none; border: 0; cursor: pointer; }
+.shift-steps button::before { content: ""; position: absolute; left: 0; bottom: -1px; height: 2px; width: 100%; background: var(--bp); transform-origin: 0 50%; transform: scaleX(var(--p)); }
+.shift-steps .s-no { font-family: var(--mono); font-size: 11px; padding-top: 4px; color: var(--ink-3); transition: color 0.3s var(--ease); }
+.shift-steps .s-t { display: block; font-family: var(--serif); font-weight: 400; font-size: 1.05rem; color: var(--ink); }
+.shift-steps .s-t small { display: block; font-family: var(--sans); font-size: 13px; font-weight: 400; color: var(--ink-3); margin-top: 2px; }
+.shift-steps button[aria-pressed="true"] .s-no { color: var(--bp); }
+.shift-stage { grid-column: 7 / span 6; }
+.shift-stage svg { width: 100%; height: auto; overflow: visible; }
+.shift-cap { margin-top: 14px; text-align: center; transition: opacity 0.2s var(--ease); }
+.colo-about-cont { grid-column: 3 / span 5; color: var(--ink-2); max-width: 54ch; }
+@media (max-width: 900px) {
+  .colo-about, .colo-contact { grid-column: 1 / -1; }
+  .shift-kicker, .shift-copy, .shift-stage, .colo-about-cont { grid-column: 1 / -1; }
+  .shift-stage { order: -1; }
+}
+@media (max-width: 640px) { .colo-about h2, .colo-about .body { grid-column: 1 / -1; } .colo-about .body { margin-top: 12px; } }
+</style>
+</head>
+<body>
+<a class="skip" href="#contents">Skip to the four investigations</a>
+
+<header class="hdr">
+  <a class="hdr-name" href="index.html">Vedanshi Singh <span>/ field guide</span></a>
+  <nav class="hdr-index" aria-label="Investigations">
+    <a href="system.html" style="--mk: var(--c-system)"><i>01</i> System</a>
+    <a href="moment.html" style="--mk: var(--c-moment)"><i>02</i> Moment</a>
+    <a href="work.html#decision" class="is-pending" style="--mk: var(--c-decision)"><i>03</i> Decision</a>
+    <a href="work.html#commitment" class="is-pending" style="--mk: var(--c-commitment)"><i>04</i> Commitment</a>
+  </nav>
+  <nav class="hdr-links" aria-label="Site">
+    <a href="work.html">Work</a>
+    <a href="#about">About</a>
+    <a href="#contact">Contact</a>
+  </nav>
+</header>
+
+<main>
+  <section class="mast g" aria-labelledby="title">
+    <p class="meta mast-l">A field guide<br>Four investigations<br>Bengaluru, 2026</p>
+    <h1 id="title" class="display mast-h"><span class="l1">Things I couldn't</span><span class="l2"><em>leave alone.</em></span></h1>
+    <div class="mast-intro">
+      <p class="lede">Interfaces are usually the visible part of the problem. I like finding what's underneath.</p>
+      <p class="meta">Vedanshi Singh. Product designer at Leadrat. Trained in architecture.</p>
+    </div>
+  </section>
+
+  <section class="toc" id="contents" aria-labelledby="tocH">
+    <div class="toc-head g">
+      <h2 id="tocH" class="meta">Contents</h2>
+      <span class="meta th-u" aria-hidden="true">Underneath</span>
+      <span class="meta th-c" aria-hidden="true">Found in</span>
+    </div>
+    <ol>
+      <li class="entry" style="--mk: var(--c-system); --step: 0">
+        <a class="g" href="system.html">
+          <span class="e-no meta">01</span>
+          <span class="e-title"><span class="display e-t">The algorithm</span><span class="e-sub serif">that decides who gets the next lead</span></span>
+          <span class="e-under meta"><i></i>System</span>
+          <span class="e-ctx">
+            <span class="meta">Real product · Systems</span>
+            <span>Leadrat, a real-estate CRM</span>
+            <span class="e-trace" aria-hidden="true">lead → rules → assignment<br>→ deficit → agent</span>
+            <span class="e-go">Inspect the system <span aria-hidden="true">→</span></span>
+          </span>
+        </a>
+      </li>
+      <li class="entry" style="--mk: var(--c-moment); --step: 1">
+        <a class="g" href="moment.html">
+          <span class="e-no meta">02</span>
+          <span class="e-title"><span class="display e-t">The 200 metres</span><span class="e-sub serif">between the train door and the right ride, after the map has stopped helping</span></span>
+          <span class="e-under meta"><i></i>Moment</span>
+          <span class="e-ctx">
+            <span class="meta">Self-initiated · Wayfinding</span>
+            <span>KSR Bengaluru City station</span>
+            <span class="e-trace" aria-hidden="true">60 s · 8% battery<br>four ways out</span>
+            <span class="e-go">Enter the moment <span aria-hidden="true">→</span></span>
+          </span>
+        </a>
+      </li>
+      <li class="entry is-pending" style="--mk: var(--c-decision); --step: 2" id="e-decision">
+        <a class="g" href="work.html#decision">
+          <span class="e-no meta">03</span>
+          <span class="e-title"><span class="display e-t">The room</span><span class="e-sub serif">where an idea gets argued with before anyone builds it</span></span>
+          <span class="e-under meta"><i></i>Decision</span>
+          <span class="e-ctx">
+            <span class="meta">Concept · AI prototype</span>
+            <span>Boardroom AI</span>
+            <span class="e-trace" aria-hidden="true">six perspectives<br>one verdict</span>
+            <span class="e-go">Being written up</span>
+          </span>
+        </a>
+      </li>
+      <li class="entry is-pending" style="--mk: var(--c-commitment); --step: 3" id="e-commitment">
+        <a class="g" href="work.html#commitment">
+          <span class="e-no meta">04</span>
+          <span class="e-title"><span class="display e-t">The commitment</span><span class="e-sub serif">behind a simple fixed-deposit form</span></span>
+          <span class="e-under meta"><i></i>Commitment</span>
+          <span class="e-ctx">
+            <span class="meta">Research · Fintech</span>
+            <span>Mobile banking FD flow</span>
+            <span class="e-trace" aria-hidden="true">6 interviews → 4 decisions<br>→ 6-person test</span>
+            <span class="e-go">Being written up</span>
+          </span>
+        </a>
+      </li>
+    </ol>
+    <div class="toc-foot g"><p>Each one started as an interface that looked finished.</p></div>
+  </section>
+
+  <section class="sec notes g" aria-labelledby="notesH">
+    <h2 id="notesH" class="meta">Corrections</h2>
+    <p class="notes-intro">Three things I believed, and what changed my mind.</p>
+    <ol class="notes-list">
+      <li>
+        <span class="n-no">C.01</span>
+        <p class="n-old"><small>I thought</small><s>A cleaner interface makes a product better.</s></p>
+        <div class="n-new-wrap">
+          <p class="n-new">Nicer <em>is not</em> better.</p>
+          <p class="n-why">At Leadrat I spent weeks making the screens cleaner. A salesperson looked at it and said he still did not know what to do first. The design was nicer. The product was not better.</p>
+        </div>
+      </li>
+      <li>
+        <span class="n-no">C.02</span>
+        <p class="n-old"><small>I thought</small><s>Follow the brief. It is the actual job.</s></p>
+        <div class="n-new-wrap">
+          <p class="n-new">The brief <em>is a guess.</em></p>
+          <p class="n-why">I used to treat a brief as a task. If I don't check the guess first, I just solve the wrong problem neatly.</p>
+        </div>
+      </li>
+      <li>
+        <span class="n-no">C.03</span>
+        <p class="n-old"><small>I thought</small><s>AI is a way to produce faster.</s></p>
+        <div class="n-new-wrap">
+          <p class="n-new">It is for <em>arguing,</em> not for answers.</p>
+          <p class="n-why">Now I use it to poke holes in my own ideas early, so I don't fall for the first one. Investigation 03 is what happened when I took that seriously.</p>
+        </div>
+      </li>
+    </ol>
+  </section>
+
+  <section class="sec colo g" aria-label="About, the shift, and contact">
+    <div class="colo-about" id="about">
+      <h2 class="meta">About the author</h2>
+      <div class="body">
+        <p>I started in architecture, where a floor plan tells you where to stand before anyone says a word. Product design asks the same question in a different material.</p>
+      </div>
+    </div>
+    <div class="colo-contact" id="contact">
+      <h2 class="meta">Write to me</h2>
+      <a class="mail" href="mailto:vedanshis50@gmail.com">vedanshis50@gmail.com</a>
+      <ul class="c-list">
+        <li><a href="https://www.linkedin.com/in/vedanshis50" rel="noopener" target="_blank">LinkedIn</a><span class="meta">/in/vedanshis50</span></li>
+        <li><span>Résumé <span class="needs">NEEDS REAL INPUT: the current PDF is a blank placeholder</span></span></li>
+        <li><span class="status">Open to product design roles</span><button class="copy" type="button" data-copy="vedanshis50@gmail.com">Copy email</button></li>
+      </ul>
+    </div>
+
+    <p class="shift-kicker serif">Same thinking, <em>a different material.</em> It plays on its own &mdash; a step jumps straight to a stage.</p>
+
+    <div class="shift-copy">
+      <ol class="shift-steps" id="shiftSteps">
+        <li><button type="button" data-step="0" aria-pressed="true"><span class="s-no">01</span><span class="s-t">Blueprint<small>Walls, dimensions, circulation.</small></span></button></li>
+        <li><button type="button" data-step="1" aria-pressed="false"><span class="s-no">02</span><span class="s-t">Layout grid<small>Dimensions become a spacing system.</small></span></button></li>
+        <li><button type="button" data-step="2" aria-pressed="false"><span class="s-no">03</span><span class="s-t">Components<small>Rooms become cards. Circulation becomes flow.</small></span></button></li>
+        <li><button type="button" data-step="3" aria-pressed="false"><span class="s-no">04</span><span class="s-t">Interface<small>The same system, now a product screen.</small></span></button></li>
+      </ol>
+    </div>
+    <figure class="shift-stage">
+      <svg id="shiftMorph" viewBox="0 0 600 400" role="img" aria-labelledby="shiftSvgT">
+        <title id="shiftSvgT">A floor plan whose rooms move onto a grid, round into cards and fill in as a product interface</title>
+        <rect class="m-sheet" x="0" y="0" width="600" height="400" rx="14"/>
+        <g class="m-grid-fine"><path d="M40 0V400M80 0V400M120 0V400M160 0V400M200 0V400M240 0V400M280 0V400M320 0V400M360 0V400M400 0V400M440 0V400M480 0V400M520 0V400M560 0V400M0 40H600M0 80H600M0 120H600M0 160H600M0 200H600M0 240H600M0 280H600M0 320H600M0 360H600"/></g>
+        <g class="m-cols" opacity="0"><rect x="80" y="40" width="50" height="320"/><rect x="140" y="40" width="50" height="320"/><rect x="200" y="40" width="50" height="320"/><rect x="260" y="40" width="50" height="320"/><rect x="320" y="40" width="50" height="320"/><rect x="380" y="40" width="50" height="320"/><rect x="440" y="40" width="50" height="320"/><rect x="500" y="40" width="30" height="320"/></g>
+        <g class="m-tokens" opacity="0"><text x="80" y="30">8</text><text x="140" y="30">16</text><text x="200" y="30">24</text><text x="260" y="30">32</text><text x="320" y="30">40</text><text x="380" y="30">48</text><text x="440" y="30">64</text><text x="80" y="386" class="acc">SPACING SYSTEM &middot; 8PT</text></g>
+        <rect class="m-shell" x="60" y="50" width="480" height="300" rx="0" opacity="0"/>
+        <defs><clipPath id="shiftShellClip"><rect x="60" y="50" width="480" height="300" rx="16"/></clipPath></defs>
+        <rect class="m-bar" x="60" y="50" width="480" height="0" opacity="0" clip-path="url(#shiftShellClip)"/>
+        <rect class="m-room" id="mA" x="60" y="50" width="200" height="130"/>
+        <rect class="m-room" id="mB" x="260" y="50" width="280" height="70"/>
+        <rect class="m-room" id="mC" x="260" y="120" width="140" height="60"/>
+        <rect class="m-room" id="mD" x="400" y="120" width="140" height="60"/>
+        <rect class="m-room" id="mE" x="60" y="180" width="480" height="170"/>
+        <g class="m-plan">
+          <path class="m-door" d="M260 180 A 42 42 0 0 1 302 222"/><path class="m-door" d="M400 120 A 30 30 0 0 0 430 150"/>
+          <g class="m-dim"><path d="M60 30H540M60 24V36M540 24V36M36 50V350M30 50H42M30 350H42"/></g>
+          <text class="m-dimtxt" x="300" y="22" text-anchor="middle">12 000</text>
+          <text class="m-dimtxt" x="26" y="204" text-anchor="middle" transform="rotate(-90 26 204)">7 500</text>
+          <g class="m-lbl"><text x="80" y="78">LIVING</text><text x="280" y="78">KITCHEN</text><text x="280" y="148">STUDY</text><text x="420" y="148">BATH</text><text x="80" y="208">HALL + BEDROOMS</text></g>
+          <path class="m-circ" d="M300 372V300L230 260L160 210L150 150"/>
+        </g>
+        <g class="m-flow" opacity="0"><path d="M240 120H280M380 150H420M160 175V200"/><g class="m-clbl"><text x="96" y="100">CARD</text><text x="296" y="98">NAV</text><text x="296" y="161">ACTION</text><text x="96" y="222">LIST</text></g></g>
+        <g class="m-ui" opacity="0">
+          <circle cx="86" cy="72" r="5" class="u-acc"/><rect x="100" y="67" width="64" height="10" rx="5" class="u-soft-d"/><rect x="470" y="62" width="54" height="22" rx="11" class="u-acc"/>
+          <rect x="96" y="112" width="92" height="10" rx="5" class="u-ink"/><rect x="96" y="130" width="138" height="7" rx="3.5" class="u-soft"/><rect x="96" y="144" width="110" height="7" rx="3.5" class="u-soft"/>
+          <rect x="296" y="106" width="210" height="9" rx="4.5" class="u-ink"/><rect x="296" y="160" width="60" height="8" rx="4" class="u-ink"/><rect x="420" y="160" width="60" height="8" rx="4" class="u-ink"/>
+          <g class="u-rows">
+            <rect x="96" y="220" width="22" height="22" rx="6" class="u-acc"/><rect x="130" y="224" width="170" height="8" rx="4" class="u-ink"/><rect x="130" y="236" width="110" height="6" rx="3" class="u-soft"/><rect x="450" y="222" width="54" height="18" rx="9" class="u-ink"/>
+            <rect x="96" y="260" width="22" height="22" rx="6" class="u-acc2"/><rect x="130" y="264" width="150" height="8" rx="4" class="u-ink"/><rect x="130" y="276" width="96" height="6" rx="3" class="u-soft"/><rect x="450" y="262" width="54" height="18" rx="9" class="u-line"/>
+            <rect x="96" y="300" width="22" height="22" rx="6" class="u-acc2"/><rect x="130" y="304" width="180" height="8" rx="4" class="u-ink"/><rect x="130" y="316" width="120" height="6" rx="3" class="u-soft"/><rect x="450" y="302" width="54" height="18" rx="9" class="u-line"/>
+          </g>
+        </g>
+      </svg>
+      <figcaption class="shift-cap meta" id="shiftCap" aria-live="polite">01 &middot; Blueprint</figcaption>
+    </figure>
+
+    <div class="colo-about-cont">
+      <p>Four years in, I design core CRM workflows at Leadrat in Bengaluru: lead management, distribution, forms and automation. Most of my work sits where a person is still accountable for a decision, even as more of the groundwork gets automated.</p>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <p class="meta">Vedanshi Singh · Bengaluru</p>
+  <p class="meta">Set in Newsreader, Geist &amp; Geist Mono</p>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script>
+document.querySelectorAll('[data-copy]').forEach(function (b) {
+  b.addEventListener('click', function () {
+    var t = b.textContent;
+    (navigator.clipboard ? navigator.clipboard.writeText(b.dataset.copy) : Promise.reject()).then(function () {
+      b.textContent = 'Copied'; setTimeout(function () { b.textContent = t; }, 1600);
+    }, function () { window.location.href = 'mailto:' + b.dataset.copy; });
+  });
+});
+
+(function () {
+  "use strict";
+  var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var canAnimate = !reduced && !!window.gsap;
+  var q = function (s, c) { return (c || document).querySelector(s); };
+  var qa = function (s, c) { return [].slice.call((c || document).querySelectorAll(s)); };
+  function onceVisible(el, cb, t) {
+    if (!el) return;
+    if (!("IntersectionObserver" in window)) { cb(); return; }
+    var io = new IntersectionObserver(function (e) { if (e[0].isIntersecting) { io.disconnect(); cb(); } }, { threshold: t || 0.3 });
+    io.observe(el);
+  }
+
+  var section = q(".shift"), svg = q("#shiftMorph");
+  if (!section || !svg) return;
+  var rooms = ["mA", "mB", "mC", "mD", "mE"].map(function (id) { return document.getElementById(id); });
+  var g = function (s) { return svg.querySelector(s); };
+  var parts = { fine: g(".m-grid-fine"), plan: g(".m-plan"), cols: g(".m-cols"), tokens: g(".m-tokens"), flow: g(".m-flow"), shell: g(".m-shell"), bar: g(".m-bar"), ui: g(".m-ui") };
+  var buttons = qa("[data-step]", section), caption = q("#shiftCap");
+  var NAMES = ["01 · Blueprint", "02 · Layout grid", "03 · Components", "04 · Interface"];
+  var GEO = [
+    [[60, 50, 200, 130], [260, 50, 280, 70], [260, 120, 140, 60], [400, 120, 140, 60], [60, 180, 480, 170]],
+    [[80, 60, 170, 110], [260, 60, 270, 50], [260, 120, 130, 50], [400, 120, 130, 50], [80, 190, 450, 150]],
+    [[80, 75, 180, 105], [280, 75, 240, 50], [280, 135, 115, 45], [405, 135, 115, 45], [80, 200, 440, 105]],
+    [[80, 104, 190, 60], [280, 98, 240, 30], [280, 146, 110, 34], [404, 146, 116, 34], [80, 206, 440, 128]]
+  ];
+  var RX = [0, 2, 10, 10], SW = [3, 1.6, 1.5, 1.2], FILL = [0, 0, 1, 1], STROKE_OP = [1, 0.9, 1, 0.45];
+  var clamp = function (v, a, b) { return v < a ? a : v > b ? b : v; }, lerp = function (a, b, t) { return a + (b - a) * t; }, smooth = function (t) { return t * t * (3 - 2 * t); }, ramp = function (p, a, b) { return clamp((p - a) / (b - a), 0, 1); };
+  var stageVal = function (arr, p) { var i = Math.min(Math.floor(p), arr.length - 2), t = smooth(clamp(p - i, 0, 1)); return lerp(arr[i], arr[i + 1], t); };
+  var current = 0;
+  function render(p) {
+    p = clamp(p, 0, 3); current = p;
+    var i = Math.min(Math.floor(p), 2), t = smooth(clamp(p - i, 0, 1));
+    rooms.forEach(function (el, r) {
+      var a = GEO[i][r], b = GEO[i + 1][r];
+      el.setAttribute("x", lerp(a[0], b[0], t).toFixed(2)); el.setAttribute("y", lerp(a[1], b[1], t).toFixed(2));
+      el.setAttribute("width", lerp(a[2], b[2], t).toFixed(2)); el.setAttribute("height", lerp(a[3], b[3], t).toFixed(2));
+      el.setAttribute("rx", stageVal(RX, p).toFixed(2)); el.style.strokeWidth = stageVal(SW, p); el.style.fillOpacity = stageVal(FILL, p); el.style.strokeOpacity = stageVal(STROKE_OP, p);
+    });
+    parts.fine.style.opacity = 1 - ramp(p, 0.2, 2.6); parts.plan.style.opacity = 1 - ramp(p, 0.05, 0.6);
+    parts.cols.style.opacity = ramp(p, 0.3, 1) * (1 - ramp(p, 1.4, 2.4)); parts.tokens.style.opacity = ramp(p, 0.5, 1) * (1 - ramp(p, 1.3, 1.8));
+    parts.flow.style.opacity = ramp(p, 1.5, 2) * (1 - ramp(p, 2.2, 2.6)); parts.shell.style.opacity = ramp(p, 2.1, 2.8);
+    parts.shell.setAttribute("rx", (ramp(p, 2.1, 3) * 16).toFixed(1)); parts.bar.style.opacity = ramp(p, 2.3, 2.8); parts.bar.setAttribute("height", (ramp(p, 2.3, 3) * 36).toFixed(1));
+    parts.ui.style.opacity = ramp(p, 2.55, 3); parts.ui.style.transform = "translateY(" + ((1 - ramp(p, 2.55, 3)) * 6).toFixed(2) + "px)";
+    var active = Math.round(p);
+    buttons.forEach(function (btn, b) { btn.setAttribute("aria-pressed", b === active ? "true" : "false"); btn.style.setProperty("--p", (b < 3 ? clamp(p - b, 0, 1) : (p >= 2.98 ? 1 : 0)).toFixed(3)); });
+    if (caption && caption.getAttribute("data-idx") !== String(active)) {
+      caption.style.opacity = 0;
+      setTimeout(function () { caption.textContent = NAMES[active]; caption.style.opacity = 1; }, 160);
+      caption.setAttribute("data-idx", String(active));
+    }
+  }
+  render(0);
+  var loop = null, resumeTimer = null, state = { p: 0 };
+  if (canAnimate) {
+    loop = gsap.to(state, { p: 3, duration: 9, ease: "sine.inOut", repeat: -1, yoyo: true, paused: true, onUpdate: function () { render(state.p); } });
+    onceVisible(q(".shift-stage", section), function () {
+      if ("IntersectionObserver" in window) {
+        new IntersectionObserver(function (e) { if (e[0].isIntersecting) loop.play(); else loop.pause(); }).observe(section);
+      } else loop.play();
+    }, 0.3);
+  }
+  buttons.forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      var target = parseInt(btn.getAttribute("data-step"), 10);
+      clearTimeout(resumeTimer);
+      if (loop) {
+        loop.pause();
+        var o = { p: current };
+        gsap.to(o, { p: target, duration: 0.6, ease: "power3.out", onUpdate: function () { render(o.p); }, onComplete: function () {
+          resumeTimer = setTimeout(function () {
+            loop.kill();
+            var edge = target <= 1.5 ? 0 : 3; state.p = edge; render(edge);
+            loop = gsap.to(state, { p: edge ? 0 : 3, duration: 9, ease: "sine.inOut", repeat: -1, yoyo: true, onUpdate: function () { render(state.p); } });
+          }, 3500);
+        } });
+      } else render(target);
+    });
+  });
+  if (reduced) render(0);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+{
+  "name": "boardroom",
+  "private": true,
+  "version": "0.2.0",
+  "description": "Put a product idea in front of six opposing perspectives before anyone builds it.",
+  "type": "module",
+  "scripts": {
+    "start": "node server.mjs"
+  },
+  "engines": { "node": ">=18" },
+  "dependencies": {
+    "@anthropic-ai/sdk": "*"
+  }
+}

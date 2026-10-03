@@ -1,0 +1,790 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>01 System: the algorithm that decides who gets the next lead — Vedanshi Singh</title>
+<meta name="description" content="Leadrat lead assignment. A system you can inspect: lead, rules, assignment, deficit, agent. Then the screen that sits on top of it.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23131312'/%3E%3Crect x='7' y='7' width='8' height='8' fill='%232c55b8'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,300..500;1,6..72,300..400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="fg.css">
+<style>
+/* ======================================================================
+   SYSTEM: technical, precise, quiet. Cool ground, hairlines, mono.
+   One blue, used for "the system is acting here".
+   ====================================================================== */
+.sys section[id], .sys [id^="s"] { scroll-margin-top: 64px; }
+body.sys { --ground: #eef0f1; --ink: #111a24; --ink-2: #44505c; --ink-3: #5c6773; --rule: #d2d8dd; --rule-strong: #9ea8b2; --accent: #2c55b8; --tint: #dfe6f3; --warn: #b4441f; }
+
+/* ---------- opening ---------- */
+.open { padding-top: clamp(40px, 6vw, 96px); padding-bottom: clamp(40px, 6vw, 80px); row-gap: 0; }
+.open-side { grid-column: 1 / span 3; grid-row: 1 / span 3; align-self: start; }
+.open-side .no { font-family: var(--mono); font-size: 12px; letter-spacing: 0.04em; display: flex; gap: 8px; align-items: baseline; color: var(--ink); }
+.open-side .no i { width: 8px; height: 8px; background: var(--accent); }
+.spec { margin-top: 26px; border-top: 1px solid var(--rule); max-width: 250px; }
+.spec div { padding: 9px 0; border-bottom: 1px solid var(--rule); }
+.spec dt { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-3); }
+.spec dd { font-size: 13.5px; color: var(--ink); margin-top: 2px; }
+.open h1 { grid-column: 4 / span 9; font-size: clamp(2.6rem, 6.2vw, 6.4rem); }
+.open .lede { grid-column: 4 / span 5; margin-top: clamp(24px, 3vw, 40px); max-width: 44ch; color: var(--ink-2); }
+.open .lede b { color: var(--ink); font-weight: 500; }
+.open-cue { grid-column: 9 / span 4; margin-top: clamp(24px, 3vw, 40px); align-self: end; display: grid; gap: 8px; justify-items: start; }
+.open-cue p { font-family: var(--serif); font-style: italic; font-size: 1.15rem; font-weight: 300; }
+.open-cue a { font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--ink-3); }
+@media (max-width: 900px) {
+  .open-side { grid-column: 1 / -1; grid-row: auto; margin-bottom: 26px; }
+  .spec { max-width: none; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--col-gap); }
+  .open h1, .open .lede, .open-cue { grid-column: 1 / -1; }
+}
+
+/* ---------- 01.1 the question moved ---------- */
+.shift { row-gap: 0; }
+.shift .sec-no { grid-row: 1; }
+.shift-q { grid-column: 3 / span 10; display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1.4fr); gap: var(--col-gap); align-items: end; }
+.shift-q p { font-family: var(--serif); font-weight: 340; font-size: clamp(1.5rem, 2.8vw, 2.5rem); line-height: 1.08; letter-spacing: -0.015em; }
+.shift-q .was { color: var(--ink-3); }
+.shift-q .was s { text-decoration-thickness: 1px; }
+.shift-q .arrow { font-family: var(--mono); color: var(--ink-3); padding-bottom: 0.5em; }
+.shift-q small { display: block; font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 10px; }
+.shift .prose { grid-column: 3 / span 6; margin-top: clamp(26px, 3vw, 40px); }
+.gaps { grid-column: 3 / span 10; margin-top: clamp(30px, 4vw, 50px); display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border-top: 1px solid var(--ink); }
+.gaps li { padding: 14px 18px 4px 0; }
+.gaps li + li { padding-left: 16px; border-left: 1px solid var(--rule); }
+.gaps b { display: block; font-family: var(--mono); font-size: 11px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 8px; }
+.gaps p { font-size: 14px; color: var(--ink-2); }
+@media (max-width: 900px) {
+  .shift-q, .shift .prose, .gaps { grid-column: 1 / -1; }
+  .shift .sec-no { grid-column: 1 / -1; margin-bottom: 16px; }
+  .shift-q { grid-template-columns: 1fr; }
+  .shift-q .arrow { transform: rotate(90deg); justify-self: start; padding: 0; }
+  .gaps { grid-template-columns: 1fr 1fr; }
+  .gaps li:nth-child(3) { padding-left: 0; border-left: 0; }
+  .gaps li:nth-child(n+3) { border-top: 1px solid var(--rule); }
+}
+@media (max-width: 520px) { .gaps { grid-template-columns: 1fr; } .gaps li { padding-left: 0 !important; border-left: 0 !important; } .gaps li + li { border-top: 1px solid var(--rule); } }
+
+/* ---------- 01.2 the system map ---------- */
+.map-sec { background: #e6e9ec; border-block: 1px solid var(--rule); }
+.map-head { row-gap: 0; }
+.map-head .h2 { grid-column: 3 / span 8; }
+.map-head .prose { grid-column: 3 / span 5; margin-top: 18px; }
+.lenses { grid-column: 3 / span 10; margin-top: clamp(26px, 3vw, 40px); display: flex; flex-wrap: wrap; gap: 0; border: 1px solid var(--ink); width: fit-content; max-width: 100%; }
+.lenses button { font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.03em; padding: 10px 14px; color: var(--ink-2); border-right: 1px solid var(--rule-strong); }
+.lenses button:last-child { border-right: 0; }
+.lenses button:hover { color: var(--ink); background: rgba(255, 255, 255, 0.5); }
+.lenses button[aria-selected="true"] { background: var(--ink); color: var(--ground); }
+@media (max-width: 900px) { .map-head .h2, .map-head .prose, .lenses { grid-column: 1 / -1; } .map-head .sec-no { grid-column: 1 / -1; margin-bottom: 14px; } }
+@media (max-width: 620px) { .lenses { width: 100%; } .lenses button { flex: 1 1 50%; border-bottom: 1px solid var(--rule-strong); text-align: left; } }
+
+.map { padding: clamp(28px, 4vw, 56px) var(--gut) 0; }
+.chain { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 0; position: relative; }
+.node { position: relative; padding-right: clamp(14px, 2vw, 28px); }
+.node-box { display: flex; align-items: baseline; gap: 10px; padding: 12px 14px; border: 1px solid var(--ink); background: var(--ground); position: relative; transition: background 0.35s, color 0.35s, border-color 0.35s, opacity 0.35s; }
+.node-box .ix { font-family: var(--mono); font-size: 10.5px; color: var(--ink-3); }
+.node-box b { font-family: var(--mono); font-size: 13px; font-weight: 500; letter-spacing: 0.08em; }
+.node:not(:last-child) .node-box::after { content: ""; position: absolute; left: 100%; top: 50%; width: clamp(14px, 2vw, 28px); height: 1px; background: var(--ink); }
+.node:not(:last-child) .node-box::before { content: ""; position: absolute; left: calc(100% + clamp(14px, 2vw, 28px) - 6px); top: calc(50% - 4px); border: 4px solid transparent; border-left: 6px solid var(--ink); }
+.node-note { padding: 16px 4px 0 0; min-height: 11.5em; font-size: 14px; line-height: 1.5; color: var(--ink-2); }
+.node-note b { color: var(--ink); font-weight: 600; }
+.node-note code { font-family: var(--mono); font-size: 12px; background: rgba(255, 255, 255, 0.6); padding: 0 3px; }
+.node-note .tag { display: inline-block; margin-top: 10px; font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.05em; text-transform: uppercase; color: var(--accent); }
+.node.is-sys .node-box { background: var(--accent); border-color: var(--accent); color: #fff; }
+.node.is-sys .node-box .ix { color: rgba(255, 255, 255, 0.7); }
+.node.is-dim .node-box { opacity: 0.35; border-style: dashed; }
+.node.is-dim .node-note { color: var(--ink-3); }
+.node.is-warn .node-box { border-color: var(--warn); color: var(--warn); }
+.node.is-open .node-box { border-style: dashed; }
+.chain.swap .node-note { animation: noteIn 0.45s var(--ease); }
+@keyframes noteIn { from { opacity: 0; transform: translateY(4px); } }
+@media (max-width: 900px) {
+  .chain { grid-template-columns: 1fr; }
+  .node { display: grid; grid-template-columns: 9.5em minmax(0, 1fr); gap: 16px; padding: 0 0 18px; }
+  .node-box { align-self: start; }
+  .node-note { padding-top: 10px; min-height: 0; }
+  .node:not(:last-child) .node-box::after { left: 22px; top: 100%; width: 1px; height: calc(100% + 18px); }
+  .node:not(:last-child) .node-box::before { display: none; }
+}
+@media (max-width: 480px) { .node { grid-template-columns: 1fr; gap: 0; } .node:not(:last-child) .node-box::after { display: none; } }
+
+.formula { margin-top: clamp(24px, 3vw, 40px); padding: 18px var(--gut); border-top: 1px solid var(--rule-strong); display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--col-gap); }
+.formula .meta { grid-column: 1 / span 2; padding-top: 3px; }
+.formula pre { grid-column: 3 / span 10; margin: 0; font-family: var(--mono); font-size: clamp(12px, 1.05vw, 14px); line-height: 1.8; color: var(--ink); white-space: pre-wrap; }
+.formula pre span { color: var(--ink-3); }
+@media (max-width: 760px) { .formula .meta, .formula pre { grid-column: 1 / -1; } .formula pre { margin-top: 8px; } }
+
+/* ---------- 01.3 the engine ---------- */
+.eng-head .h2 { grid-column: 3 / span 8; }
+.eng-head .prose { grid-column: 3 / span 5; margin-top: 18px; }
+@media (max-width: 900px) { .eng-head .h2, .eng-head .prose { grid-column: 1 / -1; } .eng-head .sec-no { grid-column: 1 / -1; margin-bottom: 14px; } }
+.engine { margin-top: clamp(28px, 4vw, 48px); }
+.eng-left { grid-column: 3 / span 6; }
+.eng-right { grid-column: 9 / span 4; }
+@media (max-width: 1000px) { .eng-left, .eng-right { grid-column: 1 / -1; } .eng-right { margin-top: 30px; } }
+
+.split { border: 1px solid var(--ink); }
+.split-row { display: grid; grid-template-columns: auto 1fr auto; gap: 12px; align-items: center; padding: 10px 14px; border-bottom: 1px solid var(--rule); }
+.split-row:last-child { border-bottom: 0; }
+.split-top { background: var(--ink); color: var(--ground); }
+.split-top .meta { color: rgba(255, 255, 255, 0.72); }
+.split-inputs { display: flex; flex-wrap: wrap; gap: 14px; }
+.split-inputs label { display: inline-flex; align-items: center; gap: 6px; font-family: var(--mono); font-size: 12px; }
+.split-inputs input { width: 3.6em; font: inherit; font-size: 14px; padding: 6px 6px; border: 1px solid var(--rule-strong); background: #fff; color: var(--ink); text-align: right; font-variant-numeric: tabular-nums; }
+.split-inputs input:focus { outline: 2px solid var(--accent); outline-offset: 0; border-color: var(--accent); }
+.total { font-family: var(--mono); font-size: 12px; font-variant-numeric: tabular-nums; }
+.total.is-bad { color: var(--warn); }
+.btn { font-family: var(--mono); font-size: 12px; letter-spacing: 0.02em; padding: 9px 14px; border: 1px solid var(--ink); background: var(--ground); color: var(--ink); min-height: 38px; }
+.btn:hover:not(:disabled) { background: #fff; }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+.btn.primary:hover:not(:disabled) { background: #234a9f; }
+.btn:disabled { opacity: 0.4; cursor: not-allowed; border-style: dashed; }
+.lock-note { font-size: 12.5px; color: var(--ink-3); }
+.lock-note.is-bad { color: var(--warn); }
+
+.agents { margin-top: 18px; border-top: 1px solid var(--ink); }
+.agent { display: grid; grid-template-columns: 5.2em minmax(0, 1fr) 11.5em; gap: 14px; align-items: center; padding: 14px 0; border-bottom: 1px solid var(--rule); transition: background 0.3s; }
+.agent.is-hit { background: var(--tint); }
+.a-name { font-family: var(--mono); font-size: 13px; font-weight: 500; }
+.a-name small { display: block; font-weight: 400; color: var(--ink-3); font-size: 11px; }
+.a-track { position: relative; height: 26px; }
+.a-slots { position: absolute; inset: 0; display: flex; gap: 3px; align-items: center; }
+.a-slots i { width: 14px; height: 18px; background: var(--ink); flex: none; animation: slotIn 0.35s var(--ease); }
+.a-slots i.new { background: var(--accent); }
+@keyframes slotIn { from { transform: translateY(-8px); opacity: 0; } }
+.a-exp { position: absolute; top: -3px; bottom: -3px; width: 0; border-left: 1.5px dashed var(--accent); transition: left 0.45s var(--ease); }
+.a-nums { font-family: var(--mono); font-size: 11.5px; line-height: 1.45; font-variant-numeric: tabular-nums; color: var(--ink-2); display: grid; grid-template-columns: auto auto; gap: 0 10px; }
+.a-nums span:nth-child(odd) { color: var(--ink-3); }
+.a-nums .pos { color: var(--accent); font-weight: 500; }
+.a-nums .neg { color: var(--ink-3); }
+.eng-legend { margin-top: 10px; display: flex; gap: 18px; flex-wrap: wrap; }
+.eng-legend span { display: inline-flex; gap: 6px; align-items: center; }
+.eng-legend i { width: 10px; height: 12px; background: var(--ink); display: inline-block; }
+.eng-legend i.dash { width: 0; height: 14px; background: none; border-left: 1.5px dashed var(--accent); }
+.controls { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+
+.log-h { display: flex; justify-content: space-between; border-bottom: 1px solid var(--ink); padding-bottom: 8px; }
+.log { max-height: 440px; overflow-y: auto; font-family: var(--mono); font-size: 12px; line-height: 1.55; }
+.log li { padding: 9px 0; border-bottom: 1px solid var(--rule); color: var(--ink-2); animation: noteIn 0.4s var(--ease); }
+.log li b { color: var(--ink); font-weight: 500; }
+.log li.tie { color: var(--ink); background: linear-gradient(90deg, var(--tint), transparent); padding-left: 8px; margin-left: -8px; }
+.log li.tie em { font-style: normal; color: var(--accent); }
+.log li.cfg { color: var(--warn); }
+.log .empty { color: var(--ink-3); font-family: var(--serif); font-style: italic; font-size: 15px; border: 0; }
+
+/* ---------- 01.4 the visible layer ---------- */
+.vis-head .h2 { grid-column: 3 / span 8; }
+.vis-head .prose { grid-column: 3 / span 5; margin-top: 18px; }
+@media (max-width: 900px) { .vis-head .h2, .vis-head .prose { grid-column: 1 / -1; } .vis-head .sec-no { grid-column: 1 / -1; margin-bottom: 14px; } }
+.entry-shot { margin-top: clamp(30px, 4vw, 50px); align-items: end; }
+.entry-shot figure { grid-column: 3 / span 5; }
+.entry-shot figcaption, .shot figcaption { margin-top: 10px; font-size: 13px; color: var(--ink-2); }
+.entry-shot figcaption b, .shot figcaption b { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-3); font-weight: 400; margin-right: 8px; }
+.entry-shot .aside { grid-column: 9 / span 4; font-family: var(--serif); font-size: 1.25rem; font-weight: 340; line-height: 1.25; }
+.frame { border: 1px solid var(--ink); background: #fff; }
+@media (max-width: 900px) { .entry-shot figure, .entry-shot .aside { grid-column: 1 / -1; } .entry-shot .aside { margin-top: 20px; } }
+
+.viewer { margin-top: clamp(40px, 5vw, 70px); }
+.matrix-wrap { grid-column: 1 / span 3; }
+.matrix { border-collapse: collapse; width: 100%; font-family: var(--mono); font-size: 11px; }
+.matrix th { font-weight: 400; color: var(--ink-3); letter-spacing: 0.04em; text-transform: uppercase; padding: 6px 4px; text-align: left; }
+.matrix td { padding: 0; border: 1px solid var(--rule-strong); }
+.matrix td button { width: 100%; height: 38px; display: grid; place-items: center; font-family: var(--mono); font-size: 11px; color: var(--ink-2); }
+.matrix td button:hover { background: #fff; }
+.matrix td button[aria-pressed="true"] { background: var(--ink); color: var(--ground); }
+.matrix td button.missing { color: var(--warn); background: repeating-linear-gradient(135deg, transparent 0 5px, rgba(180, 68, 31, 0.08) 5px 6px); }
+.matrix-note { margin-top: 12px; font-size: 12.5px; color: var(--ink-3); }
+.addl { margin-top: 22px; border-top: 1px solid var(--rule); padding-top: 12px; }
+.addl p { margin-bottom: 8px; }
+.addl .row { display: flex; }
+.addl button { flex: 1; font-family: var(--mono); font-size: 11px; padding: 9px 6px; border: 1px solid var(--rule-strong); color: var(--ink-2); }
+.addl button + button { border-left: 0; }
+.addl button[aria-pressed="true"] { background: var(--ink); color: var(--ground); border-color: var(--ink); }
+.shot { grid-column: 4 / span 9; }
+.shot-img { position: relative; }
+.shot-missing { aspect-ratio: 1283 / 726; display: grid; place-items: center; text-align: center; padding: 20px; border: 1px dashed var(--warn); color: var(--ink-2); font-size: 14px; background: repeating-linear-gradient(135deg, transparent 0 9px, rgba(180, 68, 31, 0.05) 9px 10px); }
+.pin { position: absolute; translate: -50% -50%; width: 22px; height: 22px; display: grid; place-items: center; background: var(--accent); color: #fff; font-family: var(--mono); font-size: 11px; font-weight: 500; border-radius: 50%; box-shadow: 0 0 0 3px rgba(44, 85, 184, 0.25); }
+.pin.warn { background: var(--warn); box-shadow: 0 0 0 3px rgba(180, 68, 31, 0.25); }
+.pins-legend { margin-top: 14px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--col-gap); border-top: 1px solid var(--rule); }
+.pins-legend li { display: grid; grid-template-columns: 22px minmax(0, 1fr); gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--rule); font-size: 13.5px; color: var(--ink-2); }
+.pins-legend li > span:first-child { width: 20px; height: 20px; border-radius: 50%; background: var(--accent); color: #fff; font-family: var(--mono); font-size: 10.5px; display: grid; place-items: center; }
+.pins-legend li.warn > span:first-child { background: var(--warn); }
+.pins-legend b { color: var(--ink); font-weight: 500; }
+.pins-legend .node-ref { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.05em; color: var(--accent); }
+.pins-legend[hidden] { display: none; }
+@media (max-width: 1000px) { .matrix-wrap, .shot { grid-column: 1 / -1; } .shot { margin-top: 24px; } }
+@media (max-width: 640px) { .pins-legend { grid-template-columns: 1fr; } }
+
+/* ---------- 01.5 decision log ---------- */
+.dlog-head .h2 { grid-column: 3 / span 8; }
+@media (max-width: 900px) { .dlog-head .h2 { grid-column: 1 / -1; } .dlog-head .sec-no { grid-column: 1 / -1; margin-bottom: 14px; } }
+.dlog { grid-column: 3 / span 10; margin-top: clamp(26px, 3vw, 40px); }
+.dlog-cols, .dlog summary { display: grid; grid-template-columns: 3.4em minmax(0, 1.25fr) minmax(0, 1.2fr) minmax(0, 1.2fr) 1.4em; gap: var(--col-gap); }
+.dlog-cols { padding-bottom: 8px; border-bottom: 1px solid var(--ink); }
+.dlog details { border-bottom: 1px solid var(--rule); }
+.dlog summary { list-style: none; cursor: pointer; padding: 16px 0; align-items: baseline; }
+.dlog summary::-webkit-details-marker { display: none; }
+.dlog summary .d-no { font-family: var(--mono); font-size: 11.5px; color: var(--ink-3); }
+.dlog summary .d-t { font-family: var(--serif); font-size: 1.22rem; font-weight: 400; line-height: 1.2; color: var(--ink); }
+.dlog summary .d-r, .dlog summary .d-c { font-size: 13.5px; color: var(--ink-2); }
+.dlog summary .d-r s { text-decoration-thickness: 1px; color: var(--ink-3); }
+.dlog summary .d-x { font-family: var(--mono); color: var(--ink-3); transition: transform 0.3s var(--ease); }
+.dlog details[open] .d-x { transform: rotate(45deg); }
+.dlog summary:hover .d-t { text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; }
+.d-why { padding: 0 0 20px calc(3.4em + var(--col-gap)); max-width: 72ch; font-size: 14.5px; color: var(--ink-2); }
+.d-why b { color: var(--ink); font-weight: 500; }
+.dlog-foot { margin-top: 16px; font-size: 13.5px; color: var(--ink-2); }
+@media (max-width: 900px) { .dlog { grid-column: 1 / -1; } }
+@media (max-width: 760px) {
+  .dlog-cols { display: none; }
+  .dlog summary { grid-template-columns: 2.6em minmax(0, 1fr) 1.2em; row-gap: 6px; }
+  .dlog summary .d-r, .dlog summary .d-c { grid-column: 2; }
+  .dlog summary .d-x { grid-column: 3; grid-row: 1; }
+  .dlog summary .d-r::before { content: "Rejected: "; font-family: var(--mono); font-size: 10.5px; text-transform: uppercase; color: var(--ink-3); }
+  .dlog summary .d-c::before { content: "Cost: "; font-family: var(--mono); font-size: 10.5px; text-transform: uppercase; color: var(--ink-3); }
+  .d-why { padding-left: calc(2.6em + var(--col-gap)); }
+}
+
+/* ---------- 01.6 evidence, 01.7 open ---------- */
+.ev-head .h2 { grid-column: 3 / span 8; }
+.ev-body { grid-column: 3 / span 10; margin-top: clamp(26px, 3vw, 40px); }
+@media (max-width: 900px) { .ev-head .h2, .ev-body { grid-column: 1 / -1; } .ev-head .sec-no { grid-column: 1 / -1; margin-bottom: 14px; } }
+
+.close-q { grid-column: 3 / span 8; font-family: var(--serif); font-weight: 340; font-size: clamp(1.8rem, 3.6vw, 3.2rem); line-height: 1.06; letter-spacing: -0.02em; }
+.close-q em { font-style: italic; font-weight: 300; }
+.open-list { grid-column: 3 / span 10; margin-top: clamp(30px, 4vw, 50px); display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; border-top: 1px solid var(--ink); }
+.open-list li { padding: 14px 18px 0 0; }
+.open-list li + li { padding-left: 16px; border-left: 1px solid var(--rule); }
+.open-list b { display: block; font-family: var(--mono); font-size: 11px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 8px; }
+.open-list p { font-size: 14px; color: var(--ink-2); }
+.role { grid-column: 3 / span 6; margin-top: clamp(40px, 5vw, 64px); }
+.role h3 { font-weight: 400; margin-bottom: 10px; }
+.role li { padding: 9px 0; border-top: 1px solid var(--rule); font-size: 14.5px; color: var(--ink-2); }
+@media (max-width: 900px) { .close-q, .open-list, .role { grid-column: 1 / -1; } .close-q { margin-top: 14px; } }
+@media (max-width: 760px) { .open-list { grid-template-columns: 1fr; } .open-list li { padding-left: 0 !important; border-left: 0 !important; padding-bottom: 14px; } .open-list li + li { border-top: 1px solid var(--rule); } }
+</style>
+</head>
+<body class="sys">
+<a class="skip" href="#map">Skip to the system map</a>
+
+<header class="hdr is-sticky">
+  <a class="hdr-name" href="index.html">Vedanshi Singh <span>/ field guide</span></a>
+  <nav class="hdr-index" aria-label="Investigations">
+    <a href="system.html" aria-current="page" style="--mk: var(--c-system)"><i>01</i> System</a>
+    <a href="moment.html" style="--mk: var(--c-moment)"><i>02</i> Moment</a>
+    <a href="work.html#decision" class="is-pending" style="--mk: var(--c-decision)"><i>03</i> Decision</a>
+    <a href="work.html#commitment" class="is-pending" style="--mk: var(--c-commitment)"><i>04</i> Commitment</a>
+  </nav>
+  <nav class="hdr-links" aria-label="Site">
+    <a href="work.html">Work</a>
+    <a href="index.html#about">About</a>
+    <a href="index.html#contact">Contact</a>
+  </nav>
+  <p class="hdr-here"><a href="work.html">Index</a> / 01 of 04 / System</p>
+</header>
+
+<main>
+  <!-- ============ opening ============ -->
+  <section class="open g" aria-labelledby="t">
+    <div class="open-side">
+      <p class="no"><i></i>01 / System</p>
+      <dl class="spec">
+        <div><dt>Found in</dt><dd>Leadrat CRM, global config</dd></div>
+        <div><dt>Role</dt><dd>Sole product designer</dd></div>
+        <div><dt>With</dt><dd>PM, backend engineer, QA, sales-ops</dd></div>
+        <div><dt>Scale</dt><dd>30–100 agents, 100–500 leads a day per org</dd></div>
+        <div><dt>Tools</dt><dd>Figma, FigJam, Jira</dd></div>
+        <div><dt>Status</dt><dd>Spec through dev handoff <span class="needs">NEEDS REAL INPUT: shipped? when?</span></dd></div>
+      </dl>
+    </div>
+    <h1 id="t" class="display">The algorithm <em>that decides who gets the next lead.</em></h1>
+    <p class="lede">Leadrat is the CRM real-estate brokerages run their sales on. Leads land from portals like MagicBricks and 99acres, and hundreds of times a day the system makes one quiet decision: <b>which agent gets this one.</b> I was asked for a settings screen. What I ended up designing was a way to make a mathematical guarantee legible to the person setting it up.</p>
+    <div class="open-cue">
+      <p>The system first. The screen comes last.</p>
+      <a href="#screen">Or skip to the screen ↓</a>
+    </div>
+  </section>
+
+  <!-- ============ 01.1 the question moved ============ -->
+  <section class="sec shift g rule-t" aria-labelledby="s1">
+    <p class="sec-no">01.1</p>
+    <div class="shift-q">
+      <p class="was"><small>The request</small><s>Who gets this lead?</s></p>
+      <span class="arrow" aria-hidden="true">→</span>
+      <p id="s1"><small>The actual question</small>How should leads from <em>this context</em> be distributed, fairly, without knowing how many will come?</p>
+    </div>
+    <div class="prose">
+      <p>Two requirements arrived together: a percentage-quota algorithm, and a global configuration screen to drive it and its round-robin sibling. Opening an integration's config showed a bare list: which login was connected, whether the sync had finished, who the relationship manager was. Nothing connected "here's an integration" to "here's how its leads split across my team". That logic didn't exist as a product surface yet.</p>
+      <p>Once assignment became a property of a <b>context</b> (a team, a project, a property) instead of a one-off decision, the gaps were easy to name.</p>
+    </div>
+    <ul class="gaps">
+      <li><b>No weighting</b><p>A brokerage that agreed a 50/30/20 split had nowhere to write it down. Everyone got 1-in-N.</p></li>
+      <li><b>No drift signal</b><p>Nobody could tell mid-morning whether an agent was ahead of or behind their share. You counted at day's end.</p></li>
+      <li><b>Four paths</b><p>By user, team, project and property were four mental models. A multi-project brokerage set up the same logic four times.</p></li>
+      <li><b>No trail</b><p>When a quota changed, nothing recorded who or when. That matters the day an agent asks why their count dropped.</p></li>
+    </ul>
+  </section>
+
+  <!-- ============ 01.2 the system ============ -->
+  <section class="sec map-sec" id="map" aria-labelledby="s2">
+    <div class="map-head g">
+      <p class="sec-no">01.2</p>
+      <h2 id="s2" class="h2">Five parts. <em>Only some of them have pixels.</em></h2>
+      <p class="prose">Read the same chain through different lenses. Each one is a question I had to answer before any screen made sense.</p>
+      <div class="lenses" role="tablist" aria-label="Lens">
+        <button role="tab" aria-selected="true" data-lens="does" id="lens-does" aria-controls="chain">What it does</button>
+        <button role="tab" aria-selected="false" data-lens="who" id="lens-who" aria-controls="chain" tabindex="-1">Who controls it</button>
+        <button role="tab" aria-selected="false" data-lens="breaks" id="lens-breaks" aria-controls="chain" tabindex="-1">What can go wrong</button>
+        <button role="tab" aria-selected="false" data-lens="log" id="lens-log" aria-controls="chain" tabindex="-1">What gets recorded</button>
+        <button role="tab" aria-selected="false" data-lens="pixels" id="lens-pixels" aria-controls="chain" tabindex="-1">What's on screen</button>
+      </div>
+    </div>
+    <div class="map">
+      <ol class="chain" id="chain" role="tabpanel" aria-live="polite" aria-labelledby="lens-does">
+        <li class="node" data-node="lead"><div class="node-box"><span class="ix">1</span><b>LEAD</b></div><div class="node-note"></div></li>
+        <li class="node" data-node="rules"><div class="node-box"><span class="ix">2</span><b>RULES</b></div><div class="node-note"></div></li>
+        <li class="node" data-node="assign"><div class="node-box"><span class="ix">3</span><b>ASSIGNMENT</b></div><div class="node-note"></div></li>
+        <li class="node" data-node="deficit"><div class="node-box"><span class="ix">4</span><b>DEFICIT</b></div><div class="node-note"></div></li>
+        <li class="node" data-node="agent"><div class="node-box"><span class="ix">5</span><b>AGENT</b></div><div class="node-note"></div></li>
+      </ol>
+    </div>
+    <div class="formula">
+      <p class="meta">The rule, whole</p>
+<pre>Expected(agent) = share% × leads so far
+Deficit(agent)  = Expected − Actual
+Next lead       → highest positive deficit
+Tie             → fewer total assignments so far  <span>// then alphabetical, per spec</span></pre>
+    </div>
+  </section>
+
+  <!-- ============ 01.3 the engine ============ -->
+  <section class="sec" aria-labelledby="s3">
+    <div class="eng-head g">
+      <p class="sec-no">01.3</p>
+      <h2 id="s3" class="h2">Try to break it. <em>It should correct itself.</em></h2>
+      <div class="prose">
+        <p>This is the same class of problem as sharing out parliamentary seats fairly before the final vote count is known. I adapted the largest-remainder idea to leads: on every lead, work out what each agent should have by now and give it to whoever is furthest behind.</p>
+        <p>Step through the spec's own example. Then change the split halfway through and watch what does and doesn't move.</p>
+      </div>
+    </div>
+    <div class="engine g">
+      <div class="eng-left">
+        <div class="split">
+          <div class="split-row split-top">
+            <span class="meta">Split</span>
+            <span class="meta" id="verLbl">Version 1 · set before lead 1</span>
+            <span></span>
+          </div>
+          <div class="split-row">
+            <div class="split-inputs" id="splitInputs">
+              <label>A <input type="number" inputmode="numeric" min="0" max="100" value="50" data-a="0" aria-label="Agent A share, percent">%</label>
+              <label>B <input type="number" inputmode="numeric" min="0" max="100" value="30" data-a="1" aria-label="Agent B share, percent">%</label>
+              <label>C <input type="number" inputmode="numeric" min="0" max="100" value="20" data-a="2" aria-label="Agent C share, percent">%</label>
+            </div>
+            <span class="total" id="total" aria-live="polite">= 100%</span>
+            <button class="btn" id="apply" type="button" disabled>Apply split</button>
+          </div>
+          <div class="split-row"><p class="lock-note" id="lockNote" style="grid-column: 1 / -1">Apply stays locked until the total reads exactly 100. It's the same rule as Save on the real screen.</p></div>
+        </div>
+
+        <div class="agents" id="agents" aria-label="Agents"></div>
+        <p class="eng-legend meta"><span><i></i>Leads actually assigned</span><span><i class="dash"></i>Where they should be by now</span></p>
+
+        <div class="controls">
+          <button class="btn primary" id="next" type="button">Assign next lead</button>
+          <button class="btn" id="run" type="button">Run to lead 10</button>
+          <button class="btn" id="reset" type="button">Reset</button>
+        </div>
+      </div>
+
+      <div class="eng-right">
+        <div class="log-h"><span class="meta">Assignment log</span><span class="meta" id="count">Lead 0</span></div>
+        <ol class="log" id="log" aria-live="polite"><li class="empty">Nothing assigned yet. The first lead always goes to the largest share. That matches intuition even at n = 1.</li></ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 01.4 the visible layer ============ -->
+  <section class="sec rule-t" id="screen" aria-labelledby="s4">
+    <div class="vis-head g">
+      <p class="sec-no">01.4</p>
+      <h2 id="s4" class="h2">Then the screen. <em>The visible layer of all that.</em></h2>
+      <div class="prose">
+        <p>The interface ended up small: two radio groups, a list of people and one number that has to read 100. The work was deciding which parts of the system deserved a pixel, and in what order an admin should meet them.</p>
+      </div>
+    </div>
+
+    <div class="entry-shot g">
+      <figure>
+        <img class="frame" src="img/leadrat/lr-00.png" width="1280" height="721" loading="lazy" alt="Leadrat Global Config screen listing integration accounts such as Zoho Corporation, Adani Limited and Jio Lab, with migration status and relationship manager columns.">
+        <figcaption><b>Entry point</b>Each row is one integration account. This is where an admin now opens lead-assignment rules for it.</figcaption>
+      </figure>
+      <p class="aside">Before this, the row led nowhere. Now it opens the rules for that integration's leads.</p>
+    </div>
+
+    <div class="viewer g">
+      <div class="matrix-wrap">
+        <p class="meta" style="margin-bottom: 10px">Every base × type, as designed</p>
+        <table class="matrix" aria-label="Choose a combination of assignment base and assignment type">
+          <thead><tr><th></th><th scope="col">User</th><th scope="col">Team</th><th scope="col">Proj.</th><th scope="col">Prop.</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">Seq.</th>
+              <td><button type="button" data-sheet="3" aria-pressed="false" aria-label="Sequential, User">03</button></td>
+              <td><button type="button" data-sheet="4" aria-pressed="false" aria-label="Sequential, Team">04</button></td>
+              <td><button type="button" data-sheet="5" aria-pressed="false" aria-label="Sequential, Project">05</button></td>
+              <td><button type="button" data-sheet="1" aria-pressed="false" aria-label="Sequential, Property">01</button></td>
+            </tr>
+            <tr><th scope="row">Pct.</th>
+              <td><button type="button" data-sheet="6" aria-pressed="true" aria-label="Percentage, User">06</button></td>
+              <td><button type="button" data-sheet="x" aria-pressed="false" class="missing" aria-label="Percentage, Team: not in the design file">—</button></td>
+              <td><button type="button" data-sheet="7" aria-pressed="false" aria-label="Percentage, Project">07</button></td>
+              <td><button type="button" data-sheet="2" aria-pressed="false" aria-label="Percentage, Property">02</button></td>
+            </tr>
+          </tbody>
+        </table>
+        <p class="matrix-note">Base first, then type (decision 01). Same panel for all four types, because all four resolve to a list of people (decision 02).</p>
+        <div class="addl">
+          <p class="meta">Additional config tab</p>
+          <div class="row">
+            <button type="button" data-sheet="8" aria-pressed="false">Default</button>
+            <button type="button" data-sheet="9" aria-pressed="false">Duplicates on</button>
+          </div>
+        </div>
+      </div>
+      <figure class="shot" aria-live="polite">
+        <div class="shot-img" id="shotImg"></div>
+        <figcaption id="shotCap"></figcaption>
+        <ol class="pins-legend" id="pinsLegend">
+          <li><span>1</span><div><b>Assignment base.</b> Which idea of fairness: rotation or quota. <span class="node-ref">→ RULES</span></div></li>
+          <li><span>2</span><div><b>Assignment type.</b> User, team, project or property. One panel for all four. <span class="node-ref">→ RULES</span></div></li>
+          <li><span>3</span><div><b>The share fields.</b> The only place the deficit engine has a face. <span class="node-ref">→ DEFICIT</span></div></li>
+          <li><span>4</span><div><b>Lead rotation.</b> Shift-based rotation within the team, off by default. <span class="node-ref">→ RULES</span></div></li>
+          <li class="warn"><span>5</span><div><b>Save &amp; Assign.</b> Mock data: six agents at 20% is 120%. Under the spec, this button is locked until the total reads 100. <span class="node-ref">→ THE LOCK</span></div></li>
+          <li><span>—</span><div><b>Not on this screen:</b> assignment itself, and the audit trail. The most important step has no interface. <span class="node-ref">→ ASSIGNMENT</span></div></li>
+        </ol>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ============ 01.5 decision log ============ -->
+  <section class="sec rule-t g" aria-labelledby="s5">
+    <div class="dlog-head" style="display: contents">
+      <p class="sec-no">01.5</p>
+      <h2 id="s5" class="h2">Six calls, <em>and what each one cost.</em></h2>
+    </div>
+    <div class="dlog">
+      <div class="dlog-cols meta" aria-hidden="true"><span>No.</span><span>Decision</span><span>Rejected</span><span>Cost</span><span></span></div>
+      <details>
+        <summary><span class="d-no">D01</span><span class="d-t">Base before type</span><span class="d-r"><s>One "type" dropdown with % fields bolted on for the percentage case</s></span><span class="d-c">One extra click for simple round-robin, every time</span><span class="d-x" aria-hidden="true">+</span></summary>
+        <p class="d-why">Sequential and percentage aren't two versions of one form. They're <b>two different ideas of fairness.</b> Asking "which idea?" first, then "assigned to what?", matches how an admin actually thinks about it.</p>
+      </details>
+      <details>
+        <summary><span class="d-no">D02</span><span class="d-t">Four types, one shape</span><span class="d-r"><s>Four separate flows, since each pulls from a different data source</s></span><span class="d-c">The panel has to adapt per type without becoming four screens in one</span><span class="d-x" aria-hidden="true">+</span></summary>
+        <p class="d-why">All four resolve to the same thing underneath: <b>a list of people.</b> One shared "selected" panel, with a light tag ("Aamor project") only where it adds information, let one screen replace four.</p>
+      </details>
+      <details>
+        <summary><span class="d-no">D03</span><span class="d-t">Running total always visible. Save locked.</span><span class="d-r"><s>Validate on Save, then an error toast</s></span><span class="d-c">A disabled Save reads as "broken" unless the gap to 100 is spelled out</span><span class="d-x" aria-hidden="true">+</span></summary>
+        <p class="d-why">The requirement was real-time feedback, not a post-submit error. The sum sits next to the inputs at all times, and <b>an invalid split can never reach the assignment engine, even for a second.</b></p>
+      </details>
+      <details>
+        <summary><span class="d-no">D04</span><span class="d-t">Additional config as its own tab</span><span class="d-r"><s>Two more checkboxes on the main panel</s></span><span class="d-c">An admin who does want duplicates finds them one tab away</span><span class="d-x" aria-hidden="true">+</span></summary>
+        <p class="d-why">Once duplicate handling needed its own owner list, its own sequencing toggle and its own selected-users view, <b>it had the weight of a second decision,</b> not a footnote to the first.</p>
+      </details>
+      <details>
+        <summary><span class="d-no">D05</span><span class="d-t">"Same as primary" on by default</span><span class="d-r"><s>Blank owner dropdowns to fill every time</s></span><span class="d-c">An org that wants a separate duplicate team has to notice and uncheck it</span><span class="d-x" aria-hidden="true">+</span></summary>
+        <p class="d-why">Most orgs want the same person handling a duplicate as handles the original lead. The default makes the common case <b>zero extra clicks.</b></p>
+      </details>
+      <details>
+        <summary><span class="d-no">D06</span><span class="d-t">Break ties on assignment count, not randomness</span><span class="d-r"><s>Alphabetical order, or a round-robin cycle. Both named in the spec.</s></span><span class="d-c">More state to track per agent</span><span class="d-x" aria-hidden="true">+</span></summary>
+        <p class="d-why">Every assignment is logged and can be questioned later, so I picked the tie-break that is also <b>an answer you can give out loud.</b> At lead 5, A and B both sit at +0.5; B gets it for having 1 lead against A's 2. An admin can explain that in one sentence. Alphabetical order can't be explained that way. You watched it happen in 01.3.</p>
+      </details>
+      <p class="dlog-foot">I presented this log to stakeholders and revised D03 and D05 after that review. <span class="needs">NEEDS REAL INPUT: what changed in D03 and D05?</span></p>
+    </div>
+  </section>
+
+  <!-- ============ 01.6 evidence ============ -->
+  <section class="sec rule-t g" aria-labelledby="s6">
+    <div class="ev-head" style="display: contents">
+      <p class="sec-no">01.6</p>
+      <h2 id="s6" class="h2">What I can claim, <em>and what I can't yet.</em></h2>
+    </div>
+    <div class="ev-body ledger">
+      <div class="l-measured">
+        <h4>Measured</h4>
+        <p class="empty">Nothing from a live account yet.</p>
+        <p><span class="needs">NEEDS REAL INPUT: any post-launch data?</span></p>
+      </div>
+      <div class="l-validated">
+        <h4>Validated</h4>
+        <p><b>In simulation, not production.</b> The spec's 50/30/20 example lands at exactly 5/3/2 by lead 10, with no rounding drift. This was the acceptance bar agreed with engineering before the interaction spec, and I ran it by hand before handoff.</p>
+        <p>Every base × type combination designed and checked before handoff, not only the happy path.</p>
+      </div>
+      <div class="l-target">
+        <h4>Design target</h4>
+        <p>An invalid split never reaches the engine.</p>
+        <p>Four assignment contexts in one configuration.</p>
+        <p>A quota change mid-day only steers future leads.</p>
+      </div>
+      <div class="l-hyp">
+        <h4>Hypothesis</h4>
+        <p>Fewer manual reassignment tickets.</p>
+        <p>Faster setup of a new integration.</p>
+        <p>Agents see assignment as fair.</p>
+        <p>Admins set up duplicates second, not first. That's why it lives in a tab.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 01.7 open ============ -->
+  <section class="sec rule-t g" aria-labelledby="s7">
+    <p class="sec-no">01.7</p>
+    <p class="close-q" id="s7">Designing the interface was the easy half. <em>The hard half was making a guarantee legible: showing an admin that a system with no idea of today's total is still converging.</em></p>
+    <ul class="open-list">
+      <li><b>What I'd change</b><p>The tie-break is fair but invisible. An agent can't see why they were skipped. A "why this agent" trace, built from the audit log that already exists, is the next real iteration.</p></li>
+      <li><b>What I'd test</b><p>Putting duplicates behind a tab was a bet. I'd sit in on a handful of first-time setups to confirm it instead of assuming it from the requirements.</p></li>
+      <li><b>Where engineering changed the design</b><p>Two leads in the same millisecond can't both read a stale count. Locking isn't a UI decision, but it changes what the UI is allowed to promise. Getting that early kept "applies immediately" honest.</p></li>
+    </ul>
+    <div class="role">
+      <h3 class="meta">My part</h3>
+      <ul>
+        <li>Turned two user stories and their acceptance criteria into one interaction model instead of two screens.</li>
+        <li>Pinned down the deficit formula, the tie-break and the concurrency behaviour with a backend engineer.</li>
+        <li>Defined the audit-log data model end to end: who, when, what changed.</li>
+        <li>Ran the algorithm by hand against the 10-lead example before a line of code existed.</li>
+      </ul>
+    </div>
+  </section>
+</main>
+
+<a class="next" href="moment.html">
+  <span class="meta">Next · 02 / Moment</span>
+  <span class="next-t">The 200 metres <em>after the map stops helping</em> →</span>
+</a>
+<footer class="foot">
+  <p class="meta">Vedanshi Singh · Bengaluru</p>
+  <p class="meta">Screens from the design file, shown as delivered</p>
+</footer>
+
+<script>
+(function () {
+  /* ------------------------------------------------------------------
+     1. The system map: one chain, read through five lenses.
+     ------------------------------------------------------------------ */
+  var LENS = {
+    does: {
+      lead: 'Arrives from a portal integration: MagicBricks, 99acres, Housing, or the brokerage\'s own site. <b>The system never knows how many will come today.</b>',
+      rules: 'Resolves the context (user, team, project or property) to <b>one list of people</b>, plus a base: rotation or quota.',
+      assign: 'Recomputes on every single lead. Nothing is pre-baked into a fixed cycle, so it works the same for 3 leads or 3,000.',
+      deficit: '<code>expected − actual</code> for each person. The largest gap wins. A tie goes to whoever has had fewer.',
+      agent: 'Receives the lead. Their running count <b>converges on their share</b> without anyone counting by hand.'
+    },
+    who: {
+      lead: 'Nobody. It arrives when it arrives.',
+      rules: '<b>The admin</b>, and only roles with explicit rights. Checked before the fields become editable, not just at the API.',
+      assign: '<b>The system.</b> The admin states intent; the engine applies it.',
+      deficit: 'The maths. The admin sees one number of it: the running total.',
+      agent: 'Can\'t choose. <b>Can dispute</b>, which is why every assignment has to be defensible afterwards.',
+      sys: ['assign', 'deficit']
+    },
+    breaks: {
+      lead: 'Two leads in the same millisecond both read a stale count. <b>Pushed back to engineering:</b> atomic increments and row-level locks.',
+      rules: 'A split totalling 97%. Two admins editing the same quota at once. Both need a lock, one in the UI, one in the database.',
+      assign: 'The split changes mid-day. <b>Only future leads follow it.</b> Nothing already assigned is reshuffled.',
+      deficit: 'A tie. At lead 5 of 50/30/20, A and B both sit at +0.5. Rounding instead would starve the smallest share for several leads at 34/33/33.',
+      agent: 'Low volume. At n = 1 the lead goes to the largest share, which matches what an admin expects.',
+      warn: ['lead', 'rules', 'assign', 'deficit', 'agent']
+    },
+    log: {
+      lead: 'Timestamped on arrival.',
+      rules: 'Every save is <b>versioned</b>: who, when, what changed. Append-only. Nothing logged can be edited or deleted.',
+      assign: 'Every assignment is logged and can be questioned later.',
+      deficit: 'Running totals per agent. The tie-break needs them.',
+      agent: '<b>Not yet:</b> an explanation. The log knows why; the agent can\'t see it.<span class="tag">Open question</span>',
+      open: ['agent']
+    },
+    pixels: {
+      lead: 'The integration row in Global Config. The way in.',
+      rules: 'Assignment base, then type. <b>Two radio groups.</b>',
+      assign: '<b>Nothing.</b> The most important step has no interface at all.',
+      deficit: 'One number: the running total, which must read 100. Plus a share field per person.',
+      agent: 'A list of selected people. Their assignment history lives in reports, not here.',
+      dim: ['assign']
+    }
+  };
+  var chain = document.getElementById('chain');
+  var nodes = chain.querySelectorAll('.node');
+  var tabs = document.querySelectorAll('.lenses [role="tab"]');
+  function setLens(key) {
+    var L = LENS[key];
+    tabs.forEach(function (t) { var on = t.dataset.lens === key; t.setAttribute('aria-selected', on); t.tabIndex = on ? 0 : -1; });
+    chain.setAttribute('aria-labelledby', 'lens-' + key);
+    chain.classList.remove('swap'); void chain.offsetWidth; chain.classList.add('swap');
+    nodes.forEach(function (n) {
+      var id = n.dataset.node;
+      n.querySelector('.node-note').innerHTML = L[id];
+      n.classList.toggle('is-sys', !!(L.sys && L.sys.indexOf(id) > -1));
+      n.classList.toggle('is-warn', !!(L.warn && L.warn.indexOf(id) > -1));
+      n.classList.toggle('is-dim', !!(L.dim && L.dim.indexOf(id) > -1));
+      n.classList.toggle('is-open', !!(L.open && L.open.indexOf(id) > -1));
+    });
+  }
+  tabs.forEach(function (t, i) {
+    t.addEventListener('click', function () { setLens(t.dataset.lens); });
+    t.addEventListener('keydown', function (e) {
+      var d = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+      if (!d) return;
+      var n = tabs[(i + d + tabs.length) % tabs.length]; n.focus(); setLens(n.dataset.lens);
+    });
+  });
+  setLens('does');
+
+  /* ------------------------------------------------------------------
+     2. The engine: deficit-based assignment, exactly as specified.
+     Expected = share × leads-so-far (including this one). Highest
+     positive deficit wins. Tie → fewer total assignments → alphabetical.
+     ------------------------------------------------------------------ */
+  var NAMES = ['A', 'B', 'C'];
+  var EPS = 1e-9;
+  var share, actual, total, version, lastHit;
+  var inputs = document.querySelectorAll('#splitInputs input');
+  var agentsEl = document.getElementById('agents');
+  var logEl = document.getElementById('log');
+  var applyBtn = document.getElementById('apply');
+  var totalEl = document.getElementById('total');
+  var lockNote = document.getElementById('lockNote');
+  var verLbl = document.getElementById('verLbl');
+  var countEl = document.getElementById('count');
+
+  function fmt(x) { if (Math.abs(x) < 0.005) return '0.00'; return (x > 0 ? '+' : '−') + Math.abs(x).toFixed(2); }
+
+  function build() {
+    agentsEl.innerHTML = NAMES.map(function (n, i) {
+      return '<div class="agent" data-i="' + i + '"><p class="a-name">Agent ' + n + '<small class="a-share"></small></p>' +
+        '<div class="a-track"><div class="a-slots"></div><span class="a-exp"></span></div>' +
+        '<p class="a-nums"><span>actual</span><span class="a-act"></span><span>expected</span><span class="a-ex"></span><span>deficit</span><span class="a-def"></span></p></div>';
+    }).join('');
+  }
+  function render(hit) {
+    var rows = agentsEl.querySelectorAll('.agent');
+    var slotW = 17;
+    rows.forEach(function (r, i) {
+      var exp = share[i] / 100 * total;
+      var def = exp - actual[i];
+      r.querySelector('.a-share').textContent = share[i] + '% share';
+      r.querySelector('.a-act').textContent = actual[i];
+      r.querySelector('.a-ex').textContent = exp.toFixed(2);
+      var d = r.querySelector('.a-def');
+      d.textContent = fmt(def); d.className = 'a-def ' + (def > 0.005 ? 'pos' : 'neg');
+      var slots = r.querySelector('.a-slots');
+      while (slots.children.length < actual[i]) { var s = document.createElement('i'); slots.appendChild(s); }
+      slots.querySelectorAll('i').forEach(function (s) { s.classList.remove('new'); });
+      if (hit === i && slots.lastElementChild) slots.lastElementChild.classList.add('new');
+      r.querySelector('.a-exp').style.left = (exp * slotW) + 'px';
+      r.classList.toggle('is-hit', hit === i);
+    });
+    countEl.textContent = 'Lead ' + total;
+  }
+  function logLine(html, cls) {
+    var empty = logEl.querySelector('.empty'); if (empty) empty.remove();
+    var li = document.createElement('li'); li.innerHTML = html; if (cls) li.className = cls;
+    logEl.insertBefore(li, logEl.firstChild);
+  }
+  function assign() {
+    total += 1;
+    var defs = share.map(function (s, i) { return s / 100 * total - actual[i]; });
+    var best = -Infinity;
+    defs.forEach(function (d) { if (d > best + EPS) best = d; });
+    var tied = []; defs.forEach(function (d, i) { if (Math.abs(d - best) < EPS) tied.push(i); });
+    var win = tied[0], note = '';
+    if (tied.length > 1) {
+      tied.sort(function (a, b) { return actual[a] - actual[b] || a - b; });
+      win = tied[0];
+      var others = tied.slice(1).map(function (i) { return NAMES[i] + ' has ' + actual[i]; }).join(', ');
+      note = '<br><em>Tie</em> between ' + tied.map(function (i) { return NAMES[i]; }).sort().join(' and ') + ' at ' + fmt(best) +
+        '. ' + NAMES[win] + ' has had ' + actual[win] + ', ' + others + '. Fewer wins.';
+    }
+    actual[win] += 1;
+    logLine('<b>L' + total + ' → ' + NAMES[win] + '</b>  deficits ' + defs.map(function (d, i) { return NAMES[i] + ' ' + fmt(d); }).join(' · ') + note, tied.length > 1 ? 'tie' : '');
+    render(win);
+  }
+  function reset() {
+    share = [50, 30, 20]; actual = [0, 0, 0]; total = 0; version = 1;
+    inputs.forEach(function (inp, i) { inp.value = share[i]; });
+    verLbl.textContent = 'Version 1 · set before lead 1';
+    logEl.innerHTML = '<li class="empty">Nothing assigned yet. The first lead always goes to the largest share. That matches intuition even at n = 1.</li>';
+    build(); render(null); checkSplit();
+  }
+  function readSplit() { return Array.prototype.map.call(inputs, function (inp) { var v = parseInt(inp.value, 10); return isNaN(v) ? NaN : v; }); }
+  function checkSplit() {
+    var v = readSplit();
+    var valid = v.every(function (x) { return !isNaN(x) && x >= 0 && x <= 100; });
+    var sum = v.reduce(function (a, b) { return a + (isNaN(b) ? 0 : b); }, 0);
+    var same = v.every(function (x, i) { return x === share[i]; });
+    totalEl.textContent = '= ' + sum + '%';
+    var ok = valid && sum === 100;
+    totalEl.classList.toggle('is-bad', !ok);
+    lockNote.classList.toggle('is-bad', !ok);
+    lockNote.textContent = !valid ? 'Whole numbers from 0 to 100 only. Errors show as you type, not after you press Apply.'
+      : sum !== 100 ? (sum < 100 ? (100 - sum) + '% unassigned. Apply stays locked until the total reads exactly 100.' : (sum - 100) + '% over. Apply stays locked until the total reads exactly 100.')
+      : same ? 'Apply stays locked until the total reads exactly 100. It\'s the same rule as Save on the real screen.'
+      : 'Valid. Applying creates version ' + (version + 1) + '. Leads already assigned won\'t move.';
+    applyBtn.disabled = !ok || same;
+  }
+  inputs.forEach(function (inp) { inp.addEventListener('input', checkSplit); });
+  applyBtn.addEventListener('click', function () {
+    share = readSplit(); version += 1;
+    verLbl.textContent = 'Version ' + version + ' · set after lead ' + total;
+    logLine('Split changed to ' + share.join('/') + ' after lead ' + total + '. Version ' + version + ' logged. ' + total + ' earlier lead' + (total === 1 ? '' : 's') + ' left where ' + (total === 1 ? 'it was' : 'they were') + '.', 'cfg');
+    render(null); checkSplit();
+  });
+  document.getElementById('next').addEventListener('click', assign);
+  document.getElementById('run').addEventListener('click', function () {
+    var target = total < 10 ? 10 : total + 10, btn = this; btn.disabled = true;
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    (function step() {
+      if (total >= target) { btn.disabled = false; btn.textContent = 'Run 10 more'; return; }
+      assign(); if (reduce) step(); else setTimeout(step, 260);
+    })();
+  });
+  document.getElementById('reset').addEventListener('click', function () { document.getElementById('run').textContent = 'Run to lead 10'; reset(); });
+  reset();
+
+  /* ------------------------------------------------------------------
+     3. The visible layer: every sheet in the design file.
+     ------------------------------------------------------------------ */
+  var SHEETS = {
+    1: ['lr-01', 'Sequential · Property', 'Plain rotation across the team assigned to a property.', 'Sequential based, Property assignment type, four selected users.'],
+    2: ['lr-02', 'Percentage · Property', 'The same property with share fields. The total sits at 40%, deliberately mid-entry.', 'Percentage based, Property assignment type, two selected users at 20 percent each.'],
+    3: ['lr-03', 'Sequential · User', 'Round robin across a hand-picked list of people.', 'Sequential based, Select User assignment type, eight selected users.'],
+    4: ['lr-04', 'Sequential · Team', 'Rotation switched off. The simplest possible state.', 'Sequential based, Select Team assignment type, eight selected team members, lead rotation off.'],
+    5: ['lr-05', 'Sequential · Project', 'Each person tagged with the project that put them on the list.', 'Sequential based, Project assignment type, four selected users tagged with Aamor project or Sandy project.'],
+    6: ['lr-06', 'Percentage · User', 'Six agents, six share fields, one running total.', 'Percentage based, Select User assignment type, six selected users each with a 20 percent field, lead rotation on, Save and Assign button.'],
+    7: ['lr-07', 'Percentage · Project', 'Share fields inherit the same project tags as the sequential version.', 'Percentage based, Project assignment type, three selected users at 20 percent tagged Aamor project.'],
+    8: ['lr-08', 'Additional config · default', 'Neither duplicate handling nor secondary users is on yet.', 'Additional config tab with real time duplicates and secondary users both unchecked.'],
+    9: ['lr-09', 'Additional config · duplicates on', 'Turning this on reveals exactly one new decision: who handles the duplicate. Same "assign sequentially" option as the main flow, so the mental model doesn\'t change.', 'Additional config with real time duplicates enabled, showing a lead duplicate users dropdown and an assign sequentially checkbox.']
+  };
+  var PINS6 = [[49.6, 25.8, '1'], [49.6, 38.4, '2'], [59.2, 60.3, '3'], [92.6, 74.6, '4'], [86.5, 96.2, '5', 'warn']];
+  var shotImg = document.getElementById('shotImg');
+  var shotCap = document.getElementById('shotCap');
+  var legend = document.getElementById('pinsLegend');
+  var sheetBtns = document.querySelectorAll('[data-sheet]');
+  function showSheet(k) {
+    sheetBtns.forEach(function (b) { b.setAttribute('aria-pressed', b.dataset.sheet === String(k)); });
+    if (k === 'x') {
+      shotImg.innerHTML = '<div class="shot-missing"><p>Percentage · Team has no sheet in the design file.<br><span class="needs">NEEDS REAL INPUT: add the screen, or say why it was skipped</span></p></div>';
+      shotCap.innerHTML = '<b>—</b>The one combination missing from the file.';
+      legend.hidden = true; return;
+    }
+    var s = SHEETS[k];
+    var html = '<img class="frame" src="img/leadrat/' + s[0] + '.png" width="1283" height="726" alt="' + s[3] + '">';
+    if (k === 6) html += PINS6.map(function (p) { return '<span class="pin' + (p[3] ? ' ' + p[3] : '') + '" style="left:' + p[0] + '%;top:' + p[1] + '%" aria-hidden="true">' + p[2] + '</span>'; }).join('');
+    shotImg.innerHTML = html;
+    shotCap.innerHTML = '<b>Sheet ' + String(k).padStart(2, '0') + '</b>' + s[1] + '. ' + s[2];
+    legend.hidden = k !== 6;
+  }
+  sheetBtns.forEach(function (b) { b.addEventListener('click', function () { showSheet(b.dataset.sheet === 'x' ? 'x' : +b.dataset.sheet); }); });
+  showSheet(6);
+})();
+</script>
+</body>
+</html>

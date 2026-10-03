@@ -9,27 +9,25 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&family=Familjen+Grotesk:ital,wght@0,400..700;1,400..700&family=Hanken+Grotesk:ital,wght@0,300..700;1,300..600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/base.css">
-<link rel="stylesheet" href="css/site.css?v=40">
-<script>try{document.documentElement.setAttribute("data-theme",localStorage.getItem("vsTheme8")||"light");}catch(e){document.documentElement.setAttribute("data-theme","light");}</script>
+<link rel="stylesheet" href="style.css?v=78">
+<script>document.documentElement.setAttribute("data-theme","light");</script>
 <script src="https://unpkg.com/@phosphor-icons/web@2.1.1" defer></script>
 </head>
 <body>
 <a href="#main" class="skip">Skip to content</a>
 <div class="grain" aria-hidden="true"></div>
-<div class="torch-global" id="torchG" aria-hidden="true"></div>
+<div class="cursor-glass" id="cursorGlass" aria-hidden="true"></div>
+<div class="cursor-plane" id="cursorPlane" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.7 2.3a1 1 0 0 0-1.03-.24L2.6 8.3a1 1 0 0 0-.07 1.87l7.56 3.1 3.1 7.56a1 1 0 0 0 1.87-.07l6.24-18.07a1 1 0 0 0-.24-1.03ZM11.1 12.9 5.6 10.64l12.73-4.4-7.23 6.66Zm2.3 7.3L11.14 14l6.66-7.23-4.4 12.73Z"/></svg></div>
+<div class="cursor-trail" id="cursorTrail" aria-hidden="true"></div>
 
 <nav class="nav" aria-label="Primary">
   <a href="#hero" class="mark" aria-label="Vedanshi Singh, home">VEDANSHI<span aria-hidden="true">.</span></a>
   <div class="nav-links">
-    <a href="about.html">About</a>
+    <a href="#intro" data-spy="intro">About</a>
     <a href="#work" data-spy="work">Work</a>
     <a href="#ask" data-spy="ask">Perspective</a>
   </div>
-  <div class="nav-end">
-    <a href="assets/docs/vedanshi-singh-resume.pdf" class="cta" target="_blank" rel="noopener"><i class="ph ph-file-arrow-down" aria-hidden="true"></i><span>Resume</span></a>
-    <button type="button" class="theme" data-theme-toggle aria-label="Toggle dark mode"><i class="ph ph-moon moon" aria-hidden="true"></i><i class="ph ph-sun sun" aria-hidden="true"></i></button>
-  </div>
+  <a href="assets/docs/vedanshi-singh-resume.pdf" class="cta" target="_blank" rel="noopener"><i class="ph ph-file-arrow-down" aria-hidden="true"></i><span>Resume</span></a>
 </nav>
 
 <main id="main">
@@ -41,20 +39,19 @@
     <div class="wrap hero-inner">
       <p class="hero-eyebrow mono">Product &middot; Systems &middot; Bengaluru</p>
       <h1 id="heroTitle">I design by asking <em>better questions.<svg class="doodle u-scribble" viewBox="0 0 300 14" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M3 9 C 60 2, 110 12, 160 6 S 260 4, 297 9"/></svg></em></h1>
-      <p class="hero-sub">Because the interesting part of a product usually isn't the screen. It's everything that led to it.</p>
+      <p class="hero-sub">Because the interesting part of a product usually is not the screen. It is everything that led to it.</p>
       <div class="hero-actions">
         <a class="btn btn-primary" href="#work">See the work <i class="ph ph-arrow-down" aria-hidden="true"></i></a>
-        <a class="btn btn-ghost" href="#contact">Let's talk</a>
+        <a class="btn btn-ghost" href="#contact">Let us talk</a>
       </div>
       <ul class="hero-strip mono"><li>4+ years</li><li>B2B products</li><li>Systems</li></ul>
       <p class="hero-status"><i aria-hidden="true"></i>Open to product design roles</p>
     </div>
-    <a class="keep-asking mono" href="#intro">Keep asking <i class="ph ph-arrow-down" aria-hidden="true"></i></a>
   </section>
 
   <!-- ============ 2. ABOUT: the photo, the way I start, the people I have worked with ============ -->
   <section class="intro" id="intro" aria-labelledby="introTitle">
-    <span class="dots-l" aria-hidden="true"></span><span class="dots-r" aria-hidden="true"></span><span class="moon-blob" aria-hidden="true"></span>
+    <span class="dots-l" aria-hidden="true"></span><span class="dots-r" aria-hidden="true"></span>
     <div class="wrap">
       <aside class="plan-note" aria-label="Today's plan">
         <span class="tape" aria-hidden="true"></span>
@@ -66,29 +63,25 @@
 
       <div class="intro-top">
         <figure class="photo" id="photo">
-          <svg class="p-rays" viewBox="0 0 60 60" aria-hidden="true"><path d="M8 40 L26 30 M14 22 L30 18 M28 8 L34 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>
           <span class="p-blob" aria-hidden="true"></span>
           <div class="p-card">
             <div class="p-face p-front"><img class="p-now" src="assets/photos/now-sm.webp" alt="Vedanshi outdoors in a park, laughing with a small dog in her arms" width="450" height="800" loading="lazy"></div>
             <div class="p-face p-back"><img class="p-then" src="" alt="Vedanshi as a toddler in a denim dress, standing in a garden" width="450" height="600" loading="lazy" hidden></div>
           </div>
-          <svg class="p-leaf" viewBox="0 0 80 150" aria-hidden="true"><path d="M40 148 C 38 100, 40 60, 46 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M42 118 C 20 116, 8 100, 8 86 C 26 88, 40 100, 42 118Z"/><path d="M42 92 C 64 90, 74 74, 74 60 C 56 62, 44 76, 42 92Z"/><path d="M44 62 C 24 58, 14 44, 16 30 C 32 32, 44 44, 44 62Z"/><path d="M46 36 C 64 32, 70 20, 68 8 C 54 10, 46 20, 46 36Z"/></g></svg>
-          <svg class="p-loop" viewBox="0 0 300 90" aria-hidden="true"><path d="M6 20 C 60 90, 200 96, 296 30" fill="none" stroke="currentColor" stroke-width="1.6" stroke-dasharray="4 6" stroke-linecap="round"/></svg>
-          <button class="p-flip" type="button" hidden aria-pressed="false"><i class="ph ph-arrows-left-right" aria-hidden="true"></i><span>Then</span></button>
-          <span class="p-hint mono" hidden>Move your cursor over the photo</span>
+          <button class="p-flip" type="button" hidden aria-pressed="false" aria-label="Show the childhood photo"><i class="ph ph-baby" aria-hidden="true"></i><span>Little me</span></button>
         </figure>
 
         <div class="intro-copy">
           <p class="hi reveal">Hi there!</p>
           <h2 id="introTitle" class="reveal">I never really switched careers.</h2>
           <p class="lead reveal">I just found a place where asking <b>"Why?"</b> became part of the job.</p>
-          <p class="start-l reveal">I usually start with</p>
-          <ol class="start-steps reveal" id="startSteps">
-            <li><i class="ph ph-chat-circle" aria-hidden="true"></i><b>Conversation</b><small>Real people, real insights</small></li>
-            <li><i class="ph ph-book-open" aria-hidden="true"></i><b>Notebook</b><small>Ideas, scribbles and chaos</small></li>
-            <li><i class="ph ph-chalkboard-simple" aria-hidden="true"></i><b>Whiteboard</b><small>Connecting ideas before pixels</small></li>
-            <li><i class="ph ph-shapes" aria-hidden="true"></i><b>Find patterns</b><small>I have killed more ideas</small></li>
-            <li><i class="ph ph-magnifying-glass" aria-hidden="true"></i><b>Research</b><small>Learning what doesn't work</small></li>
+          <div class="start-head reveal"><span class="start-eyebrow">How I usually start</span><span class="start-rule" aria-hidden="true"></span></div>
+          <ol class="start-steps" id="startSteps">
+            <li><span class="s-ic"><i class="ph-duotone ph-chats-circle" aria-hidden="true"></i></span><span class="s-n">01</span><b>Listen</b><small>Real people, real insights</small></li>
+            <li><span class="s-ic"><i class="ph-duotone ph-question" aria-hidden="true"></i></span><span class="s-n">02</span><b>Question</b><small>Find the thing worth solving</small></li>
+            <li><span class="s-ic"><i class="ph-duotone ph-tree-structure" aria-hidden="true"></i></span><span class="s-n">03</span><b>Make sense</b><small>Patterns and constraints</small></li>
+            <li><span class="s-ic"><i class="ph-duotone ph-pen-nib" aria-hidden="true"></i></span><span class="s-n">04</span><b>Make</b><small>Ideas before pixels</small></li>
+            <li><span class="s-ic"><i class="ph-duotone ph-flask" aria-hidden="true"></i></span><span class="s-n">05</span><b>Test</b><small>Learn what holds up</small></li>
           </ol>
         </div>
       </div>
@@ -101,36 +94,95 @@
           <li class="w-rsp"><img src="assets/logos/RSP.svg" alt="RSP" height="34"></li>
         </ul>
       </div>
-      <a class="down-cue" href="#work"><i class="ph ph-arrow-down" aria-hidden="true"></i>What questions do I have to solve?</a>
+    </div>
+  </section>
+
+  <!-- ============ THE SHIFT: a floor plan becomes a product screen ============ -->
+  <section class="arch" id="arch" aria-labelledby="archTitle">
+    <div class="wrap arch-pin">
+      <div class="arch-grid">
+        <div class="arch-copy">
+          <p class="mono">The shift, made visible</p>
+          <h2 id="archTitle" class="reveal">Same thinking, a different material.</h2>
+          <p class="reveal">Architecture starts with a floor plan, walls, dimensions, circulation, where to stand before anyone says a word. Product design asks the same question in a different material.</p>
+          <ol class="arch-steps" id="archSteps">
+            <li><button type="button" data-step="0" aria-pressed="true"><span class="n">01</span><span><b>Blueprint</b><small>Walls, dimensions, circulation.</small></span></button></li>
+            <li><button type="button" data-step="1" aria-pressed="false"><span class="n">02</span><span><b>Layout grid</b><small>Dimensions become a spacing system.</small></span></button></li>
+            <li><button type="button" data-step="2" aria-pressed="false"><span class="n">03</span><span><b>Components</b><small>Rooms become cards. Circulation becomes flow.</small></span></button></li>
+            <li><button type="button" data-step="3" aria-pressed="false"><span class="n">04</span><span><b>Interface</b><small>The same system, now a product screen.</small></span></button></li>
+          </ol>
+        </div>
+        <figure class="arch-stage">
+          <svg id="archMorph" viewBox="0 0 600 400" role="img" aria-labelledby="archSvgTitle">
+            <title id="archSvgTitle">A floor plan whose rooms move onto a grid, round into cards and fill in as a product interface</title>
+            <rect class="m-sheet" x="0" y="0" width="600" height="400" rx="14"/>
+            <g class="m-grid-fine"><path d="M40 0V400M80 0V400M120 0V400M160 0V400M200 0V400M240 0V400M280 0V400M320 0V400M360 0V400M400 0V400M440 0V400M480 0V400M520 0V400M560 0V400M0 40H600M0 80H600M0 120H600M0 160H600M0 200H600M0 240H600M0 280H600M0 320H600M0 360H600"/></g>
+            <g class="m-cols" opacity="0"><rect x="80" y="40" width="50" height="320"/><rect x="140" y="40" width="50" height="320"/><rect x="200" y="40" width="50" height="320"/><rect x="260" y="40" width="50" height="320"/><rect x="320" y="40" width="50" height="320"/><rect x="380" y="40" width="50" height="320"/><rect x="440" y="40" width="50" height="320"/><rect x="500" y="40" width="30" height="320"/></g>
+            <g class="m-tokens" opacity="0"><text x="80" y="30">8</text><text x="140" y="30">16</text><text x="200" y="30">24</text><text x="260" y="30">32</text><text x="320" y="30">40</text><text x="380" y="30">48</text><text x="440" y="30">64</text><text x="80" y="386" class="acc">SPACING SYSTEM &middot; 8PT</text></g>
+            <rect class="m-shell" x="60" y="50" width="480" height="300" rx="0" opacity="0"/>
+            <defs><clipPath id="archShellClip"><rect x="60" y="50" width="480" height="300" rx="16"/></clipPath></defs>
+            <rect class="m-bar" x="60" y="50" width="480" height="0" opacity="0" clip-path="url(#archShellClip)"/>
+            <rect class="m-room" id="mA" x="60" y="50" width="200" height="130"/>
+            <rect class="m-room" id="mB" x="260" y="50" width="280" height="70"/>
+            <rect class="m-room" id="mC" x="260" y="120" width="140" height="60"/>
+            <rect class="m-room" id="mD" x="400" y="120" width="140" height="60"/>
+            <rect class="m-room" id="mE" x="60" y="180" width="480" height="170"/>
+            <g class="m-plan">
+              <path class="m-door" d="M260 180 A 42 42 0 0 1 302 222"/><path class="m-door" d="M400 120 A 30 30 0 0 0 430 150"/>
+              <g class="m-dim"><path d="M60 30H540M60 24V36M540 24V36M36 50V350M30 50H42M30 350H42"/></g>
+              <text class="m-dimtxt" x="300" y="22" text-anchor="middle">12 000</text>
+              <text class="m-dimtxt" x="26" y="204" text-anchor="middle" transform="rotate(-90 26 204)">7 500</text>
+              <g class="m-lbl"><text x="80" y="78">LIVING</text><text x="280" y="78">KITCHEN</text><text x="280" y="148">STUDY</text><text x="420" y="148">BATH</text><text x="80" y="208">HALL + BEDROOMS</text></g>
+              <path class="m-circ" d="M300 372V300L230 260L160 210L150 150"/>
+            </g>
+            <g class="m-flow" opacity="0"><path d="M240 120H280M380 150H420M160 175V200"/><g class="m-clbl"><text x="96" y="100">CARD</text><text x="296" y="98">NAV</text><text x="296" y="161">ACTION</text><text x="96" y="222">LIST</text></g></g>
+            <g class="m-ui" opacity="0">
+              <circle cx="86" cy="72" r="5" class="u-acc"/><rect x="100" y="67" width="64" height="10" rx="5" class="u-soft-d"/><rect x="470" y="62" width="54" height="22" rx="11" class="u-acc"/>
+              <rect x="96" y="112" width="92" height="10" rx="5" class="u-ink"/><rect x="96" y="130" width="138" height="7" rx="3.5" class="u-soft"/><rect x="96" y="144" width="110" height="7" rx="3.5" class="u-soft"/>
+              <rect x="296" y="106" width="210" height="9" rx="4.5" class="u-ink"/><rect x="296" y="160" width="60" height="8" rx="4" class="u-ink"/><rect x="420" y="160" width="60" height="8" rx="4" class="u-ink"/>
+              <g class="u-rows">
+                <rect x="96" y="220" width="22" height="22" rx="6" class="u-acc"/><rect x="130" y="224" width="170" height="8" rx="4" class="u-ink"/><rect x="130" y="236" width="110" height="6" rx="3" class="u-soft"/><rect x="450" y="222" width="54" height="18" rx="9" class="u-ink"/>
+                <rect x="96" y="260" width="22" height="22" rx="6" class="u-acc2"/><rect x="130" y="264" width="150" height="8" rx="4" class="u-ink"/><rect x="130" y="276" width="96" height="6" rx="3" class="u-soft"/><rect x="450" y="262" width="54" height="18" rx="9" class="u-line"/>
+                <rect x="96" y="300" width="22" height="22" rx="6" class="u-acc2"/><rect x="130" y="304" width="180" height="8" rx="4" class="u-ink"/><rect x="130" y="316" width="120" height="6" rx="3" class="u-soft"/><rect x="450" y="302" width="54" height="18" rx="9" class="u-line"/>
+              </g>
+            </g>
+          </svg>
+          <figcaption class="arch-caption mono" id="archCaption" aria-live="polite">01 &middot; Blueprint</figcaption>
+        </figure>
+      </div>
     </div>
   </section>
 
   <!-- ============ WORK: the flagship case study, two questions still in progress ============ -->
   <section class="work" id="work" aria-labelledby="workTitle">
     <span class="sec-dots work-dots" aria-hidden="true"></span><span class="sec-blob work-blob" aria-hidden="true"></span>
+    <div class="world-backdrop" id="worldBackdrop" aria-hidden="true">
+      <span class="world-layer is-on" data-layer="leadrat"></span>
+      <span class="world-layer" data-layer="boardroom"></span>
+      <span class="world-layer" data-layer="lastmile"></span>
+      <span class="world-layer" data-layer="icici"></span>
+    </div>
     <div class="wrap work-head">
-      <h2 id="workTitle" class="reveal">Here are a few questions I have spent time answering.</h2>
+      <h2 id="workTitle" class="reveal">A few questions I have spent time answering.</h2>
       <p class="reveal">Product problems, systems and experiences I have worked on.</p>
-      <div class="wh-doodles" aria-hidden="true"><span class="q q1">?</span><span class="q q2">?</span><span class="q q3">?</span><svg class="doodle wh-arrow" viewBox="0 0 120 90"><path pathLength="1" d="M8 8 C 92 4, 112 42, 72 82 M72 82 L 64 63 M72 82 L 90 72"/></svg></div>
     </div>
 
     <div class="stack" id="stack">
       <!-- Leadrat -->
-      <article class="stack-card" aria-labelledby="c1t">
+      <article class="stack-card" data-world="leadrat" aria-labelledby="c1t">
         <div class="wrap card-grid">
           <div class="card-copy">
-            <div class="tags"><span class="tag">B2B SaaS</span><span class="tag">CRM</span><span class="tag">Workflow Design</span><span class="tag">Algorithm UX</span></div>
-            <h3 class="card-q" id="c1t">The problem wasn't assigning leads. <em>It was controlling how they were distributed.</em></h3>
-            <p class="card-d">Different teams needed different ways to split incoming leads &mdash; by user, team, property or project. I designed one global configuration system for all of it, with sequential and percentage-based distribution built in.</p>
-            <p class="meta-line mono">Sole Product Designer &middot; with PM + Engineering &middot; Global Lead Assignment</p>
+            <div class="tags"><span class="tag">B2B SaaS</span><span class="tag">CRM</span><span class="tag">Workflow Design</span></div>
+            <h3 class="card-q" id="c1t">Giving managers more control over how leads are assigned</h3>
+            <p class="card-d">Leadrat is a CRM used by real estate brokerages to manage their sales pipeline. Leads were automatically assigned one after another but some teams needed to distribute them differently based on their sales team's capacity. I designed a way to set those rules without manually assigning every lead.</p>
+            <p class="meta-line mono">Sole Product Designer &middot; with PM and Engineering</p>
             <div class="proof">
-              <div><b>4 &rarr; 1</b><span>assignment contexts (user, team, property, project) brought into one configuration</span></div>
-              <div><b>50 / 30 / 20</b><span>example percentage-based allocation from the spec</span></div>
-              <div><b>100%</b><span>required total before Save unlocks</span></div>
+              <div><b>4</b><span>places to set a rule: user, team, property or project</span></div>
+              <div><b>2</b><span>ways to share leads: in turns or by percentage</span></div>
+              <div><b>5</b><span>questions, one at a time, to set a rule</span></div>
             </div>
             <div class="card-ctas">
               <a class="btn btn-primary" href="work-leadrat.html">Read the case study <i class="ph ph-arrow-right" aria-hidden="true"></i></a>
-              <button class="explore-cue" type="button" data-explore="demoLeads"><i class="ph ph-arrow-down" aria-hidden="true"></i>Explore the interaction</button>
             </div>
           </div>
           <div class="demo" id="demoLeads">
@@ -146,7 +198,7 @@
 
             <div class="pane" data-pane="problem">
               <div class="prob" id="prob">
-                <div class="prob-lead"><span class="pl-ic" aria-hidden="true"><i class="ph ph-user-plus"></i></span><span><b>A new lead comes in</b><small>Illustrative example</small></span></div>
+                <div class="prob-lead"><span class="pl-ic" aria-hidden="true"><i class="ph ph-user-plus"></i></span><span><b>A new lead comes in</b><small>Every new lead needs an owner</small></span></div>
                 <ul class="prob-rules">
                   <li><span class="r-name"><i class="ph ph-user" aria-hidden="true"></i>Primary user</span><span class="r-arrow" aria-hidden="true"></span><span class="r-own">Agent A</span></li>
                   <li><span class="r-name"><i class="ph ph-users" aria-hidden="true"></i>Secondary user <small>(fallback)</small></span><span class="r-arrow" aria-hidden="true"></span><span class="r-own">Agent B</span></li>
@@ -163,7 +215,7 @@
                 </div>
                 <div class="fix-frame" data-frame="1" hidden>
                   <div class="pill-row"><span class="lbl">Assignment type</span><div class="pills sm"><span class="pill is-on">User</span><span class="pill">Team</span><span class="pill">Property</span><span class="pill">Project</span></div></div>
-                  <div class="chk-row"><label><input type="checkbox" checked disabled aria-hidden="true">Real-time duplicates</label><label><input type="checkbox" checked disabled aria-hidden="true">Secondary users</label></div>
+                  <div class="chk-row"><label><input type="checkbox" checked disabled aria-hidden="true">Real time duplicates</label><label><input type="checkbox" checked disabled aria-hidden="true">Secondary users</label></div>
                 </div>
                 <div class="fix-frame" data-frame="2" hidden>
                   <div class="rotation-row"><span class="lbl">Lead rotation</span><span class="rot-toggle" id="rotToggle"><i></i><b>Disabled</b></span></div>
@@ -191,57 +243,230 @@
               <figure class="shot annot-shot">
                 <div class="shot-chrome" aria-hidden="true"><i></i><i></i><i></i><span>leadrat &middot; global config</span></div>
                 <div class="shot-img-wrap">
-                  <img src="assets/case-study/sheet-06.webp" alt="Percentage-based assignment config screen showing six agents each set to a live quota field" width="1283" height="726" loading="lazy">
+                  <img src="assets/case-study/sheet-06.webp" alt="Percentage based assignment config screen showing six agents each set to a live quota field" width="1283" height="726" loading="lazy">
                   <span class="ann" style="left:49.7%;top:22.8%" aria-hidden="true">1</span>
                   <span class="ann" style="left:49.7%;top:36.4%" aria-hidden="true">2</span>
                   <span class="ann" style="left:49.7%;top:71%" aria-hidden="true">3</span>
                 </div>
               </figure>
-              <p class="demo-note ann-legend"><b>1</b> Assignment base &nbsp;&middot;&nbsp; <b>2</b> Assignment type &nbsp;&middot;&nbsp; <b>3</b> Lead rotation</p>
+              <ol class="ann-key" aria-label="Screen annotations">
+                <li><span class="ak-n">1</span><div><b>Assignment base</b><span>Sequential or percentage based</span></div></li>
+                <li><span class="ak-n">2</span><div><b>Assignment type</b><span>User, team, property or project</span></div></li>
+                <li><span class="ak-n">3</span><div><b>Lead rotation</b><span>Optional, by shift time</span></div></li>
+              </ol>
             </div>
           </div>
         </div>
       </article>
-    </div>
 
-    <div class="wrap more-head"><p class="mono">Two more questions</p><span class="more-rule" aria-hidden="true"></span></div>
-
-    <div class="wrap work-more">
       <!-- Boardroom AI -->
-      <article class="more-card more-reveal" aria-labelledby="c2t">
-        <div class="tags"><span class="tag">AI product</span><span class="tag">Decision design</span></div>
-        <h3 class="card-q" id="c2t">Why do bad ideas survive meetings?</h3>
-        <p class="card-d">Exploring groupthink, decision rituals and how to build a better filter for ideas.</p>
-        <div class="demo" id="demoMeeting">
-          <div class="demo-head"><span>Run the meeting</span><button class="demo-btn" type="button" data-run>Start</button></div>
-          <p class="demo-note">Dots show how strong each idea is. Watch what the room does.</p>
-          <ul class="ideas">
-            <li data-idea="A" data-merit="4"><b>Idea A</b><span class="merit"></span><span class="voice"></span></li>
-            <li data-idea="B" data-merit="2"><b>Idea B</b><span class="merit"></span><span class="voice"></span></li>
-            <li data-idea="C" data-merit="5"><b>Idea C</b><span class="merit"></span><span class="voice"></span></li>
-            <li data-idea="D" data-merit="3"><b>Idea D</b><span class="merit"></span><span class="voice"></span></li>
-          </ul>
-          <p class="demo-out" aria-live="polite">Four ideas walk into a meeting. Only one walks out.</p>
-        </div>
-        <a class="more-link mono" href="work-boardroom-ai.html">Read the case study <i class="ph ph-arrow-right" aria-hidden="true"></i></a>
-      </article>
-      <!-- Margin -->
-      <article class="more-card more-reveal" aria-labelledby="c3t">
-        <div class="tags"><span class="tag">Fintech</span><span class="tag">Behavioural design</span></div>
-        <h3 class="card-q" id="c3t">Why can't people tell if they can afford something?</h3>
-        <p class="card-d">Understanding the psychology of money decisions and building confidence, not just calculations.</p>
-        <div class="demo" id="demoAfford">
-          <div class="demo-head"><span>Can I afford this?</span></div>
-          <p class="demo-note">Move the price and compare what the maths says with how it feels.</p>
-          <label class="price-label" for="priceRange">Price <output id="priceOut">₹18,000</output></label>
-          <input type="range" id="priceRange" min="1000" max="60000" step="500" value="18000">
-          <div class="verdicts">
-            <div class="verdict"><span>The maths</span><b id="mathSays">Yes. You have ₹42,000 left this month.</b></div>
-            <div class="verdict"><span>How it feels</span><div class="gauge" aria-hidden="true"><i id="feelNeedle"></i></div><b id="feelSays">Not sure.</b></div>
+      <article class="stack-card" data-world="boardroom" aria-labelledby="c2t">
+        <div class="wrap card-grid">
+          <div class="card-copy">
+            <div class="tags"><span class="tag">AI product</span><span class="tag">Decision design</span></div>
+            <h3 class="card-q" id="c2t">Why do bad ideas survive meetings?</h3>
+            <p class="card-d">Good product ideas rarely die because nobody had them. They stall because the right perspectives were not in the room while the idea was still flexible. Boardroom AI is a working prototype that puts an idea in front of six conflicting perspectives in a single sitting. They question it, argue with each other and end with a verdict on what to do first. I designed how that room behaves, not only how it looks.</p>
+            <div class="proof">
+              <div><b>6</b><span>perspectives, each asking a different question</span></div>
+              <div><b>8</b><span>behaviour rules written into every seat</span></div>
+              <div><b>3</b><span>debate stages, from first reaction to a clear next step</span></div>
+            </div>
+            <div class="card-ctas">
+              <a class="btn btn-primary" href="work-boardroom-ai.html">Read the case study <i class="ph ph-arrow-right" aria-hidden="true"></i></a>
+            </div>
           </div>
-          <p class="demo-out">It's not the maths. It's the confidence.</p>
+          <div class="demo" id="demoMeeting">
+            <div class="demo-head"><span>Run the meeting</span><button class="demo-btn" type="button" data-run>Start</button></div>
+            <p class="demo-note">Dots show how strong each idea is. Watch what the room does.</p>
+            <ul class="ideas">
+              <li data-idea="A" data-merit="4"><b>Idea A</b><span class="merit"></span><span class="voice"></span></li>
+              <li data-idea="B" data-merit="2"><b>Idea B</b><span class="merit"></span><span class="voice"></span></li>
+              <li data-idea="C" data-merit="5"><b>Idea C</b><span class="merit"></span><span class="voice"></span></li>
+              <li data-idea="D" data-merit="3"><b>Idea D</b><span class="merit"></span><span class="voice"></span></li>
+            </ul>
+            <p class="demo-out" aria-live="polite">Four ideas walk into a meeting. Only one walks out.</p>
+          </div>
         </div>
-        <span class="soon">Case study in progress</span>
+      </article>
+
+      <!-- Last Mile -->
+      <article class="stack-card" data-world="lastmile" aria-labelledby="c3t">
+        <div class="wrap card-grid">
+          <div class="card-copy">
+            <div class="tags"><span class="tag">60 second experience</span><span class="tag">Mobile product</span></div>
+            <h3 class="card-q" id="c3t">Know what to do before you step off the train</h3>
+            <p class="card-d">Maps gets you to the city. It leaves the station itself to guesswork. I designed a 60 second mobile experience for travellers new to a city. It prepares you before you arrive, then guides you in a glance once you do, and sends you towards local transport instead of replacing it.</p>
+            <p class="meta-line mono">Sole Product Designer &middot; KSR Bengaluru</p>
+            <div class="proof">
+              <div><b>60s</b><span>the window this designs for, from train door to next ride</span></div>
+              <div><b>4</b><span>transport modes compared side by side</span></div>
+              <div><b>10s</b><span>decision time target, not yet measured</span></div>
+            </div>
+            <div class="card-ctas">
+              <a class="btn btn-primary" href="work-lastmile.html">Read the case study <i class="ph ph-arrow-right" aria-hidden="true"></i></a>
+            </div>
+          </div>
+          <div class="demo" id="demoLastmile">
+            <div class="demo-head">
+              <div class="demo-tabs" role="tablist" aria-label="Last Mile demo views">
+                <button role="tab" type="button" aria-selected="true" data-pane="problem">The problem</button>
+                <button role="tab" type="button" aria-selected="false" data-pane="fix">The fix</button>
+                <button role="tab" type="button" aria-selected="false" data-pane="screen">Real screen</button>
+              </div>
+              <button class="demo-btn" type="button" data-run>Replay</button>
+            </div>
+            <div class="demo-progress" aria-hidden="true"><span data-seg="problem"><i></i></span><span data-seg="fix"><i></i></span><span data-seg="screen"><i></i></span></div>
+
+            <div class="pane" data-pane="problem">
+              <div class="prob" id="lmProb">
+                <div class="prob-lead"><span class="pl-ic" aria-hidden="true"><i class="ph ph-train"></i></span><span><b>You step off the train</b><small>KSR Bengaluru</small></span></div>
+                <ul class="prob-rules" id="lmRules">
+                  <li><span class="r-name"><i class="ph ph-sign-out" aria-hidden="true"></i>Which exit?</span><span class="r-arrow" aria-hidden="true"></span><span class="r-own">Exit 1, 2 or 3?</span></li>
+                  <li><span class="r-name"><i class="ph ph-bus" aria-hidden="true"></i>Where is the bus?</span><span class="r-arrow" aria-hidden="true"></span><span class="r-own">Which gate?</span></li>
+                  <li><span class="r-name"><i class="ph ph-currency-inr" aria-hidden="true"></i>Bus, metro or cab?</span><span class="r-arrow" aria-hidden="true"></span><span class="r-own">&#8377;350 or &#8377;20?</span></li>
+                </ul>
+                <p class="prob-out" aria-live="polite">Arrived. Still no idea which way.</p>
+              </div>
+            </div>
+
+            <div class="pane" data-pane="fix" hidden>
+              <div class="fix-stage" id="lmFix">
+                <div class="fix-frame" data-frame="0">
+                  <p class="fix-cap">1. Before you arrive, pick where you are going.</p>
+                  <ul class="lm-dests">
+                    <li data-key>Indiranagar<small>Popular</small></li>
+                    <li>MG Road<small>Popular</small></li>
+                    <li>Koramangala<small>Popular</small></li>
+                  </ul>
+                </div>
+                <div class="fix-frame" data-frame="1" hidden>
+                  <p class="fix-cap">2. Understand every option side by side.</p>
+                  <ul class="lm-dests">
+                    <li data-key>Metro<b>&#8377;40 &middot; 28 min</b></li>
+                    <li>City bus<b>&#8377;12 &middot; 50 min</b></li>
+                    <li>Auto<b>&#8377;90 &middot; 40 min</b></li>
+                    <li>Cab<b>&#8377;200 &middot; 35 min</b></li>
+                  </ul>
+                </div>
+                <div class="fix-frame" data-frame="2" hidden>
+                  <p class="fix-cap">3. On arrival, one glance tells you where to go.</p>
+                  <ul class="lm-dests">
+                    <li data-key>Exit Platform 6<b>Step 1</b></li>
+                    <li>Follow Metro signs<b>Step 2</b></li>
+                    <li>Walk 200 m<b>Step 3</b></li>
+                  </ul>
+                  <p class="fix-micro">Metro to Indiranagar.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="pane" data-pane="screen" hidden>
+              <div class="lm-real">
+                <div class="lm-phone">
+                  <img src="assets/lastmile/last-mile-ui-2.webp" alt="Last Mile transport options for Indiranagar: metro, city bus, auto rickshaw and cab as stacked cards with fare, time and walking distance" width="923" height="2000" loading="lazy">
+                  <span class="ann" style="left:50%;top:28.5%" aria-hidden="true">1</span>
+                  <span class="ann" style="left:88%;top:45%" aria-hidden="true">2</span>
+                  <span class="ann" style="left:80%;top:94%" aria-hidden="true">3</span>
+                </div>
+                <ol class="ann-key lm-key" aria-label="Screen annotations">
+                  <li><span class="ak-n">1</span><div><b>Fare, time and walk on every card</b><span>Understood in one look</span></div></li>
+                  <li><span class="ak-n">2</span><div><b>All four modes in one list</b><span>Compare before choosing</span></div></li>
+                  <li><span class="ak-n">3</span><div><b>One clear next step</b><span>Directions follow the choice</span></div></li>
+                </ol>
+              </div>
+            </div>
+          
+          </div>
+        </div>
+      </article>
+      <!-- Fixed Deposit -->
+      <article class="stack-card" data-world="icici" aria-labelledby="c4t">
+        <div class="wrap card-grid">
+          <div class="card-copy">
+            <div class="tags"><span class="tag">Fintech</span><span class="tag">Consumer UX</span></div>
+            <h3 class="card-q" id="c4t">People could open an FD. They just could not easily understand the decision.</h3>
+            <p class="card-d">Opening a Fixed Deposit is easy. Feeling sure about it is not. Before committing their money, people wanted clear answers to three questions: what will I get back, how long is my money locked, and what happens after it matures. In the existing flow those answers arrived late, or on screens away from the decision. I redesigned the experience so people understand the outcome before they commit.</p>
+            <p class="meta-line mono">Product Designer &middot; Independent concept redesign</p>
+            <div class="proof">
+              <div><b>2</b><span>existing FD users interviewed</span></div>
+              <div><b>3</b><span>uncertainties found</span></div>
+              <div><b>3</b><span>design decisions that answer them</span></div>
+            </div>
+            <div class="card-ctas">
+              <a class="btn btn-primary" href="work-fd.html">Read the case study <i class="ph ph-arrow-right" aria-hidden="true"></i></a>
+            </div>
+          </div>
+          <div class="demo" id="demoFd">
+            <div class="demo-head">
+              <div class="demo-tabs" role="tablist" aria-label="Fixed Deposit demo views">
+                <button role="tab" type="button" aria-selected="true" data-pane="problem">The problem</button>
+                <button role="tab" type="button" aria-selected="false" data-pane="fix">The fix</button>
+                <button role="tab" type="button" aria-selected="false" data-pane="screen">Real screen</button>
+              </div>
+              <button class="demo-btn" type="button" data-run>Replay</button>
+            </div>
+            <div class="demo-progress" aria-hidden="true"><span data-seg="problem"><i></i></span><span data-seg="fix"><i></i></span><span data-seg="screen"><i></i></span></div>
+
+            <div class="pane" data-pane="problem">
+              <div class="prob" id="fdProb">
+                <div class="prob-lead"><span class="pl-ic" aria-hidden="true"><i class="ph ph-piggy-bank"></i></span><span><b>Open a Fixed Deposit</b><small>The questions people had</small></span></div>
+                <ul class="prob-rules" id="fdRules">
+                  <li><span class="r-name"><i class="ph ph-coins" aria-hidden="true"></i>What will I get back?</span><span class="r-arrow" aria-hidden="true"></span><span class="r-own">&#8377;??,???</span></li>
+                  <li><span class="r-name"><i class="ph ph-hourglass-medium" aria-hidden="true"></i>How long is it locked?</span><span class="r-arrow" aria-hidden="true"></span><span class="r-own">? months</span></li>
+                  <li><span class="r-name"><i class="ph ph-arrows-clockwise" aria-hidden="true"></i>What happens after?</span><span class="r-arrow" aria-hidden="true"></span><span class="r-own">Renews?</span></li>
+                </ul>
+                <p class="prob-out" aria-live="polite">Three questions, and none are answered where the decision is made.</p>
+              </div>
+            </div>
+
+            <div class="pane" data-pane="fix" hidden>
+              <div class="fix-stage" id="fdFix">
+                <div class="fix-frame" data-frame="0">
+                  <p class="fix-cap">1. See the outcome while you decide.</p>
+                  <ul class="lm-dests">
+                    <li>Deposit<b>&#8377;50,000</b></li>
+                    <li data-key>Maturity amount<b>&#8377;53,725</b></li>
+                    <li>Total gains<b>&#8377;3,725</b></li>
+                  </ul>
+                </div>
+                <div class="fix-frame" data-frame="1" hidden>
+                  <p class="fix-cap">2. Compare tenures in one column.</p>
+                  <ul class="lm-dests">
+                    <li data-key>1 year<b>7.25%</b></li>
+                    <li>3 years<b>7.25%</b></li>
+                    <li>5 years<b>7.90%</b></li>
+                    <li>10 years<b>8.80%</b></li>
+                  </ul>
+                </div>
+                <div class="fix-frame" data-frame="2" hidden>
+                  <p class="fix-cap">3. Review once, then commit.</p>
+                  <ul class="lm-dests">
+                    <li>Tenure<b>1 year 23 days</b></li>
+                    <li>Interest rate<b>7.25% p.a.</b></li>
+                    <li data-key>Auto renew at maturity<b>Yes</b></li>
+                  </ul>
+                  <p class="fix-micro">Book FD is the only commitment.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="pane" data-pane="screen" hidden>
+              <div class="lm-real">
+                <div class="lm-phone">
+                  <img src="assets/fd/fd-amount-returns.webp" alt="Redesigned FD deposit screen: 50,000 rupees entered with the maturity amount 53,725 rupees and total gains 3,725 rupees directly below, then tenure, interest rate, annual yield and an auto renew switch" width="1500" height="3248" loading="lazy">
+                  <span class="ann" style="left:86%;top:44.2%" aria-hidden="true">1</span>
+                  <span class="ann" style="left:50%;top:55.2%" aria-hidden="true">2</span>
+                  <span class="ann" style="left:86%;top:64.5%" aria-hidden="true">3</span>
+                </div>
+                <ol class="ann-key lm-key" aria-label="Screen annotations">
+                  <li><span class="ak-n">1</span><div><b>Maturity and gains</b><span>Right beside the amount</span></div></li>
+                  <li><span class="ak-n">2</span><div><b>Rate and yield</b><span>Attached to the tenure</span></div></li>
+                  <li><span class="ak-n">3</span><div><b>Auto renewal</b><span>A visible switch, not buried</span></div></li>
+                </ol>
+              </div>
+            </div>
+          </div>
+        </div>
       </article>
     </div>
   </section>
@@ -251,7 +476,7 @@
     <span class="sec-dots ask-dots" aria-hidden="true"></span><span class="sec-blob ask-blob" aria-hidden="true"></span>
     <div class="wrap">
       <div class="ask-head">
-        <h2 id="askTitle" class="reveal">Don't take my word for it.</h2>
+        <h2 id="askTitle" class="reveal">Do not take my word for it.</h2>
         <p class="reveal">What the people I have worked with say, and what the AI tools I work with said too.</p>
       </div>
       <div class="ask-tabs" role="tablist" aria-label="Perspective views" hidden>
@@ -269,30 +494,51 @@
             </li>
             -->
             <li class="quote-card">
-              <header class="q-head"><span class="q-avatar" aria-hidden="true">KR</span><div><b>Karthik Rajeev</b><span>Senior Product Designer</span></div><i class="ph ph-quotes q-mark" aria-hidden="true"></i></header>
+              <header class="q-head"><span class="q-avatar"><img src="assets/people/karthik-rajeev.jpg" alt="" loading="lazy"></span><div><b>Karthik Rajeev</b><span>Senior Product Designer</span></div><i class="ph ph-quotes q-mark" aria-hidden="true"></i></header>
               <blockquote>
-                <p>Seeing her eventually grow into someone who could lead the design team at Leadrat is something I&rsquo;m genuinely proud of. She is the kind of designer who doesn&rsquo;t just execute requirements, she gets involved in the problem, challenges assumptions, and takes responsibility for finding a better solution.</p>
+                <p>Seeing her eventually grow into someone who could lead the design team at Leadrat is something I am genuinely proud of. She is the kind of designer who does not just execute requirements, she gets involved in the problem, challenges assumptions, and takes responsibility for finding a better solution.</p>
               </blockquote>
               <p class="q-context"><i class="ph ph-link-simple" aria-hidden="true"></i>Managed Vedanshi directly</p>
             </li>
             <li class="quote-card">
-              <header class="q-head"><span class="q-avatar" aria-hidden="true">KR</span><div><b>Kiran Rajput</b><span>Senior AI Product Manager</span></div><i class="ph ph-quotes q-mark" aria-hidden="true"></i></header>
+              <header class="q-head"><span class="q-avatar"><img src="assets/people/kiran-rajput.jpg" alt="" loading="lazy"></span><div><b>Kiran Rajput</b><span>Senior AI Product Manager</span></div><i class="ph ph-quotes q-mark" aria-hidden="true"></i></header>
               <blockquote>
-                <p>Vedanshi has a rare ability to translate complex product requirements into clean, intuitive, and user-friendly designs.</p>
+                <p>Vedanshi has a rare ability to translate complex product requirements into clean, intuitive, and user friendly designs.</p>
               </blockquote>
               <p class="q-context"><i class="ph ph-link-simple" aria-hidden="true"></i>Worked with Vedanshi on different teams</p>
             </li>
             <li class="quote-card">
-              <header class="q-head"><span class="q-avatar" aria-hidden="true">MP</span><div><b>Mounika P</b><span>Senior Full Stack Developer</span></div><i class="ph ph-quotes q-mark" aria-hidden="true"></i></header>
+              <header class="q-head"><span class="q-avatar"><img src="assets/people/mounika-p.jpg" alt="" loading="lazy"></span><div><b>Mounika P</b><span>Senior Full Stack Developer</span></div><i class="ph ph-quotes q-mark" aria-hidden="true"></i></header>
               <blockquote>
                 <p>&hellip;Vedanshi had this ability to step back, understand the real problem, and turn it into something simple, intuitive, and meaningful for the user.</p>
               </blockquote>
               <p class="q-context"><i class="ph ph-link-simple" aria-hidden="true"></i>Worked with Vedanshi on the same team</p>
             </li>
             <li class="quote-card">
-              <header class="q-head"><span class="q-avatar" aria-hidden="true">SN</span><div><b>SK Nowlak</b><span>QA Lead, SDET</span></div><i class="ph ph-quotes q-mark" aria-hidden="true"></i></header>
+              <header class="q-head"><span class="q-avatar"><img src="assets/people/sk-nowlak.jpg" alt="" loading="lazy"></span><div><b>SK Nowlak</b><span>QA Lead, SDET</span></div><i class="ph ph-quotes q-mark" aria-hidden="true"></i></header>
               <blockquote>
-                <p>What truly stands out about her is her creativity, ownership, and way of thinking. She approaches every task as if the product were her own&mdash;not just as someone working for the company.</p>
+                <p>What truly stands out about her is her creativity, ownership, and way of thinking. She approaches every task as if the product were her own, not just as someone working for the company.</p>
+              </blockquote>
+              <p class="q-context"><i class="ph ph-link-simple" aria-hidden="true"></i>Worked with Vedanshi on different teams</p>
+            </li>
+            <li class="quote-card">
+              <header class="q-head"><span class="q-avatar"><img src="assets/people/maitri-upadhyay.jpg" alt="" loading="lazy"></span><div><b>Maitri Upadhyay</b><span>Business Analyst | Product Owner</span></div><i class="ph ph-quotes q-mark" aria-hidden="true"></i></header>
+              <blockquote>
+                <p>I had the pleasure of working with Vedanshi at Leadrat and was impressed by her creativity, attention to detail, and strong understanding of user experience and product requirements. She has a user centric approach, excels at translating complex requirements into intuitive and visually appealing designs, and is always collaborative, proactive, and open to feedback.</p>
+              </blockquote>
+              <p class="q-context"><i class="ph ph-link-simple" aria-hidden="true"></i>Worked with Vedanshi on the same team</p>
+            </li>
+            <li class="quote-card">
+              <header class="q-head"><span class="q-avatar"><img src="assets/people/midhun-m.jpg" alt="" loading="lazy"></span><div><b>Midhun M</b><span>Product Designer for the AI era</span></div><i class="ph ph-quotes q-mark" aria-hidden="true"></i></header>
+              <blockquote>
+                <p>I had a great experience working with you at Leadrat. You consistently brought a thoughtful and user focused approach to design, with a strong ability to understand problems, explore different solutions, and turn complex requirements into clear and intuitive experiences.</p>
+              </blockquote>
+              <p class="q-context"><i class="ph ph-link-simple" aria-hidden="true"></i>Reported to Vedanshi directly</p>
+            </li>
+            <li class="quote-card">
+              <header class="q-head"><span class="q-avatar"><img src="assets/people/amit-pandey.jpg" alt="" loading="lazy"></span><div><b>Amit Pandey</b><span>Application Engineer II</span></div><i class="ph ph-quotes q-mark" aria-hidden="true"></i></header>
+              <blockquote>
+                <p>Working with Vedanshi as my senior UI/UX designer teammate has been an inspiring and enjoyable experience. She has a rare ability to blend creativity with practicality, ensuring that every design not only looks visually appealing but also creates a seamless user experience.</p>
               </blockquote>
               <p class="q-context"><i class="ph ph-link-simple" aria-hidden="true"></i>Worked with Vedanshi on different teams</p>
             </li>
@@ -301,7 +547,7 @@
       </div>
       <div class="ai-panel" id="aiPanel" role="tabpanel" aria-labelledby="tabAI">
       <ul class="phones">
-        <li><button class="phone" type="button" data-full="assets/chats/chat-1.jpg"><img src="assets/chats/chat-1.jpg" alt="Screenshot of a ChatGPT answer to 'What Vedanshi's like to work with?': thoughtful, collaborative and invested in the work, digs into the why behind a brief, curious, strong eye for detail, open to feedback, and cares about making the final work meaningful, not just finished." loading="lazy"><span class="ph-cap">What's she like to work with?</span></button></li>
+        <li><button class="phone" type="button" data-full="assets/chats/chat-1.jpg"><img src="assets/chats/chat-1.jpg" alt="Screenshot of a ChatGPT answer to 'What is Vedanshi like to work with?': thoughtful, collaborative and invested in the work, digs into the why behind a brief, curious, strong eye for detail, open to feedback, and cares about making the final work meaningful, not just finished." loading="lazy"><span class="ph-cap">What is she like to work with?</span></button></li>
         <li><button class="phone" type="button" data-full="assets/chats/chat-2.jpg"><img src="assets/chats/chat-2.jpg" alt="Screenshot of a ChatGPT answer to 'What does she do differently?': she starts with what actually needs to happen rather than what the screen should look like, questions assumptions, looks for the simplest idea that makes a complex problem feel clear, and iterates to sharpen the idea rather than decorate it." loading="lazy"><span class="ph-cap">What does she do differently?</span></button></li>
         <li><button class="phone" type="button" data-full="assets/chats/chat-3.jpg"><img src="assets/chats/chat-3.jpg" alt="Screenshot of a ChatGPT answer to 'What should she get better at': being more ruthless with prioritisation, explaining design decisions more simply, knowing when to stop iterating, balancing creativity with practicality, showing impact more clearly, and trusting her first instinct more." loading="lazy"><span class="ph-cap">What should she get better at?</span></button></li>
       </ul>
@@ -349,13 +595,20 @@
       <div class="gal-row" data-dir="left">
         <ul class="gal-track">
           <li><figure><img src="assets/gallery/team.jpg" alt="A smiling team in maroon shirts on a sports field, holding trophies" loading="lazy"></figure></li>
-          <li><figure><img src="assets/gallery/straightener-render.webp" alt="Rendered concept of a teal hair straightener with a heat-resistant fabric grip, with two small circles showing how it is held" loading="lazy"></figure></li>
+          <li><figure><img src="assets/gallery/straightener-render.webp" alt="Rendered concept of a teal hair straightener with a heat resistant fabric grip, with two small circles showing how it is held" loading="lazy"></figure></li>
           <li><figure><img src="assets/gallery/dog-photo.jpg" alt="A friendly brown dog looking up while someone holds its chin" loading="lazy"></figure></li>
-          <li><figure><img src="assets/gallery/chair-green.jpg" alt="Coloured-pencil drawing of a green upholstered armchair with a wooden frame and dimensions" loading="lazy"></figure></li>
+          <li><figure><img src="assets/gallery/chair-green.jpg" alt="Coloured pencil drawing of a green upholstered armchair with a wooden frame and dimensions" loading="lazy"></figure></li>
                   <li><figure><img src="assets/gallery/site-model.jpg" alt="A white card scale model of a campus site plan on a wooden table" loading="lazy"></figure></li>
-          <li><figure><img src="assets/gallery/straightener-sketch.jpg" alt="Hand-drawn sketches showing how the hair straightener is held and opened, with labels" loading="lazy"></figure></li>
+          <li><figure><img src="assets/gallery/straightener-sketch.jpg" alt="Hand drawn sketches showing how the hair straightener is held and opened, with labels" loading="lazy"></figure></li>
           <li><figure><img src="assets/gallery/dog-illustration.jpg" alt="Digital illustration of a cream Labrador with a red collar" loading="lazy"></figure></li>
-          <li><figure><img src="assets/gallery/chair-grey.jpg" alt="Coloured-pencil drawing of a wooden armchair with grey upholstery and dimensions" loading="lazy"></figure></li></ul>
+          <li><figure><img src="assets/gallery/chair-grey.jpg" alt="Coloured pencil drawing of a wooden armchair with grey upholstery and dimensions" loading="lazy"></figure></li>
+          <li><figure><img src="assets/gallery/floorplan-render.jpg" alt="3D rendered floor plan of a small apartment, showing the living and sleeping areas" loading="lazy"></figure></li>
+          <li><figure><img src="assets/gallery/car-dash-sketch.jpg" alt="Pen and watercolour sketch of a car dashboard interior in red and grey" loading="lazy"></figure></li>
+          <li><figure><img src="assets/gallery/site-aerial-render.jpg" alt="Aerial 3D render of a landscaped campus with a piano key pathway and fountains" loading="lazy"></figure></li>
+          <li><figure><img src="assets/gallery/packaging-render.webp" alt="3D renders of a stacked, compostable food container with a carrying handle" loading="lazy"></figure></li>
+          <li><figure><img src="assets/gallery/string-art.jpg" alt="Hand made geometric string art composition in a grid of triangles" loading="lazy"></figure></li>
+          <li><figure><img src="assets/gallery/mobility-aid-sketch.webp" alt="Concept sketch of a wheeled mobility aid built around a toilet seat" loading="lazy"></figure></li>
+          <li><figure><img src="assets/gallery/dog-kiss.jpg" alt="Vedanshi kissing a golden retriever on the cheek" loading="lazy"></figure></li></ul>
       </div>
     </div>
     <dialog class="lightbox" id="lightbox" aria-label="Screenshot, enlarged"><button class="lb-x" type="button" aria-label="Close"><i class="ph ph-x" aria-hidden="true"></i></button><img alt=""></dialog>
@@ -387,5 +640,5 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
-<script src="js/site.js?v=28"></script></body>
+<script src="script.js?v=44"></script></body>
 </html>

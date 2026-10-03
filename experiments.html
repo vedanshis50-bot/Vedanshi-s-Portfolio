@@ -3,14 +3,25 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Experiments — Vedanshi Singh</title>
+<title>Experiments, Vedanshi Singh</title>
 <meta name="description" content="Things built while figuring things out: AI experiments, prototypes and small interaction experiments, separate from Vedanshi Singh's product work.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%236f7d4f'/%3E%3Ctext x='16' y='23' font-family='Arial,sans-serif' font-weight='800' font-size='20' fill='%23ffffff' text-anchor='middle'%3E%3F%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:ital,wght@0,400..700;1,400..700&family=Hanken+Grotesk:ital,wght@0,300..700;1,300..600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/base.css">
 <style>
+:root {
+  --bg: #efece3; --bg-raised: #f8f6ef; --text: #24261f; --text-soft: #545848; --gray: #7a7d6b;
+  --border: #dcd9cb; --line-strong: #bebbaa; --accent: #6f7d4f; --accent-text: #56663a;
+  --on-accent: #ffffff;
+  --f-display: "Familjen Grotesk", "Hanken Grotesk", system-ui, sans-serif;
+  --f-body: "Hanken Grotesk", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-mono: "JetBrains Mono", ui-monospace, monospace;
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --r-pill: 999px; --r-lg: 18px;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
 body { margin: 0; background: var(--bg) url("assets/textures/paper.webp") repeat; background-size: 900px; color: var(--text); font-family: var(--f-body); font-size: 17px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
 a { color: inherit; text-decoration: none; }
 h1, h2, p { margin: 0; padding: 0; }
@@ -59,28 +70,28 @@ footer.a-foot { border-top: 1px solid var(--border); padding: 22px 0 40px; }
 <main>
   <section class="e-hero wrap">
     <h1>Things I built while figuring things out.</h1>
-    <p>Separate from the product work on the other side of this site &mdash; this is where curiosity, prototypes and small interaction experiments live. Less polished, more honest about being unfinished.</p>
-    <span class="e-note">This page is genuinely under construction &mdash; the entries below are placeholders, not finished work.</span>
+    <p>Separate from the product work on the other side of this site, this is where curiosity, prototypes and small interaction experiments live. Less polished, more honest about being unfinished.</p>
+    <span class="e-note">This page is genuinely under construction, the entries below are placeholders, not finished work.</span>
   </section>
 
   <ul class="e-grid wrap">
     <li class="e-card">
       <span class="e-tag">AI experiment</span>
       <h2>AI critique loop</h2>
-      <p>A small tool that argues back at a design decision instead of agreeing with it &mdash; built to stress-test my own first instinct before I commit to it.</p>
-      <span class="e-ph">Placeholder &middot; real write-up coming</span>
+      <p>A small tool that argues back at a design decision instead of agreeing with it, built to stress test my own first instinct before I commit to it.</p>
+      <span class="e-ph">Placeholder &middot; real write up coming</span>
     </li>
     <li class="e-card">
       <span class="e-tag">Prototype</span>
       <h2>Interface from a sketch</h2>
-      <p>Feeding a rough whiteboard photo into a model and seeing what it thinks the resulting screen should look like, then comparing it to what I'd actually design.</p>
-      <span class="e-ph">Placeholder &middot; real write-up coming</span>
+      <p>Feeding a rough whiteboard photo into a model and seeing what it thinks the resulting screen should look like, then comparing it to what I would actually design.</p>
+      <span class="e-ph">Placeholder &middot; real write up coming</span>
     </li>
     <li class="e-card">
       <span class="e-tag">Creative coding</span>
       <h2>A generative pattern toy</h2>
       <p>A small visual experiment kept around because it was fun to build, not because it shipped anywhere.</p>
-      <span class="e-ph">Placeholder &middot; real write-up coming</span>
+      <span class="e-ph">Placeholder &middot; real write up coming</span>
     </li>
   </ul>
 

@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Boardroom</title>
+  <meta name="description" content="Put a product idea in front of six opposing perspectives before anyone builds it." />
+  <meta name="theme-color" content="#1C1C1C" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,300..500;1,6..72,300..400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/boardroom.css" />
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<div class="app">
+  <!-- ============ SIDEBAR ============ -->
+  <aside class="rail" aria-label="Boardroom">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></span>
+      <span class="brand-name">Boardroom</span>
+    </div>
+
+    <nav class="steps" aria-label="Progress">
+      <ol>
+        <li><button class="step" data-go="idea"><span class="step-n">1</span><span class="step-l">Your idea</span></button></li>
+        <li><button class="step" data-go="board" disabled><span class="step-n">2</span><span class="step-l">Meet the board</span></button></li>
+        <li><button class="step" data-go="discussion" disabled><span class="step-n">3</span><span class="step-l">The debate</span></button></li>
+        <li><button class="step" data-go="verdict" disabled><span class="step-n">4</span><span class="step-l">The verdict</span></button></li>
+      </ol>
+    </nav>
+
+    <div class="rail-idea" id="railIdea" hidden>
+      <span class="label">Your idea</span>
+      <p id="railIdeaText"></p>
+    </div>
+
+    <div class="rail-foot">
+      <fieldset class="mode">
+        <legend class="label">Mode</legend>
+        <label><input type="radio" name="mode" value="demo" checked /> <span>Demo</span></label>
+        <label><input type="radio" name="mode" value="live" disabled /> <span>Live AI</span></label>
+      </fieldset>
+      <p class="mode-hint" id="modeHint"></p>
+    </div>
+  </aside>
+
+  <main id="main" tabindex="-1">
+
+    <!-- ============ 1 · IDEA ============ -->
+    <section class="screen" data-screen="idea" aria-labelledby="idea-h">
+      <div class="idea-wrap">
+        <h1 id="idea-h" class="display">Bring an idea<br />to the room.</h1>
+        <p class="lede">Six people with different priorities will debate it, so you can see its strengths and weak spots before you build anything.</p>
+
+        <form class="idea-form" id="ideaForm" novalidate>
+          <label for="ideaInput" class="field-label">What are you thinking about building?</label>
+          <textarea id="ideaInput" rows="4" maxlength="600"
+            placeholder="A shared grocery list for flatmates that automatically splits the bill when someone checks out."
+            aria-describedby="ideaNotice"></textarea>
+          <div class="idea-row">
+            <button type="button" class="link-btn" id="tryExample">Try this example <span aria-hidden="true">→</span></button>
+          </div>
+          <div class="notice" id="ideaNotice" role="status" hidden></div>
+          <button type="submit" class="btn btn-primary btn-lg" id="enterBtn">Enter the boardroom <span aria-hidden="true">→</span></button>
+        </form>
+
+        <div class="who">
+          <div class="who-faces" id="ideaRoster" aria-hidden="true"></div>
+          <p>A CEO, an investor, an engineer, a UX researcher, a customer and a strategist.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 2 · BOARD ============ -->
+    <section class="screen" data-screen="board" aria-labelledby="board-h" hidden>
+      <header class="screen-head">
+        <h2 id="board-h" class="h2">Meet the board</h2>
+        <p class="sub">Each person looks at your idea from a different angle. Here is their first reaction, before they have heard each other. Tap anyone to learn more.</p>
+      </header>
+
+      <blockquote class="idea-quote" id="tableIdea"></blockquote>
+
+      <div class="cards" id="cards"></div>
+
+      <div class="board-actions">
+        <p class="board-status" id="boardStatus" role="status"></p>
+        <button class="btn btn-primary btn-lg" id="startBtn" disabled>Start the debate <span aria-hidden="true">→</span></button>
+      </div>
+    </section>
+
+    <!-- ============ 3 · DEBATE ============ -->
+    <section class="screen" data-screen="discussion" aria-labelledby="disc-h" hidden>
+      <header class="screen-head screen-head-tight">
+        <h2 id="disc-h" class="h2">The debate</h2>
+        <p class="sub">Now they react to each other. Pause or skip ahead whenever you like.</p>
+      </header>
+
+      <div class="speakers" id="room" aria-label="The board"></div>
+
+      <ol class="transcript" id="transcript" aria-label="Debate"></ol>
+
+      <div class="converge" id="converge" hidden>
+        <p class="converge-line">The board has made up its mind.</p>
+        <p class="converge-sub" id="convergeSub"></p>
+        <button class="btn btn-primary btn-lg" id="toVerdict">See the verdict <span aria-hidden="true">→</span></button>
+      </div>
+
+      <div class="player" id="player" role="toolbar" aria-label="Debate playback">
+        <span class="player-state" id="playerState"></span>
+        <div class="player-btns">
+          <button class="btn btn-ghost" id="pauseBtn" aria-pressed="false">Pause</button>
+          <button class="btn btn-ghost" id="nextBtn">Next <span aria-hidden="true">→</span></button>
+          <button class="btn btn-ghost" id="allBtn">Show all</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 4 · VERDICT ============ -->
+    <section class="screen" data-screen="verdict" aria-labelledby="verdict-h" hidden>
+      <div class="verdict">
+        <div class="v-top v-reveal">
+          <div class="v-score">
+            <div class="v-score-num"><span id="vScore">–</span><small>/10</small></div>
+            <div class="v-meter" id="vMeter" aria-hidden="true"></div>
+          </div>
+          <div class="v-head">
+            <h2 id="verdict-h" class="h2" tabindex="-1"></h2>
+            <p class="v-signal" id="vSignal"></p>
+            <p class="v-caveat">The score reflects how strongly this debate supports the idea as it stands. It is an AI opinion, not a prediction.</p>
+            <p class="notice notice-warn" id="vPartial" hidden>The summary step did not finish, so some of this is missing. The votes come from where each person ended the debate.</p>
+          </div>
+        </div>
+
+        <div class="v-grid">
+          <article class="v-card v-flaw v-reveal"><h3>Biggest risk</h3><p id="vFlaw"></p></article>
+          <article class="v-card v-opp v-reveal"><h3>Hidden opportunity</h3><p id="vOpp"></p></article>
+          <article class="v-card v-build v-reveal"><h3>What to do first</h3><p id="vBuild"></p></article>
+        </div>
+
+        <section class="v-votes v-reveal" aria-labelledby="votes-h">
+          <h3 id="votes-h" class="v-sec">How the board voted</h3>
+          <ul class="votes" id="vVotes"></ul>
+        </section>
+
+        <section class="v-next v-reveal" aria-labelledby="next-h">
+          <h3 id="next-h" class="v-sec">Ask the board a follow-up</h3>
+          <div class="angles" id="angles"></div>
+          <form class="angle-own" id="angleOwn" hidden>
+            <label for="angleInput" class="sr-only">Your own follow-up question</label>
+            <input id="angleInput" type="text" maxlength="200" placeholder="Or ask your own question…" />
+            <button class="btn btn-ghost" type="submit">Ask</button>
+          </form>
+          <div id="followups"></div>
+        </section>
+
+        <div class="v-actions v-reveal">
+          <p>The board helps you think. <strong>The decision is yours.</strong></p>
+          <div>
+            <button class="btn btn-ghost" id="revisitBtn">Watch the debate again</button>
+            <button class="btn btn-ghost" id="editBtn">Edit your idea</button>
+            <button class="btn btn-ghost" id="rerunBtn">Run it again</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- Person detail -->
+<dialog class="drawer" id="drawer" aria-labelledby="drawerName">
+  <div class="drawer-in">
+    <button class="drawer-x btn btn-ghost" id="drawerClose" aria-label="Close">✕</button>
+    <div class="drawer-id">
+      <span class="mono mono-l" id="drawerMono" aria-hidden="true"></span>
+      <div>
+        <h2 id="drawerName"></h2>
+        <p id="drawerRole"></p>
+      </div>
+    </div>
+    <p class="drawer-q" id="drawerQ"></p>
+    <div><h3 class="label">Cares about</h3><ul class="drawer-list" id="drawerThinks"></ul></div>
+    <div class="drawer-pos" id="drawerPos"></div>
+  </div>
+</dialog>
+
+<div class="sr-only" aria-live="polite" id="announcer"></div>
+
+<script src="js/board.js"></script>
+<script src="js/demo-session.js"></script>
+<script src="js/engine.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

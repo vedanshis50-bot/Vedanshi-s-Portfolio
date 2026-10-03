@@ -3,274 +3,799 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Boardroom AI &mdash; Vedanshi Singh</title>
-<meta name="description" content="Boardroom AI: an AI working prototype where a product idea has to defend itself in front of six conflicting perspectives before a team commits time, money and development effort.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%236f7d4f'/%3E%3Ctext x='16' y='23' font-family='Arial,sans-serif' font-weight='800' font-size='20' fill='%23ffffff' text-anchor='middle'%3E%3F%3C/text%3E%3C/svg%3E">
+<meta name="theme-color" content="#1C1C1C">
+<title>Boardroom AI | Vedanshi Singh</title>
+<meta name="description" content="Case study: Boardroom AI, a working AI prototype that puts a product idea in front of six different perspectives before anyone builds it. The problem, the AI behaviour design, and a recorded walkthrough.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%231C1C1C'/%3E%3Ccircle cx='9' cy='11' r='3' fill='%23F26A21'/%3E%3Ccircle cx='16' cy='9' r='3' fill='%23E0896B'/%3E%3Ccircle cx='23' cy='11' r='3' fill='%2379A6D9'/%3E%3Ccircle cx='9' cy='21' r='3' fill='%236FBF9A'/%3E%3Ccircle cx='16' cy='23' r='3' fill='%23E0B062'/%3E%3Ccircle cx='23' cy='21' r='3' fill='%235FB8C2'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:ital,wght@0,400..700;1,400..700&family=Hanken+Grotesk:ital,wght@0,300..700;1,300..600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/base.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Work+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/@phosphor-icons/web@2.1.1" defer></script>
 <style>
-body { margin: 0; background: var(--bg) url("assets/textures/paper.webp") repeat; background-size: 900px; color: var(--text); font-family: var(--f-body); font-size: 17px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
-img, svg { display: block; max-width: 100%; }
-a { color: inherit; text-decoration: none; }
-h1, h2, h3, p, ul, ol, dl { margin: 0; padding: 0; }
-h1, h2, h3 { font-family: var(--f-display); font-weight: 600; letter-spacing: -0.03em; line-height: 1.08; }
-em { font-style: normal; color: var(--accent-text); }
-:focus-visible { outline: 2.5px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
-.wrap { width: min(980px, 100% - clamp(32px, 7vw, 120px)); margin-inline: auto; }
-.mono { font-family: var(--f-mono); font-size: 0.72rem; letter-spacing: 0.07em; text-transform: uppercase; color: var(--gray); }
+  :root{
+    --bg:#1C1C1C; --panel:#232323; --card:#292929; --card2:#303030; --tile:#3A3A3A;
+    --line:#383838; --line2:#454545;
+    --text:#F5F5F5; --text2:#D4D4D4; --muted:#A3A3A3; --dim:#7C7C7C;
+    --accent:#F26A21; --accent2:#FF8A4C; --accent-ink:#141414; --accent-tint:rgba(242,106,33,0.14);
+    --neg:#E0918C; --mid:#D2BE7E; --pos:#8EC9A8;
+    --head:"Inter",system-ui,sans-serif; --body:"Work Sans",-apple-system,"Segoe UI",sans-serif;
+    --r:10px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth; -webkit-text-size-adjust:100%;}
+  body{margin:0; background:var(--bg); color:var(--text2); font-family:var(--body); font-size:17px; line-height:1.62; letter-spacing:-0.005em; -webkit-font-smoothing:antialiased; overflow-x:clip;}
+  h1,h2,h3,h4,p,ul,ol,figure{margin:0; padding:0;}
+  ul,ol{list-style:none;}
+  button{font:inherit; color:inherit; background:none; border:0; padding:0; cursor:pointer;}
+  a{color:inherit;}
+  img,svg{display:block; max-width:100%;}
+  [hidden]{display:none !important;}
+  :focus-visible{outline:2px solid var(--accent2); outline-offset:3px; border-radius:6px;}
+  .sr-only{position:absolute !important; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap;}
+  .skip{position:absolute; left:16px; top:-60px; z-index:1000; background:var(--text); color:var(--bg); padding:8px 12px; border-radius:6px; font-size:14px; text-decoration:none;}
+  .skip:focus{top:12px;}
+  b,strong{color:var(--text); font-weight:600;}
+  h1,h2,h3,h4{font-family:var(--head); color:var(--text);}
+  .label{font-family:var(--head); font-size:0.7rem; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; color:var(--muted);}
 
-.case-nav { max-width: 1180px; margin: 0 auto; padding: 24px 20px 0; display: flex; align-items: center; justify-content: space-between; font-family: var(--f-display); }
-.case-nav-mark { font-weight: 700; font-size: 1.1rem; letter-spacing: 0.02em; color: var(--text); }
-.case-nav-mark span { color: var(--accent); }
-.case-nav-back { font-family: var(--f-mono); font-size: 0.76rem; letter-spacing: 0.04em; text-transform: uppercase; color: var(--text-soft); border-bottom: 1px solid var(--line-strong); padding-bottom: 2px; transition: color 0.2s, border-color 0.2s; }
-.case-nav-back:hover { color: var(--accent); border-color: var(--accent); }
-@media (max-width: 860px) { .case-nav { padding: 18px 20px 0; } }
+  /* case nav */
+  .case-nav{max-width:1320px; margin:0 auto; padding:24px 28px 0; display:flex; align-items:center; justify-content:space-between; position:relative; z-index:5;}
+  .case-nav-mark{font-family:var(--head); font-weight:600; font-size:1.05rem; letter-spacing:-0.01em; color:var(--text); text-decoration:none;}
+  .case-nav-mark span{color:var(--accent);}
+  .case-nav-back{font-size:0.82rem; font-weight:600; color:var(--muted); text-decoration:none; transition:color .2s;}
+  .case-nav-back:hover{color:var(--text);}
+  @media (max-width:900px){ .case-nav{padding:18px 20px 0;} }
 
-main { padding-bottom: 40px; }
-.sec { padding: clamp(44px, 6vw, 76px) 0; border-top: 1px solid var(--border); }
-.sec:first-of-type { border-top: 0; }
-.sec .mono { margin-bottom: 10px; }
-.sec h2 { font-size: clamp(1.7rem, 3.2vw, 2.5rem); max-width: 18em; text-wrap: balance; }
-.sec p.lede { margin-top: 16px; color: var(--text-soft); font-size: clamp(1.02rem, 1.4vw, 1.18rem); max-width: 62ch; }
-.sec p.body-p { margin-top: 14px; color: var(--text-soft); max-width: 62ch; }
+  /* title screen */
+  .title-screen{min-height:100dvh; padding:72px 28px 56px; display:flex; flex-direction:column; align-items:center;}
+  .title-inner{max-width:1264px; width:100%;}
+  .tags{display:flex; flex-wrap:wrap; gap:10px; margin-bottom:32px;}
+  .tag{font-size:0.72rem; letter-spacing:0.05em; text-transform:uppercase; font-weight:600; padding:8px 14px; border-radius:20px; color:var(--text2); background:var(--card); border:1px solid var(--line);}
+  h1{font-weight:600; font-size:clamp(2.3rem,5.6vw,4.9rem); line-height:1.06; letter-spacing:-0.04em; text-wrap:balance;}
+  .dek{margin-top:26px; max-width:none; font-size:1.18rem; line-height:1.7; color:var(--text2);}
+  .meta{background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:30px 36px 34px; display:grid; grid-template-columns:0.9fr 0.9fr 1.2fr 1.7fr; gap:28px 44px; margin-top:48px; align-items:start;}
+  @media (max-width:1000px){ .meta{grid-template-columns:1fr 1fr;} .meta .col-tiles{grid-column:1 / -1;} }
+  @media (max-width:560px){ .meta{grid-template-columns:1fr; padding:24px 22px 28px;} }
+  .meta .k{font-family:var(--head); font-size:0.7rem; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; color:var(--muted); margin-bottom:18px;}
+  .meta .v{font-size:0.98rem; color:var(--text); line-height:1.6;}
+  .tiles{display:grid; grid-template-columns:1fr 1fr; gap:22px 18px; padding-top:6px;}
+  .tile{position:relative; background:var(--card2); padding:22px 20px 18px; border-radius:3px; box-shadow:0 2px 8px rgba(0,0,0,0.35); transform:rotate(-0.7deg);}
+  .tile:nth-child(even){transform:rotate(0.6deg);}
+  .tile::before{content:""; position:absolute; top:-9px; left:calc(50% - 20px); width:40px; height:15px; background:#5A5A5A; opacity:0.75; transform:rotate(-2deg);}
+  .tile:nth-child(even)::before{transform:rotate(2deg);}
+  .tile .num{font-family:var(--head); font-size:1.7rem; font-weight:500; letter-spacing:-0.03em; line-height:1.1; color:var(--text);}
+  .tile .lbl{font-size:0.66rem; font-weight:500; letter-spacing:0.07em; text-transform:uppercase; color:var(--muted); margin-top:10px; line-height:1.4;}
 
-/* hero */
-.b-hero { padding: clamp(50px, 8vw, 90px) 0 clamp(30px, 5vw, 50px); border-top: 0; }
-.b-tags { display: flex; gap: 6px; flex-wrap: wrap; }
-.b-tag { font-family: var(--f-mono); font-size: 0.68rem; letter-spacing: 0.04em; padding: 5px 11px; border: 1px solid var(--line-strong); border-radius: var(--r-pill); color: var(--text-soft); }
-.b-hero h1 { margin-top: 18px; font-size: clamp(2.2rem, 4.6vw, 3.8rem); max-width: 14em; text-wrap: balance; }
-.b-hero .lede { margin-top: 18px; max-width: 46ch; color: var(--text-soft); font-size: clamp(1.05rem, 1.6vw, 1.3rem); }
-.b-meta { margin-top: 28px; display: flex; gap: clamp(20px, 4vw, 46px); flex-wrap: wrap; padding-top: 20px; border-top: 1px solid var(--border); }
-.b-meta div dt { font-family: var(--f-mono); font-size: 0.64rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--gray); }
-.b-meta div dd { margin: 4px 0 0; font-weight: 600; }
+  /* page + left nav (Uma Subbu pattern) */
+  .page{max-width:1320px; margin:0 auto; padding-inline:28px; display:grid; grid-template-columns:250px minmax(0,1fr); gap:32px 56px; padding-bottom:60px;}
+  @media (max-width:900px){ .page{grid-template-columns:1fr; gap:0; padding-inline:20px;} }
+  .toc-wrap{position:sticky; top:36px; align-self:start; max-height:calc(100vh - 56px); overflow:auto;}
+  @media (max-width:900px){ .toc-wrap{display:none;} }
+  .toc-eyebrow{font-family:var(--head); font-size:0.68rem; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; color:var(--muted); margin-bottom:14px; padding-left:16px;}
+  .toc li{border-bottom:1px solid var(--line);}
+  .toc li:last-child{border-bottom:0;}
+  .toc a{position:relative; display:flex; gap:14px; align-items:baseline; padding:14px 16px; border-radius:8px; text-decoration:none; color:var(--text); font-family:var(--head); font-size:0.74rem; font-weight:700; letter-spacing:0.05em; text-transform:uppercase; transition:background .15s,color .15s;}
+  .toc a .n{color:var(--dim); font-weight:600; min-width:1.4em;}
+  .toc a:hover{background:rgba(255,255,255,0.04);}
+  .toc a.active{background:var(--card2); color:var(--accent);}
+  .toc a.active::before{content:""; position:absolute; left:0; top:0; bottom:0; width:3px; background:var(--accent); border-radius:2px;}
+  .toc a.active .n{color:var(--accent);}
+  .toc-back{display:inline-flex; gap:6px; align-items:center; margin-top:16px; padding:10px 16px; font-family:var(--head); font-size:0.68rem; font-weight:600; letter-spacing:0.06em; text-transform:uppercase; color:var(--muted); text-decoration:none;}
+  .toc-back:hover{color:var(--text);}
+  .mnav{display:none; position:fixed; top:0; left:0; right:0; z-index:60; background:rgba(28,28,28,0.94); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); border-bottom:1px solid var(--line); padding:12px 20px 10px;}
+  .mnav.show{display:block;}
+  @media (min-width:901px){ .mnav{display:none !important;} }
+  .mnav-row{display:flex; align-items:baseline; gap:10px; font-family:var(--head); font-size:0.74rem; font-weight:700; letter-spacing:0.05em; text-transform:uppercase; color:var(--text);}
+  .mnav-row .n{color:var(--accent);}
+  .mnav-bar{height:2px; background:var(--line2); margin-top:9px; border-radius:2px; overflow:hidden;}
+  .mnav-bar i{display:block; height:100%; width:0; background:var(--accent);}
+  main{min-width:0;}
 
-/* journey strip */
-.journey { display: flex; overflow-x: auto; gap: 0; margin-top: 26px; padding-bottom: 6px; list-style: none; padding-left: 0; }
-.role-list, .board-qs, .clash { list-style: none; padding-left: 0; }
-.journey li { flex: 0 0 152px; position: relative; padding-right: 22px; }
-.journey li:not(:last-child)::after { content: "\2192"; position: absolute; right: 2px; top: 6px; color: var(--line-strong); }
-.journey b { display: block; font-family: var(--f-mono); font-size: 0.62rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--accent-text); }
-.journey span { display: block; margin-top: 6px; font-size: 0.86rem; color: var(--text-soft); font-style: italic; }
-.journey li:last-child span { color: var(--pen); }
-.callout { margin-top: 24px; padding: 16px 20px; border-left: 3px solid var(--accent); background: var(--accent-tint); border-radius: 0 var(--r-md) var(--r-md) 0; font-weight: 600; }
-.callout.warn { border-color: var(--pen); background: color-mix(in srgb, var(--pen) 10%, var(--bg-raised)); }
+  /* sections */
+  section.sec{margin-bottom:96px; scroll-margin-top:36px;}
+  .sec-head{margin-bottom:22px;}
+  .eyebrow-row{display:flex; align-items:baseline; gap:10px; margin-bottom:14px;}
+  .eyebrow-row .n{font-family:var(--head); font-size:0.72rem; font-weight:700; letter-spacing:0.06em; color:var(--muted);}
+  h2{font-weight:600; font-size:clamp(1.65rem,2.9vw,2.3rem); line-height:1.15; letter-spacing:-0.035em; max-width:36ch; text-wrap:balance;}
+  .lede{font-size:1.08rem; line-height:1.7; color:var(--text2); max-width:none; margin-bottom:6px;}
+  .lede b{color:var(--text);}
+  .sub-h{font-family:var(--head); font-size:0.72rem; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; color:var(--muted); margin:42px 0 14px;}
 
-/* real-world cost cards */
-.cost-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; margin-top: 24px; }
-.cost-card { padding: clamp(18px, 2.4vw, 24px); border-radius: var(--r-lg); border: 1px solid var(--border); background: color-mix(in srgb, var(--bg-raised) 60%, transparent); }
-.cost-card h3 { font-size: 1.15rem; }
-.cost-card .sub { margin-top: 2px; color: var(--pen); font-size: 0.86rem; font-weight: 600; }
-.cost-card p { margin-top: 12px; color: var(--text-soft); font-size: 0.92rem; }
-.cost-fig { margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--border); font-family: var(--f-mono); font-size: 1.3rem; font-weight: 700; color: var(--text); }
-.cost-fig span { display: block; font-family: var(--f-body); font-size: 0.76rem; font-weight: 400; color: var(--gray); margin-top: 2px; }
-.cost-note { margin-top: 10px; font-size: 0.84rem; color: var(--accent-text); font-weight: 600; }
-@media (max-width: 760px) { .cost-grid { grid-template-columns: 1fr; } }
+  /* card system, from the reference */
+  .ic{width:34px; height:34px; border-radius:8px; background:var(--tile); display:grid; place-items:center; color:var(--accent); font-size:1.1rem; flex:none;}
+  .cards{display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:14px; margin-top:24px;}
+  .icard{display:grid; grid-template-columns:34px 1fr; gap:16px; align-items:start; background:var(--card); border:1px solid var(--line); border-radius:var(--r); padding:22px 22px 24px; font-size:0.98rem; color:var(--text2); line-height:1.55; text-align:left;}
+  .icard b{color:var(--text);}
+  .callout{background:var(--card); border:1px solid var(--line); border-left:3px solid var(--accent); border-radius:var(--r); padding:22px 26px; margin:26px 0;}
+  .callout .k{font-family:var(--head); font-size:0.7rem; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--accent); margin-bottom:10px;}
+  .callout p{color:var(--text); max-width:none;}
+  .callout p + p{margin-top:8px; color:var(--text2); font-size:0.95rem;}
+  .statement{font-family:var(--head); font-weight:600; font-size:clamp(1.5rem,3vw,2.3rem); line-height:1.18; letter-spacing:-0.035em; color:var(--text); max-width:32ch; margin:46px 0 4px; text-wrap:balance;}
+  .statement em{font-style:normal; color:var(--accent);}
+  figure.comic{margin:26px 0 8px; border:1px solid var(--line2); border-radius:12px; overflow:hidden; background:#fff;}
+  figure.comic img{display:block; width:100%; height:auto;}
+  .story{font-family:var(--head); font-weight:500; font-size:1.12rem; line-height:1.55; letter-spacing:-0.015em; color:var(--text); border-left:3px solid var(--accent); padding-left:16px; margin:0 0 6px; max-width:none;}
+  .steps{border-top:1px solid var(--line); margin-top:6px;}
+  .steps li{display:grid; grid-template-columns:44px minmax(0,1fr); gap:16px; padding:15px 0; border-bottom:1px solid var(--line); font-size:1.02rem; line-height:1.55; color:var(--text2);}
+  .steps li b{color:var(--text);}
+  .steps .num{width:28px; height:28px; border-radius:50%; background:var(--text); color:var(--bg); font:700 0.78rem/28px var(--head); text-align:center;}
+  .rules2{display:grid; grid-template-columns:1fr 1fr; gap:0 44px; border-top:1px solid var(--line);}
+  @media (max-width:760px){ .rules2{grid-template-columns:1fr;} }
+  .rules2 li{display:grid; grid-template-columns:34px minmax(0,1fr); gap:12px; padding:13px 0; border-bottom:1px solid var(--line); font-size:0.98rem; color:var(--text);}
+  .rules2 .i{font-family:var(--head); font-weight:700; font-size:0.72rem; color:var(--accent); padding-top:3px;}
+  .cols2{display:grid; grid-template-columns:1fr 1fr; gap:0 44px; margin-top:6px;}
+  @media (max-width:760px){ .cols2{grid-template-columns:1fr;} }
+  .cols2 h4{font-family:var(--head); font-size:0.7rem; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--accent); margin:0 0 8px;}
+  .cols2 li{padding:9px 0; border-top:1px solid var(--line); font-size:1rem; color:var(--text);}
+  .def{border-top:1px solid var(--line);}
+  .def > div{display:grid; grid-template-columns:170px minmax(0,1fr); gap:20px; padding:14px 0; border-bottom:1px solid var(--line);}
+  @media (max-width:640px){ .def > div{grid-template-columns:1fr; gap:4px;} }
+  .def dt{font-family:var(--head); font-weight:700; font-size:1rem; color:var(--text);}
+  .def dd{margin:0; font-size:1rem; color:var(--text2);}
+  .plain{font-size:1.05rem; line-height:1.7; color:var(--text2);}
+  /* problems as rows, not cards */
+  #fails.cards{display:block; margin-top:18px; border-top:1px solid var(--line);}
+  #fails .fail{border:0; border-bottom:1px solid var(--line); border-radius:0; background:transparent; padding:14px 6px; grid-template-columns:34px 1fr;}
+  #fails .fail:hover, #fails .fail[aria-pressed="true"]{background:var(--card);}
+  #fails .fail h3{display:inline; font-size:1rem; margin:0 10px 0 0;}
+  #fails .fail p{display:inline; font-size:0.96rem;}
+  .decision{display:grid; grid-template-columns:auto minmax(0,1fr); gap:6px 18px; align-items:baseline; background:var(--card); border:1px solid var(--line); border-left:3px solid var(--accent); border-radius:var(--r); padding:16px 22px; margin-top:20px;}
+  .decision .k{font-family:var(--head); font-size:0.7rem; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--accent);}
+  .decision p{color:var(--text); font-size:1rem; line-height:1.6;}
+  .reveal{opacity:1; transform:none;}
+  .js .reveal{opacity:0; transform:translateY(14px); transition:opacity .6s ease, transform .6s cubic-bezier(.2,.7,.2,1);}
+  .js .reveal.in{opacity:1; transform:none;}
 
-/* six perspectives */
-.board-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-top: 26px; }
-.board-card { padding: clamp(16px, 2vw, 20px); border-radius: var(--r-lg); border: 1px solid var(--border); background: var(--bg-raised); }
-.board-role { font-family: var(--f-mono); font-size: 0.62rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--on-accent); background: var(--accent); display: inline-block; padding: 4px 10px; border-radius: var(--r-pill); }
-.board-focus { margin-top: 10px; font-weight: 700; font-size: 0.98rem; }
-.board-qs { margin-top: 10px; display: grid; gap: 6px; }
-.board-qs li { font-size: 0.84rem; color: var(--text-soft); padding-left: 14px; position: relative; }
-.board-qs li::before { content: "\201C"; position: absolute; left: 0; color: var(--line-strong); }
-@media (max-width: 760px) { .board-grid { grid-template-columns: 1fr 1fr; } }
-@media (max-width: 480px) { .board-grid { grid-template-columns: 1fr; } }
+  /* 02 flow and failures */
+  .flow{display:flex; flex-wrap:wrap; align-items:center; gap:8px 6px; margin:24px 0 6px;}
+  .node{padding:9px 14px; border-radius:8px; border:1px solid var(--line2); background:var(--card); color:var(--text2); font-size:0.88rem; font-weight:500; transition:border-color .2s, background .2s, color .2s;}
+  .node.hot{border-color:var(--accent); background:var(--accent-tint); color:var(--text);}
+  .node.later{border-style:dashed;}
+  .arr{color:var(--dim); font-size:0.9rem;}
+  .fail{text-align:left; display:grid; grid-template-columns:34px 1fr; gap:16px; background:var(--card); border:1px solid var(--line); border-radius:var(--r); padding:22px 22px 24px; transition:border-color .2s, background .2s; width:100%;}
+  .fail:hover,.fail[aria-pressed="true"]{border-color:var(--accent); background:var(--card2);}
+  .fail h3{font-size:1rem; font-weight:600; margin-bottom:6px;}
+  .fail p{font-size:0.92rem; line-height:1.5; color:var(--text2);}
 
-/* conflict example */
-.clash { margin-top: 22px; display: grid; gap: 10px; }
-.clash li { display: grid; grid-template-columns: 110px 1fr; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 0.92rem; }
-.clash b { font-family: var(--f-mono); font-size: 0.68rem; letter-spacing: 0.04em; text-transform: uppercase; color: var(--accent-text); }
-.clash span { color: var(--text); }
+  /* lists with detail panel (why AI, rules) */
+  .opts{display:grid; grid-template-columns:minmax(0,0.95fr) minmax(0,1.05fr); gap:16px; margin-top:24px; align-items:start;}
+  @media (max-width:860px){ .opts{grid-template-columns:1fr;} }
+  .opt-list{border:1px solid var(--line); border-radius:var(--r); overflow:hidden; background:var(--card);}
+  .opt{display:flex; align-items:center; gap:14px; width:100%; text-align:left; padding:15px 18px; border-bottom:1px solid var(--line); color:var(--text2); font-weight:500; font-size:0.96rem; transition:background .15s,color .15s; position:relative;}
+  .opt:last-child{border-bottom:0;}
+  .opt .i{font-family:var(--head); font-weight:600; font-size:0.72rem; color:var(--dim); min-width:1.6em;}
+  .opt:hover{background:var(--card2); color:var(--text);}
+  .opt[aria-pressed="true"]{background:var(--card2); color:var(--text);}
+  .opt[aria-pressed="true"]::before{content:""; position:absolute; left:0; top:0; bottom:0; width:3px; background:var(--accent);}
+  .opt .tagai{margin-left:auto; font-size:0.62rem; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; color:var(--accent); border:1px solid rgba(242,106,33,0.5); padding:2px 7px; border-radius:20px; white-space:nowrap;}
+  .detail{background:var(--card); border:1px solid var(--line2); border-radius:var(--r); padding:24px 26px;}
+  .detail h3{font-size:1.35rem; font-weight:600; margin-bottom:16px; letter-spacing:-0.025em;}
+  .detail .row{padding:14px 0; border-top:1px solid var(--line);}
+  .detail .row .k{font-family:var(--head); font-size:0.68rem; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--pos); margin-bottom:5px;}
+  .detail .row.lim .k{color:var(--accent);}
+  .detail .row p{color:var(--text); font-size:1rem;}
+  .rule-detail{position:sticky; top:30px;}
+  @media (max-width:860px){ .rule-detail{position:static;} }
+  .rule-detail .txt{font-size:1rem; line-height:1.6; color:var(--text); background:var(--bg); border-left:3px solid var(--accent); padding:14px 16px; margin-bottom:18px; border-radius:0 6px 6px 0;}
 
-/* session states table */
-.states { margin-top: 24px; display: grid; gap: 0; border-top: 1px solid var(--border); }
-.state-row { display: grid; grid-template-columns: 140px minmax(0,1.4fr) minmax(0,1fr); gap: 18px; padding: 16px 0; border-bottom: 1px solid var(--border); align-items: start; }
-.state-n { font-family: var(--f-mono); font-size: 0.7rem; color: var(--gray); }
-.state-name { display: block; font-weight: 700; font-family: var(--f-display); font-size: 1rem; margin-top: 2px; }
-.state-does { font-size: 0.9rem; color: var(--text-soft); }
-.state-feel { font-size: 0.88rem; color: var(--accent-text); font-style: italic; }
-.state-feel-lbl { display: block; font-family: var(--f-mono); font-size: 0.6rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--gray); font-style: normal; margin-bottom: 3px; }
-@media (max-width: 700px) { .state-row { grid-template-columns: 1fr; gap: 6px; } .state-n { display: none; } }
+  /* 04 board */
+  .seats{display:grid; grid-template-columns:repeat(6,minmax(0,1fr)); gap:10px; margin-top:24px;}
+  @media (max-width:900px){ .seats{grid-template-columns:repeat(3,minmax(0,1fr));} }
+  @media (max-width:480px){ .seats{grid-template-columns:repeat(2,minmax(0,1fr));} }
+  .seat{display:flex; flex-direction:column; align-items:center; gap:10px; text-align:center; padding:20px 10px 18px; background:var(--card); border:1px solid var(--line); border-radius:var(--r); transition:border-color .2s, background .2s, transform .2s;}
+  .seat:hover{background:var(--card2);}
+  .seat[aria-pressed="true"]{border-color:var(--c); background:var(--card2); transform:translateY(-2px);}
+  .seat .nm{font-size:0.94rem; font-weight:600; color:var(--text); line-height:1.2;}
+  .seat .rl{font-size:0.78rem; color:var(--muted); line-height:1.3;}
+  .mono-av{width:34px; height:34px; border-radius:50%; display:grid; place-items:center; font-family:var(--head); font-size:11px; font-weight:600; color:var(--c); background:color-mix(in srgb,var(--c) 14%,var(--bg)); border:1px solid color-mix(in srgb,var(--c) 45%,transparent); flex:none;}
+  .seat-detail{margin-top:14px; background:var(--card); border:1px solid var(--line2); border-radius:var(--r); padding:28px 30px 8px; border-top:3px solid var(--c, var(--accent));}
+  .sd-head{display:flex; align-items:center; gap:14px;}
+  .sd-head .mono-av{width:46px; height:46px; font-size:13px;}
+  .sd-head h3{font-size:1.1rem; font-weight:600;}
+  .sd-head p{font-size:0.88rem; color:var(--muted);}
+  .sd-head .chip{margin-left:auto;}
+  .sd-q{font-family:var(--head); font-weight:600; font-size:clamp(1.5rem,2.6vw,2rem); line-height:1.2; letter-spacing:-0.03em; color:var(--text); margin:22px 0 26px;}
+  .sd-grid{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); border-top:1px solid var(--line);}
+  .sd-col{padding:22px 26px 24px; border-right:1px solid var(--line);}
+  .sd-col:first-child{padding-left:0;}
+  .sd-col:last-child{border-right:0; padding-right:0;}
+  @media (max-width:900px){ .sd-grid{grid-template-columns:1fr;} .sd-col, .sd-col:first-child, .sd-col:last-child{padding:18px 0; border-right:0; border-bottom:1px solid var(--line);} .seat-detail{padding:22px;} }
+  .sd-col h4{font-family:var(--head); font-size:0.68rem; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--muted); margin:0 0 12px;}
+  .sd-col li{padding:7px 0; border-bottom:1px solid var(--line); font-size:0.95rem; color:var(--text);}
+  .sd-col li:first-child{padding-top:0;}
+  .sd-col li:last-child{border-bottom:0;}
+  .sd-guard{font-size:0.95rem; line-height:1.55; color:var(--text);}
+  .sd-col .hd{font-family:var(--head); font-weight:500; font-size:1.1rem; letter-spacing:-0.02em; color:var(--text); line-height:1.35;}
+  .sd-col .cn{font-size:0.92rem; color:var(--text2); margin-top:10px;}
+  .chip{display:inline-flex; align-items:center; gap:7px; font-size:0.8rem; font-weight:500; padding:3px 10px; border-radius:999px; background:var(--tile); color:var(--text);}
+  .chip::before{content:""; width:7px; height:7px; border-radius:50%; background:var(--dim);}
+  .chip[data-lean="-2"]::before,.chip[data-lean="-1"]::before{background:var(--neg);}
+  .chip[data-lean="0"]::before{background:var(--mid);}
+  .chip[data-lean="1"]::before,.chip[data-lean="2"]::before{background:var(--pos);}
 
-/* principles */
-.prin-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-top: 24px; }
-.prin-card { padding: 18px; border-radius: var(--r-lg); border: 1px dashed var(--line-strong); }
-.prin-card h3 { font-size: 0.98rem; }
-.prin-card p { margin-top: 8px; font-size: 0.88rem; color: var(--text-soft); }
-@media (max-width: 700px) { .prin-grid { grid-template-columns: 1fr; } }
+  /* 05 behaviour */
+  .seg{display:inline-flex; border:1px solid var(--line2); border-radius:10px; padding:3px; background:var(--card); gap:2px; margin:18px 0 18px;}
+  .seg button{padding:9px 18px; border-radius:7px; font-size:0.9rem; font-weight:500; color:var(--muted);}
+  .seg button[aria-pressed="true"]{background:var(--accent); color:var(--accent-ink); font-weight:600;}
+  .ver{background:var(--card); border:1px solid var(--line2); border-radius:var(--r); padding:24px;}
+  .ver-cap{font-family:var(--head); font-weight:600; font-size:1.2rem; letter-spacing:-0.025em; color:var(--text); margin-bottom:18px; max-width:36ch; line-height:1.3;}
+  .v1{display:grid; grid-template-columns:auto 1fr; gap:10px 16px; align-items:center;}
+  .v1 .idea-pill{grid-row:1 / span 6; align-self:center; writing-mode:vertical-rl; transform:rotate(180deg); font-family:var(--head); font-weight:600; font-size:0.68rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--muted); border:1px dashed var(--line2); border-radius:8px; padding:16px 8px;}
+  .v1-row{display:flex; align-items:center; gap:12px; padding:8px 12px; border:1px solid var(--line); border-radius:8px; background:var(--bg);}
+  .v1-row .nm{font-size:0.85rem; color:var(--text); min-width:78px; font-weight:500;}
+  .skel{flex:1; display:grid; gap:5px;}
+  .skel i{display:block; height:5px; border-radius:3px; background:var(--line2);}
+  .skel i:nth-child(2){width:88%;} .skel i:nth-child(3){width:64%;}
+  .v2{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px;}
+  @media (max-width:760px){ .v2{grid-template-columns:1fr;} }
+  .v2-col{background:var(--bg); border:1px solid var(--line); border-radius:var(--r); padding:16px 16px 18px;}
+  .v2-col .k{font-family:var(--head); font-size:0.64rem; font-weight:700; letter-spacing:0.09em; text-transform:uppercase; color:var(--accent); margin-bottom:8px;}
+  .v2-col h4{font-size:0.98rem; margin:0 0 8px; font-weight:600;}
+  .v2-col li{font-size:0.88rem; color:var(--text2); padding:5px 0; border-top:1px solid var(--line); line-height:1.4;}
+  .seatrow{display:flex; gap:5px; flex-wrap:wrap; margin:6px 0 8px;}
+  .seatrow .mono-av{width:26px; height:26px; font-size:9px;}
+  .fl{border:1px solid var(--line); border-radius:var(--r); overflow:hidden; background:var(--card);}
+  .fl details{border-bottom:1px solid var(--line);}
+  .fl details:last-child{border-bottom:0;}
+  .fl summary{list-style:none; display:flex; align-items:center; gap:16px; padding:16px 18px; cursor:pointer; color:var(--text); font-weight:500;}
+  .fl summary::-webkit-details-marker{display:none;}
+  .fl summary .i{font-family:var(--head); font-weight:600; font-size:0.72rem; color:var(--accent); min-width:1.8em;}
+  .fl summary::after{content:"+"; margin-left:auto; color:var(--muted); font-size:1.15rem;}
+  .fl details[open] summary::after{content:"\2212";}
+  .fl summary:hover{background:var(--card2);}
+  .fl .body{padding:0 18px 18px 52px; color:var(--text2); font-size:0.95rem; max-width:76ch;}
+  .fl .body b{display:block; font-family:var(--head); font-size:0.64rem; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--accent); margin:12px 0 4px;}
+  .conf-tabs{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px;}
+  @media (max-width:760px){ .conf-tabs{grid-template-columns:1fr;} }
+  .conf{text-align:left; background:var(--card); border:1px solid var(--line); border-radius:var(--r); padding:16px 18px; transition:border-color .2s, background .2s;}
+  .conf:hover{background:var(--card2);}
+  .conf[aria-pressed="true"]{border-color:var(--accent); background:var(--card2);}
+  .conf .vs{font-family:var(--head); font-size:0.64rem; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--muted); display:block; margin-bottom:6px;}
+  .conf b{display:block; font-size:0.96rem; font-weight:600; line-height:1.3;}
+  .conf-body{margin-top:12px; background:var(--card); border:1px solid var(--line2); border-radius:var(--r); padding:22px 24px; display:grid; gap:18px;}
+  .conf-body .lead{font-family:var(--head); font-weight:500; font-size:1.1rem; letter-spacing:-0.02em; color:var(--text); line-height:1.35;}
+  .turn{display:grid; grid-template-columns:34px minmax(0,1fr); gap:12px;}
+  .turn-who{font-size:0.82rem; font-weight:600; color:var(--text);}
+  .turn-who span{font-weight:400; color:var(--muted);}
+  .turn-says{font-size:1rem; line-height:1.55; color:var(--text); margin-top:3px;}
+  .shift{display:inline-flex; align-items:center; gap:6px; margin-top:8px; font-size:0.7rem; font-weight:600; letter-spacing:0.04em; text-transform:uppercase; color:var(--accent); background:var(--accent-tint); padding:4px 9px; border-radius:20px;}
 
-/* honest reflection */
-.honest { text-align: center; max-width: 68ch; margin-inline: auto; }
-.honest h2 { font-size: clamp(1.7rem, 3.2vw, 2.4rem); }
-.honest p { margin-top: 16px; color: var(--text-soft); }
-.honest p.final { margin-top: 22px; font-family: var(--f-display); font-weight: 600; color: var(--text); font-size: 1.1rem; }
+  /* 06 verdict */
+  .verdict{background:var(--card); border:1px solid var(--line2); border-radius:var(--r); padding:26px; margin-top:22px;}
+  .v-top{display:grid; grid-template-columns:auto 1fr; gap:20px 32px; align-items:center; padding-bottom:22px; border-bottom:1px solid var(--line);}
+  @media (max-width:640px){ .v-top{grid-template-columns:1fr;} }
+  .v-score{font-family:var(--head); font-weight:600; font-size:4.4rem; line-height:0.9; color:var(--text); letter-spacing:-0.05em;}
+  .v-score small{font-size:1.4rem; color:var(--muted); letter-spacing:0; font-weight:500;}
+  .v-meter{display:flex; gap:4px; margin-top:12px;}
+  .v-meter i{width:16px; height:5px; border-radius:2px; background:var(--line2);}
+  .v-meter i.on{background:var(--accent);}
+  .v-head h3{font-size:1.5rem; font-weight:600; letter-spacing:-0.03em; margin-bottom:6px;}
+  .v-head p{color:var(--text); font-size:1rem;}
+  .v-head .cav{display:flex; gap:8px; margin-top:10px; font-size:0.84rem; color:var(--muted);}
+  .v-head .cav i{color:var(--accent); margin-top:3px; flex:none;}
+  .v-cards{display:grid; gap:10px; margin-top:20px;}
+  .vc{background:var(--bg); border:1px solid var(--line); border-radius:var(--r); overflow:hidden; transition:border-color .2s;}
+  .vc[data-open="true"]{border-color:var(--line2);}
+  .vc > button{display:block; width:100%; text-align:left; padding:17px 20px;}
+  .vc > button:hover{background:var(--card2);}
+  .vc .k{font-family:var(--head); font-size:0.68rem; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; display:flex; align-items:center; gap:10px; margin-bottom:7px;}
+  .vc .k::after{content:"+"; margin-left:auto; font-size:1.05rem; color:var(--muted); font-weight:500;}
+  .vc[data-open="true"] .k::after{content:"\2212";}
+  .vc.risk .k{color:var(--neg);} .vc.opp .k{color:var(--pos);} .vc.first .k{color:var(--accent);} .vc.votes .k{color:var(--text2);}
+  .vc .main{color:var(--text); font-size:1rem; line-height:1.5;}
+  .vc .more{padding:4px 20px 20px; display:grid; gap:14px; border-top:1px solid var(--line);}
+  .vc .more .lbl{margin:14px 0 0; font-family:var(--head); font-size:0.64rem; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--muted);}
+  .chain{display:grid; gap:14px;}
+  .vote{display:grid; grid-template-columns:minmax(150px,200px) minmax(0,1fr); gap:6px 18px; align-items:center; padding:10px 0; border-top:1px solid var(--line);}
+  .vote:first-child{border-top:0;}
+  .vote .who{display:flex; align-items:center; gap:10px; font-size:0.9rem; color:var(--text); font-weight:500;}
+  .vote .who .mono-av{width:28px; height:28px; font-size:10px;}
+  .vote .why{color:var(--text2); font-size:0.9rem;}
+  .vote .lean{display:flex; align-items:center; gap:10px; flex-wrap:wrap;}
+  @media (max-width:640px){ .vote{grid-template-columns:1fr;} }
+  .lean-bar{display:inline-grid; grid-template-columns:repeat(5,14px); gap:3px;}
+  .lean-bar i{height:6px; border-radius:2px; background:var(--line2);}
+  .lean-bar i.on{background:var(--pos);} .lean-bar i.on.neg{background:var(--neg);} .lean-bar i.on.mid{background:var(--mid);}
+  .followups{margin-top:22px; padding-top:20px; border-top:1px solid var(--line);}
+  .angle-row{display:flex; flex-wrap:wrap; gap:8px; margin-top:12px;}
+  .angle{padding:9px 14px; border:1px solid var(--line2); border-radius:20px; font-size:0.9rem; color:var(--text2);}
+  .angle:hover{border-color:var(--muted); color:var(--text);}
+  .angle[aria-pressed="true"]{border-color:var(--accent); background:var(--accent-tint); color:var(--text);}
+  .angle-out{margin-top:14px; font-size:0.98rem; color:var(--text); max-width:70ch;}
+  .angle-out b{color:var(--accent);}
+  .tag-demo{display:inline-block; margin-top:16px; font-size:0.66rem; font-weight:700; letter-spacing:0.07em; text-transform:uppercase; color:var(--muted); border:1px solid var(--line2); padding:3px 9px; border-radius:20px;}
 
-/* role list + close */
-.role-list { margin-top: 22px; display: grid; gap: 10px; }
-.role-list li { padding-left: 22px; position: relative; color: var(--text-soft); font-size: 0.94rem; }
-.role-list li::before { content: ""; position: absolute; left: 0; top: 9px; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); }
-.b-cta { text-align: center; padding: clamp(40px, 6vw, 70px) 0 10px; }
-.btn { display: inline-flex; align-items: center; gap: 10px; min-height: 46px; padding: 0 24px; border-radius: var(--r-pill); font-weight: 700; font-size: 0.96rem; margin-top: 18px; transition: transform 0.3s var(--ease), background 0.25s; background: var(--accent); color: var(--on-accent); }
-.btn:hover { transform: translateY(-2px); background: color-mix(in srgb, var(--accent) 88%, white); }
+  /* 07 screen recording */
+  .video-frame{margin-top:22px; border:1px solid var(--line2); border-radius:12px; overflow:hidden; background:#000;}
+  .video-frame video{display:block; width:100%; height:auto; aspect-ratio:1280 / 609;}
 
-footer.a-foot { border-top: 1px solid var(--border); padding: 22px 0 40px; }
-.a-foot .wrap { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
-.a-foot span { color: var(--gray); font-size: 0.85rem; }
+  /* 08 learned */
+  .three{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px; margin-top:16px;}
+  .three.two{grid-template-columns:repeat(2,minmax(0,1fr));}
+  @media (max-width:860px){ .three{grid-template-columns:1fr;} }
+  .col-card{background:var(--card); border:1px solid var(--line); border-radius:var(--r); padding:20px 22px 22px;}
+  .col-card .k{font-family:var(--head); font-size:0.68rem; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; margin-bottom:12px; color:var(--accent);}
+  .col-card li{padding:8px 0; border-top:1px solid var(--line); font-size:0.95rem; color:var(--text);}
+  .col-card p{color:var(--text); font-size:1rem;}
+  .end-note{margin-top:56px; padding-top:32px; border-top:1px solid var(--line);}
+  .end-note .statement{margin-top:0;}
+  .end-final{margin-top:40px; font-size:1.15rem; line-height:1.5; color:var(--text); max-width:none;}
+  .end-note .final{margin-top:22px; font-size:1.1rem; color:var(--muted); max-width:54ch;}
 
-@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; } }
-</style>
+  /* footer */
+  .foot{padding:clamp(60px,8vw,100px) 0 30px; border-top:1px solid var(--line); margin-top:30px;}
+  .foot-grid{display:grid; grid-template-columns:minmax(0,1.1fr) minmax(0,0.9fr); gap:clamp(30px,5vw,80px); align-items:center;}
+  @media (max-width:860px){ .foot-grid{grid-template-columns:1fr;} }
+  .foot-statement{font-family:var(--head); font-weight:600; letter-spacing:-0.03em; line-height:1; font-size:clamp(2.4rem,6vw,4.6rem); color:var(--text);}
+  .foot-sub{margin-top:18px; max-width:40ch; color:var(--text2); font-size:1.02rem;}
+  .connect{display:grid; gap:10px; margin:0; padding:0;}
+  .connect li{position:relative;}
+  .c-row{display:flex; align-items:center; gap:16px; padding:14px 18px; border-radius:20px; background:var(--card); border:1px solid var(--line2); transition:transform .3s, border-color .25s; text-decoration:none; color:var(--text);}
+  .c-row:hover{transform:translateX(6px); border-color:var(--accent);}
+  .c-ic{width:44px; height:44px; border-radius:50%; display:grid; place-items:center; background:var(--tile); color:var(--accent); font-size:1.3rem; flex:none;}
+  .c-ic.brand{background:#fff;}
+  .c-ic svg{width:24px; height:24px;}
+  .c-t{display:grid; flex:1; min-width:0;}
+  .c-t b{font-family:var(--head); font-weight:600; font-size:1.05rem;}
+  .c-t small{color:var(--muted); font-size:0.86rem; overflow-wrap:anywhere;}
+  .c-go{color:var(--muted); font-size:1.15rem; transition:transform .3s,color .25s;}
+  .c-row:hover .c-go{color:var(--accent); transform:translate(3px,-3px);}
+  .c-main{padding-right:70px;}
+  .c-copy{position:absolute; right:12px; top:50%; translate:0 -50%; width:40px; height:40px; display:grid; place-items:center; border-radius:50%; color:var(--text2); font-size:1.1rem; transition:background .2s;}
+  .c-copy:hover{background:var(--tile); color:var(--accent);}
+  .c-copy.is-copied{background:var(--accent); color:var(--accent-ink);}
+  .foot-bottom{margin-top:clamp(40px,6vw,64px); padding-top:18px; border-top:1px solid var(--line); display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; color:var(--muted); font-size:0.9rem;}
+  .foot-bottom a{display:inline-flex; gap:6px; align-items:center; text-decoration:none; color:inherit;}
+
+  /* paper plane cursor, as on the other pages */
+  .cursor-plane{position:fixed; left:0; top:0; z-index:900; width:26px; height:26px; pointer-events:none; opacity:0; transition:opacity .3s; transform:translate(var(--cx,-100px),var(--cy,-100px)) translate(-50%,-50%) rotate(var(--cr,-40deg)); will-change:transform;}
+  .cursor-plane.on{opacity:1;}
+  .cursor-plane svg{width:100%; height:100%; color:var(--text); filter:drop-shadow(0 3px 6px rgba(0,0,0,0.6));}
+  .cursor-trail{position:fixed; left:0; top:0; z-index:899; width:4px; height:4px; border-radius:50%; background:var(--accent); pointer-events:none; opacity:0; transform:translate(var(--tx,-100px),var(--ty,-100px)) translate(-50%,-50%); transition:opacity .5s;}
+  .cursor-trail.on{opacity:0.5;}
+  @media (hover:none),(pointer:coarse){ .cursor-plane,.cursor-trail{display:none;} }
+  @media (hover:hover) and (pointer:fine){ html.has-plane-cursor,html.has-plane-cursor a,html.has-plane-cursor button,html.has-plane-cursor summary{cursor:none;} }
+  @media (prefers-reduced-motion:reduce){ *,*::before,*::after{animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important; scroll-behavior:auto !important;} .js .reveal{opacity:1; transform:none;} }
+
+  /* header stays put */
+  header.case-nav{position:fixed; top:0; left:0; right:0; max-width:none; margin:0; padding:14px max(28px, calc((100% - 1264px) / 2)); background:color-mix(in srgb, var(--bg) 92%, transparent); -webkit-backdrop-filter:blur(12px); backdrop-filter:blur(12px); border-bottom:1px solid var(--line); z-index:70;}
+  @media (max-width:900px){ header.case-nav{padding:12px 20px;} .mnav{top:46px;} }
+  .toc-wrap{top:84px !important; max-height:calc(100vh - 104px) !important;}
+  section.sec{scroll-margin-top:84px !important;}
+  .title-screen{padding-top:92px !important;}
+  /* how the room moved */
+  .sh{border-top:1px solid var(--line); margin-top:6px;}
+  .sh-row{display:grid; grid-template-columns:150px minmax(0,1fr); align-items:stretch; border-bottom:1px solid var(--line);}
+  .sh-l{padding:18px 8px 18px 0; font-family:var(--head); font-weight:600; font-size:0.9rem; color:var(--text); display:flex; align-items:center;}
+  .sh-track{display:grid; grid-template-columns:repeat(5,minmax(0,1fr));}
+  .sh-col{min-height:64px; display:flex; flex-wrap:wrap; align-items:center; justify-content:center; gap:5px; padding:10px 4px; border-left:1px solid var(--line);}
+  .sh-row.head .sh-col{min-height:0; padding:10px 4px; font-family:var(--head); font-size:0.66rem; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--muted);}
+  .sh-col .mono-av{width:32px; height:32px; font-size:10px;}
+  .sh-col .mono-av.moved{box-shadow:0 0 0 2px var(--bg), 0 0 0 3px var(--text2);}
+  .sh-note{margin-top:12px; font-size:0.92rem; color:var(--muted);}
+  .sh-note b{color:var(--text);}
+  @media (max-width:760px){ .sh-row{grid-template-columns:96px minmax(0,1fr);} .sh-col .mono-av{width:26px; height:26px; font-size:9px;} .sh-row.head .sh-col{font-size:0.56rem; letter-spacing:0.04em;} }
+  /* problem to decision table */
+  .dtab{border:1px solid var(--line); border-radius:var(--r); overflow:hidden; background:var(--card);}
+  .dtab .head, .dtab .r{display:grid; grid-template-columns:minmax(0,0.8fr) 34px minmax(0,1.3fr); gap:12px; align-items:center; padding:15px 22px;}
+  .dtab .head{background:var(--card2); font-family:var(--head); font-size:0.68rem; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--muted); padding-block:11px;}
+  .dtab .r{border-top:1px solid var(--line); font-size:0.98rem; color:var(--text2);}
+  .dtab .r .p{display:flex; align-items:center; gap:12px; color:var(--text);}
+  .dtab .r .p i{font-size:1.25rem; color:var(--muted); flex:none;}
+  .dtab .r b{font-weight:600; color:var(--text);}
+  .dtab .ar{text-align:center; color:var(--dim); font-style:normal;}
+  @media (max-width:700px){ .dtab .head{display:none;} .dtab .r{grid-template-columns:1fr; gap:4px;} .dtab .ar{display:none;} }
+  /* use the full column, and keep orange for small signals only */
+  h1, h2, .statement, .ver-cap{max-width:none; text-wrap:pretty;}
+  h2{max-width:none;}
+  .statement{max-width:none;}
+  .ver-cap, .fl .body, .angle-out, .end-final{max-width:none;}
+  .statement em{color:inherit; font-style:normal;}
+  .callout .k, .decision .k, .cols2 h4, .v2-col .k, .rules2 .i, .detail .row.lim .k, .col-card .k, .angle-out b{color:var(--muted);}
+  .opt .tagai{color:var(--text2); border-color:var(--line2);}
+  .shift{color:var(--text2); background:var(--tile);}
+  .mnav-row .n{color:var(--muted);}</style>
 </head>
 <body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="cursor-plane" id="cursorPlane" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.7 2.3a1 1 0 0 0-1.03-.24L2.6 8.3a1 1 0 0 0-.07 1.87l7.56 3.1 3.1 7.56a1 1 0 0 0 1.87-.07l6.24-18.07a1 1 0 0 0-.24-1.03ZM11.1 12.9 5.6 10.64l12.73-4.4-7.23 6.66Zm2.3 7.3L11.14 14l6.66-7.23-4.4 12.73Z"/></svg></div>
+<div class="cursor-trail" id="cursorTrail" aria-hidden="true"></div>
+
+<div class="mnav" id="mnav" aria-hidden="true"><div class="mnav-row"><span class="n" id="mnavN">01</span><span id="mnavL">The Moment</span></div><div class="mnav-bar"><i id="mnavBar"></i></div></div>
+
 <header class="case-nav">
   <a href="index.html" class="case-nav-mark">VEDANSHI<span>.</span></a>
   <a href="index.html#work" class="case-nav-back">&larr; Back to portfolio</a>
 </header>
 
-<main>
-  <section class="sec b-hero wrap">
-    <div class="b-tags"><span class="b-tag">AI working prototype</span><span class="b-tag">Product concept</span><span class="b-tag">Decision design</span></div>
-    <h1>Every great product begins with a single idea. But before it deserves to be built, it deserves to be challenged.</h1>
-    <p class="lede">Boardroom AI is a working AI prototype I designed end to end &mdash; a room of six conflicting perspectives an idea has to survive before a team spends real time, money and development effort on it.</p>
-    <dl class="b-meta">
-      <div><dt>Role</dt><dd>Product / UX / UI / Interaction / AI concept &mdash; designed solo</dd></div>
-      <div><dt>Type</dt><dd>AI working prototype, 2026</dd></div>
-      <div><dt>Background</dt><dd>4 years in B2B SaaS</dd></div>
-    </dl>
-  </section>
+<section class="title-screen" id="top">
+  <div class="title-inner">
+    <div class="tags">
+      <span class="tag">AI product</span>
+      <span class="tag">Working prototype</span>
+      <span class="tag">AI behaviour design</span>
+    </div>
+    <h1>Designing a room that argues with your idea before you build it.</h1>
+    <p class="dek">Good product ideas rarely die because nobody had them. They stall because the right perspectives were not in the room while the idea was still flexible. Getting a designer, a PM, an engineer and a customer voice together takes weeks, and most ideas lose momentum before that happens. Boardroom AI is a working prototype that puts an idea in front of six conflicting perspectives in a single sitting. They question it, argue with each other and end with a verdict on what to do first. I designed how that room behaves, not only how it looks.</p>
+    <div class="meta">
+      <div class="col"><div class="k">Type</div><div class="v">Working AI prototype</div></div>
+      <div class="col"><div class="k">Role</div><div class="v">Product Design</div><div class="v">AI behaviour design</div></div>
+      <div class="col"><div class="k">Status</div><div class="v">Self initiated exploration</div><div class="v">Working prototype</div></div>
+      <div class="col col-tiles">
+        <div class="k">Inside the prototype</div>
+        <div class="tiles">
+          <div class="tile"><div class="num">6</div><div class="lbl">Perspectives</div></div>
+          <div class="tile"><div class="num">3</div><div class="lbl">Debate stages</div></div>
+          <div class="tile"><div class="num">8</div><div class="lbl">Behaviour rules</div></div>
+          <div class="tile"><div class="num">5</div><div class="lbl">Design decisions</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
-  <section class="sec wrap">
-    <p class="mono">The real problem</p>
-    <h2>Nobody rejected the idea. It just never got tested.</h2>
-    <p class="lede">This is how most ideas travel today &mdash; six stages, and the same unproven assumption riding along in all of them.</p>
-    <ol class="journey">
-      <li><b>Idea</b><span>&ldquo;I think this could be something.&rdquo;</span></li>
-      <li><b>Belief</b><span>&ldquo;Sounds good, let's do it.&rdquo;</span></li>
-      <li><b>Commitment</b><span>&ldquo;We should build this.&rdquo;</span></li>
-      <li><b>Investment</b><span>&ldquo;We've already invested.&rdquo;</span></li>
-      <li><b>Launch</b><span>&ldquo;Finally &mdash; it's ready.&rdquo;</span></li>
-      <li><b>Reality</b><span>&ldquo;Nobody wanted this.&rdquo;</span></li>
+<div class="page">
+  <nav class="toc-wrap" aria-label="Case study sections">
+    <p class="toc-eyebrow">Contents</p>
+    <ol class="toc" id="toc">
+      <li><a href="#s01"><span class="n">01</span>The Moment</a></li>
+      <li><a href="#s02"><span class="n">02</span>The Problem</a></li>
+      <li><a href="#s03"><span class="n">03</span>Why AI</a></li>
+      <li><a href="#s04"><span class="n">04</span>The Board</a></li>
+      <li><a href="#s05"><span class="n">05</span>The Behaviour</a></li>
+      <li><a href="#s06"><span class="n">06</span>The Prototype</a></li>
+      <li><a href="#s07"><span class="n">07</span>What I Learned</a></li>
     </ol>
-    <div class="callout warn">The real loss isn't the idea failing. It's the wasted resources, misaligned teams, missed opportunities and lost trust it takes down with it.</div>
-    <p class="body-p"><em>What if ideas could fight back?</em></p>
-  </section>
+    <a class="toc-back" href="#" onclick="window.scrollTo({top:0,behavior:'smooth'});setTimeout(function(){if(window.scrollY>0)window.scrollTo(0,0)},1600);return false;"><i class="ph ph-arrow-up" aria-hidden="true"></i> Back to top</a>
+  </nav>
 
-  <section class="sec wrap">
-    <p class="mono">The problem</p>
-    <h2>We don't fail because we lack ideas. We fail because we fall in love with them.</h2>
-    <p class="lede">The most dangerous moment in product development isn't when an idea fails. It's when everyone starts agreeing too quickly. The unanswered questions, hidden assumptions and overlooked risks quietly survive every review until they become expensive mistakes.</p>
-  </section>
+  <main id="main" tabindex="-1">
 
-  <section class="sec wrap">
-    <p class="mono">What it costs when nobody argues back</p>
-    <h2>Two real products, two untested assumptions.</h2>
-    <p class="lede">Not hypothetical risk &mdash; two well-documented, public examples of the exact failure mode Boardroom AI is designed to catch earlier.</p>
-    <div class="cost-grid">
-      <div class="cost-card">
-        <h3>Google+</h3>
-        <p class="sub">Social network &middot; shut down after 8 years</p>
-        <p>Google's answer to Facebook launched on a simple internal logic: bundle a social layer into Gmail, YouTube and Search, and adoption would follow. Millions of accounts were created &mdash; but signups aren't the same as people wanting to be there.</p>
-        <div class="cost-fig">&lt;5 sec<span>average length of 90% of user sessions, by the platform's own later admission</span></div>
-        <p class="cost-note">The assumption never challenged: scale was mistaken for validation. Nobody was in the room to ask for the difference.</p>
+    <section class="sec" id="s01" aria-labelledby="h01">
+      <div class="sec-head">
+        <div class="eyebrow-row"><span class="n">01</span><span class="label">The Moment</span></div>
+        <h2 id="h01">A good idea should not disappear because the right people were not in the room.</h2>
       </div>
-      <div class="cost-card">
-        <h3>Quibi</h3>
-        <p class="sub">Short-form mobile streaming &middot; shut down 6 months after launch</p>
-        <p>Quibi bet everything on one belief: that people wanted premium, 10-minute shows built only for their commute &mdash; watched between a coffee run and a train ride. Leadership had pedigree, Hollywood talent and total conviction. What it never had was a room where someone asked out loud: what if people simply stay on the apps they already open?</p>
-        <div class="cost-fig">$1.75B<span>raised, returned, gone within 6 months</span></div>
-        <p class="cost-note">The assumption never challenged: nobody in the room was assigned to argue against the core bet &mdash; only to help it launch faster.</p>
+      <p class="lede">Three of us were in a discussion, a designer, a PM and another product person. One of us shared a <b>genuinely good idea</b>. It got some feedback, and everyone agreed it needed more discussion. The PM said stakeholders had to weigh in on feasibility and direction, but getting them together was hard. A month later it <b>still had not moved</b>, and it eventually went nowhere.</p>
+      <figure class="comic">
+        <img src="assets/boardroom/boardroom-comic.webp" width="1536" height="1024" loading="lazy" alt="Four panel comic. 1, a product person says it is a good idea but more perspectives are needed before building it, and getting everyone in the room is hard. 2, what if the missing perspectives did not have to wait for the meeting, shown as Boardroom AI with six lenses: customer, product, engineering, business, design and risk. 3, the six perspectives challenge each other around the product idea. 4, a verdict with a proceed signal, biggest opportunity, biggest risk and next step.">
+      </figure>
+      <div class="decision reveal">
+        <span class="k">The insight</span>
+        <p>The problem was not a missing process. The right perspectives were hard to bring together while the idea was still flexible. This was one observed moment, not a study, and it gave me a hypothesis worth prototyping.</p>
       </div>
+    </section>
+
+    <section class="sec" id="s02" aria-labelledby="h02">
+      <div class="sec-head">
+        <div class="eyebrow-row"><span class="n">02</span><span class="label">The Problem</span></div>
+        <h2 id="h02">Why do some ideas move forward before their weakest assumptions have been challenged?</h2>
+      </div>
+      <p class="story">So I traced the path an idea usually takes. Pick a problem to see where it bites.</p>
+      <div class="flow" id="flow" aria-label="The usual path of an idea"></div>
+      <div class="cards" id="fails"></div>
+    </section>
+
+    <section class="sec" id="s03" aria-labelledby="h03">
+      <div class="sec-head">
+        <div class="eyebrow-row"><span class="n">03</span><span class="label">Why AI</span></div>
+        <h2 id="h03">What if the missing perspectives did not have to wait for the meeting?</h2>
+      </div>
+      <p class="story">That left one question, how to get more perspectives in front of an idea early. I compared six ways. The first five each solve part of it.</p>
+      <div class="opts">
+        <div class="opt-list" id="optList" role="group" aria-label="Approaches"></div>
+        <div class="detail" id="optDetail" aria-live="polite"></div>
+      </div>
+      <p class="statement reveal">I was not trying to replace the boardroom with AI. <em>I was trying to give the boardroom more perspectives before it made a decision.</em></p>
+    </section>
+
+    <section class="sec" id="s04" aria-labelledby="h04">
+      <div class="sec-head">
+        <div class="eyebrow-row"><span class="n">04</span><span class="label">The Board</span></div>
+        <h2 id="h04">Six perspectives. Six different questions.</h2>
+      </div>
+      <p class="story">Next, who sits at the table.</p>
+      <div class="decision"><span class="k">Decision</span><p>Six lenses, not six job titles. More roles started to overlap, so I kept only the six that ask <b>fundamentally different questions</b>.</p></div>
+      <div class="seats" id="seats" role="group" aria-label="Board members"></div>
+      <div class="seat-detail" id="seatDetail" aria-live="polite"></div>
+    </section>
+
+    <section class="sec" id="s05" aria-labelledby="h05">
+      <div class="sec-head">
+        <div class="eyebrow-row"><span class="n">05</span><span class="label">The Behaviour</span></div>
+        <h2 id="h05">Six personas did not create a boardroom.</h2>
+      </div>
+      <p class="story">Then the first version failed. It felt like <b>six separate ChatGPT responses</b>. Flip between the two.</p>
+      <div class="seg" role="group" aria-label="Version">
+        <button type="button" id="segFirst" aria-pressed="true">First version</button>
+        <button type="button" id="segFinal" aria-pressed="false">Final version</button>
+      </div>
+      <div class="ver" id="verFirst">
+        <p class="ver-cap">Idea in. Six answers out. Nobody reads anybody else.</p>
+        <div class="v1" id="v1"></div>
+      </div>
+      <div class="ver" id="verFinal" hidden>
+        <p class="ver-cap">Six first reactions, one argument, one verdict.</p>
+        <div class="v2" id="v2"></div>
+      </div>
+
+      <p class="sub-h">How the room moved</p>
+      <div class="sh" id="shift"></div>
+      <p class="sh-note" id="shiftNote"></p>
+
+      <p class="sub-h">What I decided</p>
+      <div class="dtab" id="decisions"></div>
+
+      <p class="statement reveal">I had to define how the AI behaves, not just who it is. <em>Persona design became behaviour design.</em></p>
+
+      <p class="sub-h">Eight rules written into every seat</p>
+      <ol class="rules2" id="rules"></ol>
+
+      <p class="sub-h">A real exchange from the recorded demo</p>
+      <div class="conf-tabs" id="confTabs" role="group" aria-label="Disagreements"></div>
+      <div class="conf-body" id="confBody" aria-live="polite"></div>
+    </section>
+
+
+    <section class="sec" id="s06" aria-labelledby="h06">
+      <div class="sec-head">
+        <div class="eyebrow-row"><span class="n">06</span><span class="label">The Prototype</span></div>
+        <h2 id="h06">Enough explanation. Watch the room work.</h2>
+      </div>
+      <p class="story">So I built it and recorded it running. The verdict, the scores and the follow up questions are all in here.</p>
+      <figure class="video-frame">
+        <video id="recVideo" poster="assets/boardroom/boardroom-poster.jpg" preload="metadata" muted playsinline controls controlsList="nodownload noplaybackrate" disablepictureinpicture aria-label="Screen recording of the Boardroom prototype running the grocery list idea, from the idea screen to the verdict">
+          <source src="assets/boardroom/boardroom-walkthrough.mp4" type="video/mp4">
+        </video>
+      </figure>
+    </section>
+
+    <section class="sec" id="s07" aria-labelledby="h07">
+      <div class="sec-head">
+        <div class="eyebrow-row"><span class="n">07</span><span class="label">What I Learned</span></div>
+        <h2 id="h07">The challenge was not getting AI to generate opinions.</h2>
+      </div>
+      <p class="story">It was designing <b>constraints that make those opinions useful</b> to a human decision maker.</p>
+      <p class="statement reveal">The early impact was not changing the decision. <em>It was changing the conversation before the decision.</em></p>
+
+      <p class="sub-h">Early validation</p>
+      <p class="plain">I tested the concept with a small group. People did not want more AI generated content. They wanted AI to structure their thinking and surface what they had not considered. This was directional feedback, not a usability study.</p>
+
+      <div class="cols2" style="margin-top:34px;">
+        <div><h4>What it demonstrates</h4><ul><li>Product concept</li><li>AI behaviour design</li><li>Interaction design</li><li>Prompt architecture</li></ul></div>
+        <div><h4>Not proven yet</h4><ul><li>Product market fit</li><li>Real business impact</li><li>Large scale adoption</li><li>Decision accuracy</li></ul></div>
+      </div>
+
+      <p class="sub-h">My role</p>
+      <dl class="def">
+        <div><dt>Product</dt><dd>Problem framing, product concept, user flow and interaction model.</dd></div>
+        <div><dt>AI behaviour</dt><dd>Six perspective definitions, behaviour rules and prompts, disagreement logic.</dd></div>
+        <div><dt>Design</dt><dd>UI and visual system, interaction states and motion, information hierarchy.</dd></div>
+      </dl>
+      <p class="end-final reveal"><strong>With AI products, the interface is only part of the design. The behaviour you design underneath it is the product.</strong></p>
+    </section>
+
+  </main>
+</div>
+
+<footer class="foot" id="contact">
+  <div class="case-nav" style="padding:0 28px;">
+    <div class="foot-grid" style="width:100%;">
+      <div>
+        <p class="foot-statement">Still asking why?</p>
+        <p class="foot-sub">It is how I start every project: keep asking until the brief turns into the real problem. If your team has one, I would like to hear it.</p>
+      </div>
+      <ul class="connect" aria-label="Ways to connect">
+        <li><a class="c-row c-main" href="mailto:vedanshis50@gmail.com"><span class="c-ic brand"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#4285F4" d="M2 7.2V18a1 1 0 001 1h3.5v-8.8z"/><path fill="#34A853" d="M22 7.2V18a1 1 0 01-1 1h-3.5v-8.8z"/><path fill="#FBBC04" d="M17.5 4.3L22 7.2v2.1l-4.5 1z"/><path fill="#EA4335" d="M2 6a2 2 0 012-2h.5L12 9.6 19.5 4H20a2 2 0 012 2v.6l-10 7.4L2 6.6z"/></svg></span><span class="c-t"><b>Email</b><small>vedanshis50@gmail.com</small></span><i class="ph ph-arrow-up-right c-go" aria-hidden="true"></i></a><button class="c-copy" type="button" data-copy="vedanshis50@gmail.com" aria-label="Copy email address"><i class="ph ph-copy" aria-hidden="true"></i></button></li>
+        <li><a class="c-row" href="tel:+917652006793"><span class="c-ic"><i class="ph ph-phone" aria-hidden="true"></i></span><span class="c-t"><b>Phone</b><small>+91 76520 06793</small></span><i class="ph ph-arrow-up-right c-go" aria-hidden="true"></i></a></li>
+        <li><a class="c-row" href="https://www.linkedin.com/in/vedanshis50" target="_blank" rel="noopener"><span class="c-ic brand"><svg viewBox="0 0 24 24" aria-hidden="true"><rect width="24" height="24" rx="4" fill="#0A66C2"/><path fill="#fff" d="M6.3 9.4h2.6v8.3H6.3zM7.6 5.4a1.5 1.5 0 110 3 1.5 1.5 0 010-3zM10.6 9.4h2.5v1.1h.04c.35-.66 1.2-1.36 2.47-1.36 2.64 0 3.13 1.74 3.13 4v4.56h-2.6v-4.05c0-.97-.02-2.21-1.35-2.21-1.35 0-1.56 1.05-1.56 2.14v4.12h-2.6z"/></svg></span><span class="c-t"><b>LinkedIn</b><small>Say hi, or send a role</small></span><i class="ph ph-arrow-up-right c-go" aria-hidden="true"></i></a></li>
+        <li><a class="c-row" href="assets/docs/vedanshi-singh-resume.pdf" target="_blank" rel="noopener"><span class="c-ic brand"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#E5252A" d="M6 2h8l5 5v13a2 2 0 01-2 2H6a2 2 0 01-2-2V4a2 2 0 012-2z"/><path fill="#fff" fill-opacity=".4" d="M14 2l5 5h-4a1 1 0 01-1-1z"/><text x="11.6" y="17.4" font-size="6.6" font-weight="700" fill="#fff" text-anchor="middle" font-family="Arial, sans-serif">PDF</text></svg></span><span class="c-t"><b>Resume</b><small>Download</small></span><i class="ph ph-arrow-down c-go" aria-hidden="true"></i></a></li>
+      </ul>
     </div>
-  </section>
-
-  <section class="sec wrap">
-    <p class="mono">The reframe</p>
-    <h2>Before you build, make the idea defend itself.</h2>
-    <p class="lede">Every product decision starts as an assumption. Untested, it can survive months of meetings before it becomes an expensive mistake. What if every idea had to prove who it's for, why now, and what could go wrong &mdash; before it got a single hour of work?</p>
-    <p class="body-p">Boardroom AI helps teams challenge ideas before they invest time, money and development effort in them.</p>
-  </section>
-
-  <section class="sec wrap">
-    <p class="mono">Meet the boardroom</p>
-    <h2>So I built a room of six perspectives.</h2>
-    <p class="lede">Different minds, different incentives. One goal: build what actually matters. Their value isn't in six separate answers &mdash; it's in what happens when the answers disagree.</p>
-    <div class="board-grid">
-      <div class="board-card"><span class="board-role">CEO</span><p class="board-focus">Vision and priority</p><ul class="board-qs"><li>Is this a great business?</li><li>Can we win this market?</li><li>Will this still matter in three years?</li></ul></div>
-      <div class="board-card"><span class="board-role">Investor</span><p class="board-focus">ROI and risk</p><ul class="board-qs"><li>What is the upside?</li><li>What are we underestimating?</li><li>Why now and not later?</li></ul></div>
-      <div class="board-card"><span class="board-role">Engineer</span><p class="board-focus">Feasibility and technical truth</p><ul class="board-qs"><li>Can we build this reliably?</li><li>What are the technical risks?</li><li>What will this cost us later?</li></ul></div>
-      <div class="board-card"><span class="board-role">UX Researcher</span><p class="board-focus">User trust</p><ul class="board-qs"><li>What do users truly need?</li><li>What did we not validate?</li><li>What will surprise us later?</li></ul></div>
-      <div class="board-card"><span class="board-role">Customer</span><p class="board-focus">Adoption and trust</p><ul class="board-qs"><li>Will this make my life better?</li><li>What would make me unhappy?</li><li>Why should I choose this?</li></ul></div>
-      <div class="board-card"><span class="board-role">Strategist</span><p class="board-focus">The long game</p><ul class="board-qs"><li>Does this create a real edge?</li><li>How does this fit our strategy?</li><li>What are we saying no to?</li></ul></div>
-    </div>
-    <p class="body-p" style="margin-top:26px;"><b>An idea doesn't get six opinions. It gets cross-examined.</b> Example of the kind of exchange the room is designed to produce:</p>
-    <ul class="clash">
-      <li><b>CEO</b><span>&ldquo;This could be a strong opportunity.&rdquo;</span></li>
-      <li><b>Engineer</b><span>&ldquo;The architecture doesn't support that scale.&rdquo;</span></li>
-      <li><b>Customer</b><span>&ldquo;I'm not convinced anyone needs it.&rdquo;</span></li>
-      <li><b>Investor</b><span>&ldquo;What's the evidence?&rdquo;</span></li>
-      <li><b>Strategist</b><span>&ldquo;If we build this, what are we not building?&rdquo;</span></li>
-    </ul>
-  </section>
-
-  <section class="sec wrap">
-    <p class="mono">The interaction</p>
-    <h2>One decision, start to verdict.</h2>
-    <p class="lede">The interaction isn't one screen, it's a sequence. Here's the path a founder walks, and what each state is designed to make them feel.</p>
-    <div class="states">
-      <div class="state-row"><div class="state-n">01<span class="state-name">Entry</span></div><div class="state-does">States one decision in a single field &mdash; not a product brief, one sentence.</div><div class="state-feel"><span class="state-feel-lbl">Designed to feel</span>Commitment &mdash; name the real question.</div></div>
-      <div class="state-row"><div class="state-n">02<span class="state-name">Board assembles</span></div><div class="state-does">Watches the six members take their seats, one by one.</div><div class="state-feel"><span class="state-feel-lbl">Designed to feel</span>Slight intimidation &mdash; they are prepared.</div></div>
-      <div class="state-row"><div class="state-n">03<span class="state-name">Debate</span></div><div class="state-does">Watches positions move across the room and clash.</div><div class="state-feel"><span class="state-feel-lbl">Designed to feel</span>Tension.</div></div>
-      <div class="state-row"><div class="state-n">04<span class="state-name">Cross-examination</span></div><div class="state-does">Sees a claim challenged with a real comparable, not just an opinion.</div><div class="state-feel"><span class="state-feel-lbl">Designed to feel</span>Pressure &mdash; the assumption is exposed.</div></div>
-      <div class="state-row"><div class="state-n">05<span class="state-name">The turn</span></div><div class="state-does">Watches the room converge as the original question gets reframed.</div><div class="state-feel"><span class="state-feel-lbl">Designed to feel</span>Clarity forming.</div></div>
-      <div class="state-row"><div class="state-n">06<span class="state-name">The verdict</span></div><div class="state-does">Reads the ruling, the vote, and the minority opinion.</div><div class="state-feel"><span class="state-feel-lbl">Designed to feel</span>Clarity &mdash; a ruling, not &ldquo;feedback&rdquo;.</div></div>
-      <div class="state-row"><div class="state-n">07<span class="state-name">Homework</span></div><div class="state-does">Gets specific things to prove before the next session &mdash; not applause.</div><div class="state-feel"><span class="state-feel-lbl">Designed to feel</span>Obligation &mdash; a next step.</div></div>
-    </div>
-  </section>
-
-  <section class="sec wrap">
-    <p class="mono">The design challenge</p>
-    <h2>How do you design disagreement?</h2>
-    <p class="lede">The hard part was never making six AI personas look attractive. It was the information architecture of disagreement &mdash; deciding what a founder sees, what stays hidden, and when tension turns into noise instead of clarity.</p>
-    <div class="prin-grid">
-      <div class="prin-card"><h3>Show what helps a decision, not everything the model says</h3><p>Raw AI output isn't the interface. The room only surfaces what moves a founder from opinion to evidence.</p></div>
-      <div class="prin-card"><h3>Disagreement needs a shape, not a wall of text</h3><p>Six people talking at once is noise. A claim and the comparable that challenges it is a decision aid.</p></div>
-      <div class="prin-card"><h3>A verdict, not a feedback dump</h3><p>What we agree on, what we don't, the biggest risk, the minority opinion, what to prove next &mdash; that's more useful than &ldquo;feasible.&rdquo;</p></div>
-      <div class="prin-card"><h3>Why not just ask one AI?</h3><p>One question gets one general answer. Boardroom AI trades that for structured disagreement &mdash; the value isn't &ldquo;AI knows more,&rdquo; it's that the idea has to survive being cross-examined.</p></div>
-    </div>
-  </section>
-
-  <section class="sec">
-    <div class="wrap honest">
-      <p class="mono">The honest version</p>
-      <h2>The design was never about visuals.</h2>
-      <p>I came in thinking the hard part was making six AI personas look good. It wasn't. The hard part was the information architecture of disagreement: deciding what to show, what to hide, and how to make a founder feel a split without explaining it to them.</p>
-      <p class="final">That's the part I'd carry into any product &mdash; figure out what the interface should make someone feel before deciding what it should look like.</p>
-    </div>
-  </section>
-
-  <section class="sec wrap">
-    <p class="mono">My role</p>
-    <ul class="role-list">
-      <li>Designed the product concept end to end: the six-perspective model, the interaction sequence and the AI persona behaviour.</li>
-      <li>Decided the information architecture of disagreement &mdash; what a founder sees at each state, and what stays hidden until it's useful.</li>
-      <li>Built the working AI prototype and the visual direction, from entry to verdict.</li>
-      <li>This is a working prototype, not a shipped product &mdash; the outcomes above are the design reasoning behind it, not validated business results.</li>
-    </ul>
-  </section>
-
-  <section class="b-cta wrap">
-    <h2>Good ideas don't need more applause. They need better questions.</h2>
-    <a class="btn" href="index.html#work">See the rest of the work <span aria-hidden="true">&rarr;</span></a>
-  </section>
-</main>
-
-<footer class="a-foot">
-  <div class="wrap">
+  </div>
+  <div class="foot-bottom" style="max-width:1320px;margin-inline:auto;padding-inline:28px;">
     <span>Vedanshi Singh &middot; Bengaluru</span>
-    <a class="case-nav-back" href="index.html#contact">Get in touch &rarr;</a>
+    <a href="#top">Back to top <i class="ph ph-arrow-up" aria-hidden="true"></i></a>
   </div>
 </footer>
+
+<script src="boardroom/js/board.js"></script>
+<script src="boardroom/js/demo-session.js"></script>
+<script>
+(function(){
+  "use strict";
+  document.documentElement.classList.add('js');
+  var $ = function(s, el){ return (el||document).querySelector(s); };
+  var $$ = function(s, el){ return Array.prototype.slice.call((el||document).querySelectorAll(s)); };
+  var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var fine = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+
+  function nd(s){ return String(s==null?'':s).replace(/\s*[—–]\s*/g, ', ').replace(/([A-Za-z0-9])-([A-Za-z])/g, '$1 $2'); }
+  function esc(s){ return nd(s).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+
+  var BR = window.BR;
+  var BOARD_OK = !!(BR && BR.board && BR.demo);
+  var B, M = [], S, byId = {}, turns = [], pos = {}, verdict = {};
+  if(BOARD_OK){ B = BR.board; M = B.MEMBERS; S = BR.demo.session(); M.forEach(function(m){ byId[m.id]=m; }); turns = S.turns; pos = S.positions; verdict = S.verdict; }
+
+  function av(m){ return '<span class="mono-av" style="--c:'+m.color+'" aria-hidden="true">'+m.initials+'</span>'; }
+  function stanceText(t){ var st = B.STANCES[t.stance]; if(!st) return ''; var to = byId[t.to]; return st.says.replace('{to}', to ? to.short : 'the room'); }
+  function say(idx, sentence){ if(turns[idx].says.indexOf(sentence) === -1 && window.console) console.warn('Excerpt not found in turn', idx, sentence); return sentence; }
+  function turnHtml(idx, sentence, shift){
+    var t = turns[idx], m = byId[t.speaker];
+    var sh = (shift && t.shift) ? '<span class="shift"><i class="ph ph-arrows-left-right" aria-hidden="true"></i>Changes position: '+esc(t.shift.position)+'</span>' : '';
+    return '<div class="turn">'+av(m)+'<div><div class="turn-who">'+esc(m.name)+' <span>'+esc(m.role)+' &middot; '+esc(stanceText(t))+'</span></div><p class="turn-says">&ldquo;'+esc(say(idx,sentence))+'&rdquo;</p>'+sh+'</div></div>';
+  }
+
+  /* 02 flow and failures */
+  var NODES = [['idea','Idea'],['pm','PM'],['meeting','Meeting'],['stake','Stakeholders'],['decision','Decision'],['roadmap','Roadmap'],['build','Design + Engineering'],['later','Problems discovered later']];
+  $('#flow').innerHTML = NODES.map(function(n,i){ return (i?'<span class="arr" aria-hidden="true">&rarr;</span>':'')+'<span class="node'+(n[0]==='later'?' later':'')+'" data-n="'+n[0]+'">'+esc(n[1])+'</span>'; }).join('');
+  var FAILS = [
+    ['Opinion driven decisions','Agreement comes fast when everyone sees the opportunity.','ph-megaphone',['meeting','stake','decision']],
+    ['Feasibility arrives late','Engineering limits surface after the idea has momentum.','ph-gear-six',['build','later']],
+    ['Customer needs disappear','Business and internal views dominate the room.','ph-user-circle-minus',['meeting','stake']],
+    ['Good ideas stall','The problem is not the idea. It is getting people together.','ph-hourglass-medium',['pm','meeting','stake']],
+    ['Design effort is wasted','Problems found late force rethinking.','ph-arrow-counter-clockwise',['build','later']]
+  ];
+  var failsEl = $('#fails');
+  failsEl.innerHTML = FAILS.map(function(f,i){ return '<button type="button" class="fail" aria-pressed="false" data-i="'+i+'"><span class="ic"><i class="ph '+f[2]+'" aria-hidden="true"></i></span><span><h3>'+esc(f[0])+'</h3><p>'+esc(f[1])+'</p></span></button>'; }).join('');
+  function lightFlow(ids){ $$('.node').forEach(function(n){ n.classList.toggle('hot', ids.indexOf(n.getAttribute('data-n')) > -1); }); }
+  $$('.fail', failsEl).forEach(function(b){
+    var i = +b.getAttribute('data-i');
+    function pinned(){ return !!$('.fail[aria-pressed="true"]', failsEl); }
+    b.addEventListener('click', function(){
+      var on = b.getAttribute('aria-pressed') === 'true';
+      $$('.fail', failsEl).forEach(function(x){ x.setAttribute('aria-pressed','false'); });
+      if(on) lightFlow([]); else { b.setAttribute('aria-pressed','true'); lightFlow(FAILS[i][3]); }
+    });
+    b.addEventListener('mouseenter', function(){ if(!pinned()) lightFlow(FAILS[i][3]); });
+    b.addEventListener('mouseleave', function(){ if(!pinned()) lightFlow([]); });
+    b.addEventListener('focus', function(){ if(!pinned()) lightFlow(FAILS[i][3]); });
+    b.addEventListener('blur', function(){ if(!pinned()) lightFlow([]); });
+  });
+
+  /* 03 why AI */
+  var OPTS = [
+    {n:'Checklist or framework', a:'Good for', g:'Consistency.', b:'Limitation', l:"It can structure the questions, but it cannot generate the perspectives that are missing."},
+    {n:'Collaboration tool', a:'Good for', g:'Coordination.', b:'Limitation', l:'It still depends on people being available.'},
+    {n:'Meeting template', a:'Good for', g:'Structured discussion.', b:'Limitation', l:"It does not guarantee meaningful disagreement."},
+    {n:'Scoring system', a:'Good for', g:'Quantifying decisions.', b:'Limitation', l:'It needs the criteria to exist already.'},
+    {n:'Human review panel', a:'Good for', g:'Rich perspectives.', b:'Limitation', l:'Slow and difficult to coordinate.'},
+    {n:'AI perspectives', ai:true, a:'Potential', g:'Several relevant perspectives, instantly.', b:'The challenge', l:'The AI has to be designed carefully enough to produce useful disagreement instead of generic opinions.'}
+  ];
+  var optList = $('#optList'), optDetail = $('#optDetail');
+  optList.innerHTML = OPTS.map(function(o,i){ return '<button type="button" class="opt" aria-pressed="false" data-i="'+i+'"><span class="i">0'+(i+1)+'</span>'+esc(o.n)+(o.ai?'<span class="tagai">What I chose</span>':'')+'</button>'; }).join('');
+  function selOpt(i){
+    var o = OPTS[i];
+    $$('.opt', optList).forEach(function(b,k){ b.setAttribute('aria-pressed', k===i?'true':'false'); });
+    optDetail.innerHTML = '<h3>'+esc(o.n)+'</h3><div class="row"><div class="k">'+esc(o.a)+'</div><p>'+esc(o.g)+'</p></div><div class="row lim"><div class="k">'+esc(o.b)+'</div><p>'+esc(o.l)+'</p></div>';
+  }
+  $$('.opt', optList).forEach(function(b){ b.addEventListener('click', function(){ selOpt(+b.getAttribute('data-i')); }); });
+  selOpt(5);
+
+  if(BOARD_OK){
+    /* 04 board */
+    var seatsEl = $('#seats'), seatDetail = $('#seatDetail');
+    seatsEl.innerHTML = M.map(function(m,i){ return '<button type="button" class="seat" style="--c:'+m.color+'" aria-pressed="false" data-i="'+i+'">'+av(m)+'<span class="nm">'+esc(m.name)+'</span><span class="rl">'+esc(m.role)+'</span></button>'; }).join('');
+    var selSeat = function(i){
+      var m = M[i], p = pos[m.id];
+      $$('.seat', seatsEl).forEach(function(b,k){ b.setAttribute('aria-pressed', k===i?'true':'false'); });
+      seatDetail.style.setProperty('--c', m.color);
+      seatDetail.innerHTML =
+        '<div class="sd-head">'+av(m)+'<div><h3>'+esc(m.name)+'</h3><p>'+esc(m.role)+' &middot; '+esc(m.lens)+'</p></div><span class="chip" data-lean="'+p.lean+'">'+esc(p.position)+'</span></div>'+
+        '<p class="sd-q">&ldquo;'+esc(m.question)+'&rdquo;</p>'+
+        '<div class="sd-grid">'+
+          '<div class="sd-col"><h4>Thinks about</h4><ul>'+m.thinks.map(function(t){ return '<li>'+esc(t)+'</li>'; }).join('')+'</ul></div>'+
+          '<div class="sd-col"><h4>Guardrail in the prompt</h4><p class="sd-guard">'+esc(m.guard)+'</p></div>'+
+          '<div class="sd-col"><h4>First reaction, grocery list idea</h4><p class="hd">&ldquo;'+esc(p.headline)+'&rdquo;</p><p class="cn"><b>Main concern.</b> '+esc(p.key_concern)+'</p></div>'+
+        '</div>';
+    };
+    $$('.seat', seatsEl).forEach(function(b){ b.addEventListener('click', function(){ selSeat(+b.getAttribute('data-i')); }); });
+    selSeat(0);
+
+    /* 05 behaviour */
+    $('#v1').innerHTML = '<span class="idea-pill">Idea</span>' + M.map(function(m){ return '<div class="v1-row">'+av(m)+'<span class="nm">'+esc(m.role)+'</span><span class="skel"><i></i><i></i><i></i></span></div>'; }).join('');
+    $('#v2').innerHTML =
+      '<div class="v2-col"><div class="k">Step 1</div><h4>First reactions</h4><div class="seatrow">'+M.map(av).join('')+'</div><ul><li>Six separate calls</li><li>Nobody anchors on anyone</li></ul></div>'+
+      '<div class="v2-col"><div class="k">Step 2</div><h4>The debate</h4><ul><li>'+B.STAGES.map(function(s){return esc(s.label);}).join('</li><li>')+'</li><li>One direct cross examination</li><li>Minds can change, with a reason</li></ul></div>'+
+      '<div class="v2-col"><div class="k">Step 3</div><h4>The verdict</h4><ul><li>Score, risk, opportunity, first step</li><li>Where each seat ended</li><li>Optional follow up round</li></ul></div>';
+    var setVer = function(first){
+      $('#verFirst').hidden = !first; $('#verFinal').hidden = first;
+      $('#segFirst').setAttribute('aria-pressed', first?'true':'false'); $('#segFinal').setAttribute('aria-pressed', first?'false':'true');
+    };
+    $('#segFirst').addEventListener('click', function(){ setVer(true); });
+    $('#segFinal').addEventListener('click', function(){ setVer(false); });
+
+
+    var DEC = [
+      ['ph-users-three','Personas agreed too much','Six separate first reactions, so nobody anchors on anyone'],
+      ['ph-identification-card','Roles sounded similar','Every seat gets a lens, a core question, a voice and a guardrail'],
+      ['ph-prohibit','Criticism became generic','A banned phrase, and seats must name the dependency, the person or the moment'],
+      ['ph-text-align-left','There was too much text','12 to 16 turns in three stages, and one card per seat before the debate'],
+      ['ph-list-checks','A summary was not enough','A verdict in five parts that answers what to do next']
+    ];
+    $('#decisions').innerHTML = '<div class="head"><span>The problem</span><span></span><span>My decision</span></div>' + DEC.map(function(d){ return '<div class="r"><span class="p"><i class="ph '+d[0]+'" aria-hidden="true"></i>'+esc(d[1])+'</span><i class="ar" aria-hidden="true">&rarr;</i><b>'+esc(d[2])+'</b></div>'; }).join('');
+    /* how the room moved: first reaction against where each seat ended */
+    var finalLean = {}; verdict.votes.forEach(function(v){ finalLean[v.speaker] = v.lean; });
+    var LV = [-2,-1,0,1,2], LN = ['Against','Doubtful','Mixed','Positive','Strong yes'];
+    function clampL(n){ n = Math.round(n); return n < -2 ? -2 : n > 2 ? 2 : n; }
+    var firstL = function(m){ return clampL(pos[m.id].lean); }, lastL = function(m){ return clampL(finalLean[m.id] == null ? pos[m.id].lean : finalLean[m.id]); };
+    var movedN = M.filter(function(m){ return firstL(m) !== lastL(m); }).length;
+    function shRow(label, get){ return '<div class="sh-row"><span class="sh-l">'+label+'</span><div class="sh-track">'+LV.map(function(L){ return '<div class="sh-col">'+M.filter(function(m){ return get(m) === L; }).map(function(m){ return av(m).replace('class="mono-av"', 'class="mono-av'+(firstL(m) !== lastL(m) ? ' moved' : '')+'"'); }).join('')+'</div>'; }).join('')+'</div></div>'; }
+    $('#shift').innerHTML = '<div class="sh-row head"><span></span><div class="sh-track">'+LN.map(function(n){ return '<div class="sh-col">'+n+'</div>'; }).join('')+'</div></div>' + shRow('First reaction', firstL) + shRow('After the debate', lastL);
+    $('#shiftNote').innerHTML = '<b>'+movedN+' of '+M.length+' seats</b> changed their position, each with a stated reason. Ringed avatars moved. Recorded demo, grocery list idea.';
+    $('#rules').innerHTML = B.RULES.map(function(r,i){ return '<li><span class="i">0'+(i+1)+'</span><span>'+esc(r.split('.')[0])+'</span></li>'; }).join('');
+
+    var CONF = [
+      {vs:'Business opportunity vs Customer adoption', t:'The weekly habit is real. Does that mean people will switch?', rows:[[0,"Every flat buys them every single week, and everyone who lives there is involved."],[1,"How often we shop does not tell you I would switch, and you would need all four of us to switch, not just me."],[5,"What evidence do you actually have that flats want to move off WhatsApp?"],[6,"That is a fair challenge, and honestly, I do not have that evidence.",true]]},
+      {vs:'Technical feasibility vs the promise', t:'"Automatic at checkout" needs data nobody shares.', rows:[[2,"To do that, we would need to see what was bought and how much it cost."],[2,"Grocery delivery apps do not share order data with other apps, and in a physical shop there is nothing for us to read at all."],[8,"We drop the automatic splitting from the first version entirely.",true]]},
+      {vs:'A simpler build vs a position worth having', t:'Cutting the hard part leaves a list that competes with a free group chat.', rows:[[9,"what would this do that a group chat cannot?"],[13,"If the product is about never running out of shared things, it stops being a copy of WhatsApp.",true]]}
+    ];
+    var confTabs = $('#confTabs'), confBody = $('#confBody');
+    confTabs.innerHTML = CONF.map(function(c,i){ return '<button type="button" class="conf" aria-pressed="false" data-i="'+i+'"><span class="vs">0'+(i+1)+' Conflict</span><b>'+esc(c.vs)+'</b></button>'; }).join('');
+    var selConf = function(i){
+      $$('.conf', confTabs).forEach(function(b,k){ b.setAttribute('aria-pressed', k===i?'true':'false'); });
+      var c = CONF[i];
+      confBody.innerHTML = '<p class="lead">'+esc(c.t)+'</p>' + c.rows.map(function(r){ return turnHtml(r[0], r[1], !!r[2]); }).join('');
+    };
+    $$('.conf', confTabs).forEach(function(b){ b.addEventListener('click', function(){ selConf(+b.getAttribute('data-i')); }); });
+    selConf(0);
+
+  }
+
+  /* 07 screen recording: plays when in view, pauses when it leaves */
+  var vid = $('#recVideo');
+  if(vid && !reduced && 'IntersectionObserver' in window){
+    new IntersectionObserver(function(es){ es.forEach(function(e){
+      if(e.isIntersecting){ var p = vid.play(); if(p && p.catch) p.catch(function(){}); } else vid.pause();
+    }); }, {threshold:0.55}).observe(vid);
+  }
+  /* scrollspy and mobile nav */
+  var links = $$('#toc a'), secs = links.map(function(a){ return document.querySelector(a.getAttribute('href')); });
+  var mnav = $('#mnav'), mN = $('#mnavN'), mL = $('#mnavL'), mB = $('#mnavBar'), titleEl = $('#top');
+  var LABELS = ['The Moment','The Problem','Why AI','The Board','The Behaviour','The Prototype','What I Learned'];
+  function onScroll(){
+    var y = window.scrollY, idx = -1;
+    secs.forEach(function(s,i){ if(s && s.getBoundingClientRect().top <= 140) idx = i; });
+    links.forEach(function(a,i){ a.classList.toggle('active', i===idx); });
+    var past = titleEl.getBoundingClientRect().bottom < 0;
+    mnav.classList.toggle('show', past); mnav.setAttribute('aria-hidden', past?'false':'true');
+    if(idx > -1){ mN.textContent = '0'+(idx+1); mL.textContent = LABELS[idx]; }
+    var h = document.documentElement, max = h.scrollHeight - h.clientHeight;
+    mB.style.width = (max>0 ? (y/max*100) : 0) + '%';
+  }
+  document.addEventListener('scroll', onScroll, {passive:true}); onScroll();
+
+  if('IntersectionObserver' in window && !reduced){
+    var io = new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } }); }, {rootMargin:'0px 0px -8% 0px'});
+    $$('.reveal').forEach(function(el){ io.observe(el); });
+  } else { $$('.reveal').forEach(function(el){ el.classList.add('in'); }); }
+
+  /* cursor */
+  (function(){
+    var plane = $('#cursorPlane'), trail = $('#cursorTrail'), doc = document.documentElement;
+    if(!plane || !fine) return;
+    doc.classList.add('has-plane-cursor');
+    var mx=-100,my=-100,px=-100,py=-100,angle=-40,on=false, pts=[];
+    addEventListener('pointermove', function(e){ mx=e.clientX; my=e.clientY; if(!on){ on=true; plane.classList.add('on'); trail.classList.add('on'); px=mx; py=my; } }, {passive:true});
+    document.addEventListener('pointerleave', function(){ on=false; plane.classList.remove('on'); trail.classList.remove('on'); });
+    function loop(){
+      var dx=mx-px, dy=my-py; px+=dx*0.18; py+=dy*0.18;
+      if(dx*dx+dy*dy>4) angle=Math.atan2(dy,dx)*(180/Math.PI)+45;
+      plane.style.setProperty('--cx',px+'px'); plane.style.setProperty('--cy',py+'px'); plane.style.setProperty('--cr',angle+'deg');
+      pts.unshift({x:px,y:py}); if(pts.length>6) pts.pop();
+      var tp = pts[Math.min(3, pts.length-1)]; if(tp){ trail.style.setProperty('--tx',tp.x+'px'); trail.style.setProperty('--ty',tp.y+'px'); }
+      requestAnimationFrame(loop);
+    }
+    if(!reduced) requestAnimationFrame(loop);
+  })();
+
+  var copyBtn = $('[data-copy]');
+  if(copyBtn) copyBtn.addEventListener('click', function(){
+    function ok(){ copyBtn.classList.add('is-copied'); setTimeout(function(){ copyBtn.classList.remove('is-copied'); }, 1600); }
+    try { navigator.clipboard.writeText(copyBtn.getAttribute('data-copy')).then(ok, function(){}); } catch(e){}
+  });
+})();
+</script>
 </body>
 </html>
