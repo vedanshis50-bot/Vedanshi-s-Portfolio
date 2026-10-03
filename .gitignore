@@ -1,0 +1,29 @@
+# dependencies and build output
+node_modules/
+# AI tool folders and prompt packs, not part of the site
+.agents/
+.augment/
+.claude/
+.codebuddy/
+.codewhale/
+.continue/
+.cursor/
+.factory/
+.gemini/
+.github/
+.kilocode/
+.kiro/
+.opencode/
+.qoder/
+.roo/
+.trae/
+.warp/
+.windsurf/
+# old versions and the stale single file bundle
+_archive-*/
+portfolio.html
+# secrets
+.env
+.env.*
+*.key
+*.pem

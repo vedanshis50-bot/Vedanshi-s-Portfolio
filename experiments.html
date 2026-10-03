@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Experiments, Vedanshi Singh</title>
+<meta name="description" content="Things built while figuring things out: AI experiments, prototypes and small interaction experiments, separate from Vedanshi Singh's product work.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%236f7d4f'/%3E%3Ctext x='16' y='23' font-family='Arial,sans-serif' font-weight='800' font-size='20' fill='%23ffffff' text-anchor='middle'%3E%3F%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:ital,wght@0,400..700;1,400..700&family=Hanken+Grotesk:ital,wght@0,300..700;1,300..600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #efece3; --bg-raised: #f8f6ef; --text: #24261f; --text-soft: #545848; --gray: #7a7d6b;
+  --border: #dcd9cb; --line-strong: #bebbaa; --accent: #6f7d4f; --accent-text: #56663a;
+  --on-accent: #ffffff;
+  --f-display: "Familjen Grotesk", "Hanken Grotesk", system-ui, sans-serif;
+  --f-body: "Hanken Grotesk", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-mono: "JetBrains Mono", ui-monospace, monospace;
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --r-pill: 999px; --r-lg: 18px;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg) url("assets/textures/paper.webp") repeat; background-size: 900px; color: var(--text); font-family: var(--f-body); font-size: 17px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+a { color: inherit; text-decoration: none; }
+h1, h2, p { margin: 0; padding: 0; }
+h1, h2 { font-family: var(--f-display); font-weight: 600; letter-spacing: -0.03em; line-height: 1.05; }
+:focus-visible { outline: 2.5px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+.wrap { width: min(1000px, 100% - clamp(32px, 7vw, 120px)); margin-inline: auto; }
+.mono { font-family: var(--f-mono); font-size: 0.72rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--gray); }
+
+.case-nav { max-width: 1180px; margin: 0 auto; padding: 24px 20px 0; display: flex; align-items: center; justify-content: space-between; font-family: var(--f-display); }
+.case-nav-mark { font-weight: 700; font-size: 1.1rem; letter-spacing: 0.02em; color: var(--text); }
+.case-nav-mark span { color: var(--accent); }
+.case-nav-back { font-family: var(--f-mono); font-size: 0.76rem; letter-spacing: 0.04em; text-transform: uppercase; color: var(--text-soft); border-bottom: 1px solid var(--line-strong); padding-bottom: 2px; transition: color 0.2s, border-color 0.2s; }
+.case-nav-back:hover { color: var(--accent); border-color: var(--accent); }
+@media (max-width: 860px) { .case-nav { padding: 18px 20px 0; } }
+
+.e-hero { padding: clamp(50px, 8vw, 96px) 0 clamp(20px, 3vw, 30px); }
+.e-hero h1 { font-size: clamp(2.1rem, 4.4vw, 3.4rem); max-width: 16em; text-wrap: balance; }
+.e-hero p { margin-top: 18px; color: var(--text-soft); font-size: clamp(1.02rem, 1.4vw, 1.18rem); max-width: 56ch; }
+.e-note { margin-top: 22px; display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; border-radius: var(--r-pill); border: 1px dashed var(--line-strong); color: var(--gray); font-family: var(--f-mono); font-size: 0.76rem; }
+
+.e-grid { padding: clamp(20px, 3vw, 40px) 0 clamp(70px, 9vw, 120px); display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(18px, 2.4vw, 28px); }
+.e-card { display: grid; gap: 12px; padding: clamp(24px, 3vw, 34px); border-radius: var(--r-lg); border: 1.5px dashed var(--line-strong); background: color-mix(in srgb, var(--bg-raised) 55%, transparent); min-height: 220px; }
+.e-tag { justify-self: start; font-family: var(--f-mono); font-size: 0.66rem; letter-spacing: 0.05em; text-transform: uppercase; color: var(--accent-text); background: color-mix(in srgb, var(--accent) 14%, transparent); padding: 5px 11px; border-radius: var(--r-pill); }
+.e-card h2 { font-size: 1.3rem; }
+.e-card p { color: var(--text-soft); font-size: 0.94rem; max-width: 46ch; }
+.e-ph { margin-top: auto; color: var(--gray); font-family: var(--f-mono); font-size: 0.68rem; letter-spacing: 0.04em; text-transform: uppercase; }
+@media (max-width: 720px) { .e-grid { grid-template-columns: 1fr; } }
+
+.e-cta { padding: 0 0 clamp(60px, 8vw, 100px); text-align: center; }
+.btn { display: inline-flex; align-items: center; gap: 10px; min-height: 46px; padding: 0 24px; border-radius: var(--r-pill); font-weight: 700; font-size: 0.96rem; transition: transform 0.3s var(--ease), background 0.25s; background: var(--accent); color: var(--on-accent); }
+.btn:hover { transform: translateY(-2px); background: color-mix(in srgb, var(--accent) 88%, white); }
+
+footer.a-foot { border-top: 1px solid var(--border); padding: 22px 0 40px; }
+.a-foot .wrap { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+.a-foot span { color: var(--gray); font-size: 0.85rem; }
+
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; } }
+</style>
+</head>
+<body>
+<header class="case-nav">
+  <a href="index.html" class="case-nav-mark">VEDANSHI<span>.</span></a>
+  <a href="index.html#work" class="case-nav-back">&larr; Back to portfolio</a>
+</header>
+
+<main>
+  <section class="e-hero wrap">
+    <h1>Things I built while figuring things out.</h1>
+    <p>Separate from the product work on the other side of this site, this is where curiosity, prototypes and small interaction experiments live. Less polished, more honest about being unfinished.</p>
+    <span class="e-note">This page is genuinely under construction, the entries below are placeholders, not finished work.</span>
+  </section>
+
+  <ul class="e-grid wrap">
+    <li class="e-card">
+      <span class="e-tag">AI experiment</span>
+      <h2>AI critique loop</h2>
+      <p>A small tool that argues back at a design decision instead of agreeing with it, built to stress test my own first instinct before I commit to it.</p>
+      <span class="e-ph">Placeholder &middot; real write up coming</span>
+    </li>
+    <li class="e-card">
+      <span class="e-tag">Prototype</span>
+      <h2>Interface from a sketch</h2>
+      <p>Feeding a rough whiteboard photo into a model and seeing what it thinks the resulting screen should look like, then comparing it to what I would actually design.</p>
+      <span class="e-ph">Placeholder &middot; real write up coming</span>
+    </li>
+    <li class="e-card">
+      <span class="e-tag">Creative coding</span>
+      <h2>A generative pattern toy</h2>
+      <p>A small visual experiment kept around because it was fun to build, not because it shipped anywhere.</p>
+      <span class="e-ph">Placeholder &middot; real write up coming</span>
+    </li>
+  </ul>
+
+  <section class="e-cta">
+    <a class="btn" href="index.html#work">See the real work instead <span aria-hidden="true">&rarr;</span></a>
+  </section>
+</main>
+
+<footer class="a-foot">
+  <div class="wrap">
+    <span>Vedanshi Singh &middot; Bengaluru</span>
+    <a class="case-nav-back" href="index.html#contact">Get in touch &rarr;</a>
+  </div>
+</footer>
+</body>
+</html>

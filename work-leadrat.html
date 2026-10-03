@@ -1,0 +1,905 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Leadrat: Lead Assignment & Distribution | Vedanshi Singh</title>
+<meta name="description" content="Case study: designing how managers configure percentage based lead assignment in Leadrat, a B2B real estate CRM, and turning a complex allocation system into a flow people can understand.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%233155B7'/%3E%3Ctext x='16' y='23' font-family='Arial,sans-serif' font-weight='800' font-size='20' fill='%23ffffff' text-anchor='middle'%3E%3F%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Work+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/@phosphor-icons/web@2.1.1" defer></script>
+<style>
+  :root{
+    --paper:#f5f3ed;
+    --surface:#fbf9f4;
+    --surface-2:#eae6d9;
+    --ink:#111111;
+    --ink-soft:#262626;
+    --ink-faint:#555555;
+    --ink-faintest:#6b6b6b;
+    --line:#dcd9cb;
+    --line-soft:rgba(32,34,31,0.08);
+    --white:#ffffff;
+    --accent:#3155B7;
+    --accent-tint:#e6ebf7;
+    --hl-bg:#efefed;
+    --hl-ink:#111111;
+    --hl-border:rgba(17,17,17,0.09);
+    --positive:#2f6b4f;
+    --negative:#c0432a;
+    --r-lg:16px;
+    --r-md:12px;
+    --r-sm:8px;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--paper) url("assets/textures/paper.webp") repeat; background-size:900px; color:var(--ink);
+    font-family:"Work Sans", -apple-system, sans-serif; font-size:17px; line-height:1.62;
+    letter-spacing:-0.01em;
+    -webkit-font-smoothing:antialiased;
+  }
+  img{max-width:100%; display:block;}
+  h1,h2,h3,h4{font-family:"Inter",sans-serif; font-weight:500; letter-spacing:-0.03em; line-height:1.18; text-wrap:balance; color:var(--ink); margin:0;}
+  a{color:inherit;} p{margin:0;}
+  .mono{font-variant-numeric:tabular-nums; font-feature-settings:"tnum";}
+  .eyebrow{font-size:0.72rem; letter-spacing:0.06em; text-transform:uppercase; color:var(--ink-faint); font-weight:600;}
+
+  /* ---------- title screen: the whole heading, nothing else, until you scroll ---------- */
+  .title-screen{min-height:100dvh; display:flex; flex-direction:column; align-items:center; justify-content:flex-start; padding:72px 28px 48px; text-align:left;}
+  .title-inner{max-width:1264px; width:100%;}
+  .tags{display:flex; flex-wrap:wrap; gap:10px; margin-bottom:32px;}
+  .tag{font-size:0.72rem; letter-spacing:0.04em; text-transform:uppercase; font-weight:600; padding:8px 14px; border-radius:20px; color:var(--ink); background:var(--surface); border:1px solid var(--line);}
+  .title-screen h1{font-size:clamp(2.1rem,6.2vw,5.3rem); font-weight:700; max-width:none; margin-bottom:26px; letter-spacing:-0.04em; line-height:1.06; text-wrap:initial;}
+  @media (max-width:760px){ .title-screen h1 .br{display:none;} }
+  .title-screen .dek{max-width:78rem; font-size:1.28rem; color:var(--ink); line-height:1.65; margin:0;}
+  .title-screen .dek b{color:var(--ink); font-weight:600;}
+  .scroll-cue{display:inline-flex; align-items:center; gap:8px; margin-top:36px; font-size:0.78rem; font-weight:600; letter-spacing:0.04em; text-transform:uppercase; color:var(--ink-faint);}
+  .scroll-cue i{animation:cueDown 1.8s ease-in-out infinite;}
+  @keyframes cueDown{ 50%{ transform:translateY(5px); } }
+
+  .page{max-width:1320px; margin:0 auto; padding-inline:28px; display:grid; grid-template-columns:250px minmax(0,1fr); gap:32px 56px; padding-block:0 60px;}
+  @media (max-width:900px){ .page{grid-template-columns:1fr; gap:0;} }
+  .toc-wrap{position:sticky; top:36px; align-self:start; max-height:calc(100vh - 56px); overflow:auto;}
+  @media (max-width:900px){ .toc-wrap{display:none;} }
+  .toc-eyebrow{font-size:0.68rem; letter-spacing:0.08em; text-transform:uppercase; color:var(--ink-faintest); font-weight:600; margin-bottom:16px; padding-left:14px;}
+  .toc{display:flex; flex-direction:column; gap:0; list-style:none; margin:0; padding:0;}
+  .toc li{border-bottom:1px solid #e1ddd2;}
+  .toc li:last-child{border-bottom:0;}
+  .toc a{position:relative; display:flex; gap:14px; align-items:baseline; padding:14px 16px; border-radius:8px; text-decoration:none; color:#1a1a1a; font-size:0.74rem; font-weight:700; letter-spacing:0.05em; text-transform:uppercase; transition:background .15s ease, color .15s ease;}
+  .toc a .n{color:#9a9a94; font-weight:700; min-width:1.4em;}
+  .toc a:hover{background:rgba(17,17,17,0.04);}
+  .toc a.active{background:#f8e1d6; color:#e4572e;}
+  .toc a.active::before{content:""; position:absolute; left:0; top:0; bottom:0; width:3px; background:#e4572e; border-radius:2px;}
+  .toc a.active .n{color:#e4572e;}
+  .toc-back{display:inline-flex; gap:6px; align-items:center; margin-top:18px; padding:10px 14px; font-size:0.72rem; font-weight:600; letter-spacing:0.04em; text-transform:uppercase; color:var(--ink-faint); text-decoration:none;}
+  .toc-back:hover{color:var(--ink);}
+  main{min-width:0;}
+
+  .meta{background:#f4f4f4; border:1px solid #e3e3e3; border-radius:14px; padding:30px 36px 34px; display:grid; grid-template-columns:0.85fr 1.05fr 1fr 1.75fr; gap:28px 44px; margin-top:40px; align-items:start;}
+  @media (max-width:1000px){ .meta{grid-template-columns:1fr 1fr;} .meta .col-tiles{grid-column:1 / -1;} }
+  @media (max-width:600px){ .meta{grid-template-columns:1fr; padding:26px 22px 30px;} }
+  .meta .k{font-size:0.7rem; letter-spacing:0.08em; text-transform:uppercase; color:#444; margin-bottom:20px; font-weight:600;}
+  .meta .v{font-size:0.98rem; color:#111; line-height:1.6;}
+  .meta .v + .v{margin-top:4px;}
+  .tiles{display:grid; grid-template-columns:1fr 1fr; gap:22px 18px; padding-top:6px;}
+  .tile{position:relative; background:#fff; padding:22px 20px 18px; border-radius:2px; box-shadow:0 2px 8px rgba(0,0,0,0.08), 0 0 0 1px rgba(0,0,0,0.03); transform:rotate(-0.7deg);}
+  .tile:nth-child(even){transform:rotate(0.6deg);}
+  .tile::before{content:""; position:absolute; top:-9px; left:calc(50% - 20px); width:40px; height:15px; background:#d9d9d9; opacity:0.9; transform:rotate(-2deg);}
+  .tile:nth-child(even)::before{transform:rotate(2deg);}
+  .tile .num{font-family:"Inter",sans-serif; font-size:1.7rem; font-weight:500; letter-spacing:-0.03em; line-height:1.1; color:#111;}
+  .tile .num small{font-size:0.62em; font-weight:500; letter-spacing:0;}
+  .tile .lbl{font-size:0.66rem; letter-spacing:0.07em; text-transform:uppercase; color:#444; margin-top:10px; line-height:1.4; font-weight:500;}
+  .hero-shot{border-radius:var(--r-lg); overflow:hidden; background:var(--surface-2); border:1px solid var(--line-soft);}
+  .hero-shot img{width:100%; height:auto;}
+  .hero-shot-cap{margin-top:12px; font-size:0.86rem; color:var(--ink-faint);}
+
+  section{margin-bottom:76px; scroll-margin-top:36px;}
+  .sec-head{margin-bottom:18px;}
+  .sec-head .eyebrow-row{display:flex; align-items:baseline; gap:10px; margin-bottom:12px;}
+  .sec-head .n{font-size:0.72rem; font-weight:700; letter-spacing:0.06em; color:var(--ink-faint); text-transform:uppercase;}
+  .sec-head .eyebrow-row .label{font-size:0.72rem; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; color:var(--ink-faint);}
+  .sec-head h2{font-size:clamp(1.6rem,2.8vw,2.2rem); max-width:40ch; font-weight:600; letter-spacing:-0.035em; line-height:1.15;}
+  .prose{max-width:84ch;}
+  .prose p{margin-bottom:16px; color:var(--ink); font-size:1.02rem;}
+  .prose p.lede{font-size:1.06rem; color:var(--ink-soft);}
+  .prose strong{font-weight:600; color:var(--ink);}
+
+  .callout{background:var(--hl-bg); border:1px solid var(--hl-border); border-radius:var(--r-md); padding:24px 28px; margin:26px 0; display:flex; gap:16px;}
+  .callout i{font-size:1.3rem; color:var(--hl-ink); flex:none; margin-top:2px;}
+  .callout .k{font-size:0.7rem; letter-spacing:0.06em; text-transform:uppercase; color:var(--hl-ink); font-weight:700; margin-bottom:10px;}
+  .callout p{max-width:72ch; color:var(--hl-ink); font-size:1rem;}
+
+  figure.sheet{margin:26px 0 0; background:var(--white); border:1px solid var(--line); border-radius:var(--r-md); overflow:hidden;}
+  .sheet-frame{overflow:hidden; background:var(--surface-2);}
+  .sheet-frame img{display:block; width:100%; height:auto;}
+  figure.sheet figcaption{padding:16px 18px; font-size:0.88rem; color:var(--ink-soft); line-height:1.45;}
+  .sheet-tag{display:block; font-size:0.66rem; font-weight:700; color:var(--ink-faintest); letter-spacing:0.06em; text-transform:uppercase; margin-bottom:5px;}
+  figure.sheet.single{max-width:820px;}
+
+  .ledger{background:var(--hl-bg); color:var(--hl-ink); padding:24px 26px; margin:28px 0; border-radius:var(--r-md); border:1px solid var(--hl-border);}
+  .ledger .formula{font-size:0.96rem; line-height:1.9;}
+  .ledger .formula .l{color:var(--hl-ink); opacity:0.75;}
+  .ledger .formula .op{color:var(--hl-ink); font-weight:700;}
+
+  .sim{background:var(--white); border:1px solid var(--line); border-radius:var(--r-lg); padding:28px 26px; margin:28px 0;}
+  .sim-head{display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:24px; flex-wrap:wrap;}
+  .sim-controls{display:flex; gap:8px; align-items:center;}
+  .btn{font-family:"Work Sans"; font-size:0.86rem; font-weight:600; padding:9px 16px 9px 14px; border-radius:20px; background:var(--ink); color:var(--white); border:1px solid var(--ink); cursor:pointer; transition:transform .15s ease, opacity .15s ease; display:inline-flex; align-items:center; gap:6px;}
+  .btn.secondary{background:transparent; color:var(--ink); border-color:var(--line);}
+  .btn:active{transform:scale(0.97);}
+  .btn:disabled{opacity:0.45; cursor:default; transform:none;}
+  .lead-count{font-family:"Inter"; font-weight:500; font-size:1.08rem;}
+  .agent-row{display:grid; grid-template-columns:120px 1fr 140px; align-items:center; gap:16px; margin:0 -12px 6px; padding:10px 12px; border-radius:10px; transition:background .4s ease;}
+  @media (max-width:560px){ .agent-row{grid-template-columns:80px 1fr;} .agent-row .stat{grid-column:1/-1;} }
+  .agent-row.hit{background:var(--hl-bg);}
+  .agent-row .name{font-weight:600; font-size:0.92rem;}
+  .agent-row .pct{color:var(--ink-faintest); font-size:0.78rem; display:block;}
+  .track{position:relative; height:22px; background:var(--surface-2); border-radius:11px; overflow:hidden;}
+  .track .fill{position:absolute; inset:0 auto 0 0; width:0%; background:var(--ink); opacity:0.85; border-radius:11px; transition:width .5s cubic-bezier(.22,.9,.3,1);}
+  .track .tick{position:absolute; top:-3px; bottom:-3px; width:2px; background:var(--ink); left:0%; opacity:0.5;}
+  .agent-row .stat{font-size:0.82rem; text-align:right;}
+  .agent-row .stat .deficit.pos{color:var(--positive); font-weight:600;}
+  .agent-row .stat .deficit.neg{color:var(--negative); font-weight:600;}
+  .sim-log{margin-top:16px; border-top:1px solid var(--line); padding-top:16px; font-size:0.9rem; color:var(--ink-soft); min-height:2.6em;}
+  .sim-log b{color:var(--ink);}
+  .sim-final{margin-top:10px; font-size:0.84rem; color:var(--ink-faint);}
+
+  .spec-grid{display:grid; grid-template-columns:1fr 1fr; gap:16px; margin:26px 0;}
+  @media (max-width:700px){ .spec-grid{grid-template-columns:1fr;} }
+  .spec-card{border:1px solid var(--line); background:var(--white); border-radius:var(--r-md); padding:22px;}
+  .spec-card .sc-head{display:flex; align-items:center; gap:10px; margin-bottom:12px;}
+  .spec-card i{font-size:1.1rem; color:var(--ink);}
+  .spec-card .tag{font-size:0.78rem; font-weight:600; color:var(--ink);}
+  .spec-card p{font-size:0.95rem; color:var(--ink-soft);}
+  .spec-card p strong{color:var(--ink);}
+
+  .reflect-lead{font-family:"Inter"; font-weight:500; font-size:clamp(1.3rem,2.6vw,1.7rem); max-width:24ch; line-height:1.28; letter-spacing:-0.03em; margin-bottom:18px;}
+  .reflect-body{max-width:82ch; color:var(--ink-soft); font-size:1.02rem; margin-bottom:8px;}
+  .reflect-grid{display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:26px;}
+  @media (max-width:700px){ .reflect-grid{grid-template-columns:1fr;} }
+  .reflect-card{background:var(--white); border:1px solid var(--line); border-radius:var(--r-md); padding:22px;}
+  .reflect-card h4{font-size:1.05rem; margin-bottom:8px;}
+  .reflect-card p{font-size:0.95rem; color:var(--ink-soft);}
+
+  .role-list{padding:0; margin:0; display:flex; flex-direction:column; gap:0;}
+  .role-list li{list-style:none; padding:14px 0; border-bottom:1px solid var(--line); font-size:1rem; display:flex; gap:14px; align-items:flex-start;}
+  .role-list li:first-child{border-top:1px solid var(--line);}
+  .role-list i{color:var(--ink); font-size:1.05rem; flex:none; margin-top:2px;}
+
+  .compare-grid{display:grid; grid-template-columns:1fr 1fr; gap:16px; margin:28px 0;}
+  @media (max-width:700px){ .compare-grid{grid-template-columns:1fr;} }
+  .compare-col{border:1px solid var(--line); background:var(--white); border-radius:var(--r-md); padding:22px 24px;}
+  .compare-col.new{border-color:var(--hl-border); background:var(--hl-bg);}
+  .compare-col .k{font-size:0.7rem; letter-spacing:0.06em; text-transform:uppercase; font-weight:700; margin-bottom:16px; color:var(--ink-faint);}
+  .compare-col.new .k{color:var(--hl-ink);}
+  .flow-steps div{padding:9px 0; border-bottom:1px solid var(--line-soft); font-size:0.95rem; color:var(--ink-soft);}
+  .compare-col.new .flow-steps div{border-bottom-color:var(--hl-border); color:var(--hl-ink);}
+  .flow-steps div:last-child{border-bottom:0;}
+  .flow-note{margin-top:16px; font-size:0.88rem; color:var(--ink-faint);}
+  .compare-col.new .flow-note{color:var(--hl-ink); opacity:0.85;}
+
+  .model-flow{display:flex; flex-direction:column; margin:30px 0 10px; max-width:760px;}
+  .model-step{display:grid; grid-template-columns:46px 1fr; gap:18px; position:relative; padding-bottom:26px;}
+  .model-step:last-child{padding-bottom:0;}
+  .model-step::before{content:""; position:absolute; left:22px; top:46px; bottom:0; width:1px; background:var(--line);}
+  .model-step:last-child::before{display:none;}
+  .model-step .dot{width:46px; height:46px; border-radius:50%; background:var(--hl-bg); display:flex; align-items:center; justify-content:center; font-family:"Inter"; font-weight:600; color:var(--hl-ink); flex:none; z-index:1; font-size:0.92rem;}
+  .model-step h4{font-size:1.05rem; margin-bottom:4px; font-weight:600;}
+  .model-step p{font-size:0.96rem; color:var(--ink-soft); max-width:62ch;}
+
+  .dense-cap{font-size:0.86rem; color:var(--ink-faint); margin-bottom:30px;}
+  .model-flow.compact .model-step{grid-template-columns:34px 1fr; gap:14px; padding-bottom:14px;}
+  .model-flow.compact .model-step::before{left:16px; top:32px;}
+  .model-flow.compact .dot{width:34px; height:34px; font-size:0.76rem;}
+  .model-flow.compact h4{font-size:0.96rem;}
+  .model-flow.compact p{font-size:0.88rem;}
+
+  .walk-step{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.3fr); gap:36px; align-items:start; margin-bottom:46px;}
+  @media (max-width:820px){ .walk-step{grid-template-columns:1fr;} }
+  .walk-step .wn{color:var(--ink); font-size:0.8rem; font-weight:700; margin-bottom:8px;}
+  .walk-step h4{font-size:1.2rem; margin-bottom:10px; font-weight:600;}
+  .walk-step p{font-size:0.98rem; color:var(--ink-soft); max-width:58ch;}
+  .walk-step figure{margin:0;}
+  .walk-step .sheet-frame{border-radius:var(--r-md); overflow:hidden; border:1px solid var(--line);}
+  .walk-step .note{display:block; margin-top:14px; font-size:0.92rem; color:var(--hl-ink); background:var(--hl-bg); border:1px solid var(--hl-border); border-radius:var(--r-sm); padding:12px 14px; max-width:46ch;}
+
+  /* ---------- problem comic: monochrome, hand drawn, one place only ---------- */
+  .comic{margin:34px 0 26px; max-width:900px;}
+  .comic-tag{font-size:0.68rem; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--ink-faint); margin-bottom:12px;}
+  .comic-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
+  @media (max-width:700px){ .comic-grid{grid-template-columns:1fr;} }
+  .comic-panel{position:relative; background:var(--surface); border:2.5px solid var(--ink); border-radius:4px; overflow:hidden; aspect-ratio:600 / 400;}
+  .comic-panel svg{display:block; width:100%; height:100%; fill:none; stroke:var(--ink); stroke-width:2.6; stroke-linecap:round; stroke-linejoin:round;}
+  .comic-panel text{fill:var(--ink); stroke:none; font-family:"Work Sans",sans-serif; font-weight:500;}
+  .comic-panel .pn{position:absolute; top:0; left:0; width:34px; height:34px; background:var(--ink); color:#fff; font:600 1rem/34px "Inter",sans-serif; text-align:center; z-index:2;}
+  .tension{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px; margin-top:16px;}
+  @media (max-width:700px){ .tension{grid-template-columns:1fr;} }
+  .tension > div{border-top:2px solid var(--ink); padding-top:10px;}
+  .tension .k{display:block; font-size:0.68rem; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--ink-faint); margin-bottom:4px;}
+  .tension p{font-family:"Inter",sans-serif; font-weight:600; font-size:1.05rem; letter-spacing:-0.02em; color:var(--ink);}
+  .tension .need{border-top-color:var(--hl-ink);} 
+  .tension .need p{background:var(--hl-bg); display:inline-block; padding:2px 8px; border-radius:6px;}
+  /* ---------- real site footer, ported ---------- */
+  .foot{padding:clamp(60px,8vw,100px) 0 30px; border-top:1px solid var(--line); margin-top:40px;}
+  .foot-grid{display:grid; grid-template-columns:minmax(0,1.1fr) minmax(0,0.9fr); gap:clamp(30px,5vw,80px); align-items:center;}
+  @media (max-width:860px){ .foot-grid{grid-template-columns:1fr;} }
+  .foot-statement{font-family:"Inter"; font-weight:600; letter-spacing:-0.03em; line-height:1; font-size:clamp(2.4rem,6vw,4.6rem); color:var(--ink);}
+  .foot-sub{margin-top:18px; max-width:40ch; color:var(--ink-soft); font-size:1.02rem;}
+  .connect{display:grid; gap:10px; list-style:none; margin:0; padding:0;}
+  .connect li{position:relative;}
+  .c-row{display:flex; align-items:center; gap:16px; padding:14px 18px; border-radius:20px; background:var(--surface); border:1px solid var(--line); transition:transform .3s, border-color .25s; text-decoration:none;}
+  .c-row:hover{transform:translateX(6px); border-color:var(--accent);}
+  .c-ic{width:44px; height:44px; border-radius:50%; display:grid; place-items:center; background:var(--accent-tint); color:var(--accent); font-size:1.3rem; flex:none;}
+  .c-ic.brand{background:#fff;}
+  .c-ic svg{width:24px; height:24px;}
+  .c-t{display:grid; flex:1; min-width:0;}
+  .c-t b{font-family:"Inter"; font-weight:600; font-size:1.05rem;}
+  .c-t small{color:var(--ink-faint); font-size:0.86rem; overflow-wrap:anywhere;}
+  .c-go{color:var(--ink-faint); font-size:1.15rem; transition:transform .3s, color .25s;}
+  .c-row:hover .c-go{color:var(--accent); transform:translate(3px,-3px);}
+  .c-main{background:var(--surface); padding-right:70px;}
+  .c-copy{position:absolute; right:12px; top:50%; translate:0 -50%; width:40px; height:40px; display:grid; place-items:center; border-radius:50%; color:var(--ink-soft); font-size:1.1rem; border:0; background:none; cursor:pointer; transition:background .2s;}
+  .c-copy:hover{background:var(--accent-tint); color:var(--accent);}
+  .c-copy.is-copied{background:var(--accent); color:#fff;}
+  .foot-bottom{margin-top:clamp(40px,6vw,64px); padding-top:18px; border-top:1px solid var(--line); display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; color:var(--ink-faint); font-size:0.9rem;}
+  .foot-bottom a{display:inline-flex; gap:6px; align-items:center; text-decoration:none; color:inherit;}
+
+  @media (prefers-reduced-motion: reduce){ *{transition-duration:0.01ms !important; animation-duration:0.01ms !important;} }
+
+  .case-nav{max-width:1320px; margin:0 auto; padding:24px 28px 0; display:flex; align-items:center; justify-content:space-between; font-family:"Inter",sans-serif; position:relative; z-index:5;}
+  .case-nav-mark{font-weight:600; font-size:1.05rem; letter-spacing:-0.01em; color:var(--ink); text-decoration:none;}
+  .case-nav-mark span{color:var(--ink);}
+  .case-nav-back{font-family:"Work Sans"; font-size:0.82rem; font-weight:600; letter-spacing:0.02em; color:var(--ink-faint); text-decoration:none; transition:color .2s;}
+  .case-nav-back:hover{color:var(--ink);}
+  .case-foot-links{display:flex; gap:20px; align-items:center;}
+  @media (max-width:900px){ .case-nav{padding:18px 20px 0;} }
+
+  /* ---------- custom cursor: a colourless glass lens locked to the pointer, plus a paper plane ---------- */
+  .cursor-glass{position:fixed; left:0; top:0; z-index:650; width:150px; height:150px; pointer-events:none; opacity:0; transition:opacity .35s; transform:translate(var(--lx,-200px),var(--ly,-200px)) translate(-50%,-50%); border-radius:50%; -webkit-mask-image:radial-gradient(circle,#000 60%,transparent 100%); mask-image:radial-gradient(circle,#000 60%,transparent 100%); backdrop-filter:contrast(1.12) saturate(1.1); -webkit-backdrop-filter:contrast(1.12) saturate(1.1); box-shadow:inset 0 0 0 1px rgba(32,34,31,0.06);}
+  .cursor-glass.on{opacity:1;}
+  .cursor-plane{position:fixed; left:0; top:0; z-index:900; width:26px; height:26px; pointer-events:none; opacity:0; transition:opacity .3s; transform:translate(var(--cx,-100px),var(--cy,-100px)) translate(-50%,-50%) rotate(var(--cr,-40deg)); will-change:transform;}
+  .cursor-plane.on{opacity:1;}
+  .cursor-plane svg{width:100%; height:100%; color:var(--ink); filter:drop-shadow(0 3px 6px rgba(32,34,31,0.3));}
+  .cursor-trail{position:fixed; left:0; top:0; z-index:899; width:4px; height:4px; border-radius:50%; background:#fff; box-shadow:0 0 4px rgba(32,34,31,0.2); pointer-events:none; opacity:0; transform:translate(var(--tx,-100px),var(--ty,-100px)) translate(-50%,-50%); transition:opacity .5s;}
+  .cursor-trail.on{opacity:0.55;}
+  @media (hover:none),(pointer:coarse){ .cursor-glass,.cursor-plane,.cursor-trail{display:none;} }
+  @media (hover:hover) and (pointer:fine){ html.has-plane-cursor,html.has-plane-cursor a,html.has-plane-cursor button{cursor:none;} }
+
+  /* header stays put on every page */
+  header.case-nav{position:fixed; top:0; left:0; right:0; max-width:none; margin:0; padding:14px max(28px, calc((100% - 1264px) / 2)); background:color-mix(in srgb, var(--paper) 90%, transparent); -webkit-backdrop-filter:blur(12px) saturate(140%); backdrop-filter:blur(12px) saturate(140%); border-bottom:1px solid var(--line-soft); z-index:70;}
+  @media (max-width:900px){ header.case-nav{padding:12px 20px;} }
+  .toc-wrap{top:84px !important; max-height:calc(100vh - 104px) !important;}
+  section{scroll-margin-top:84px !important;}
+  .title-screen{padding-top:92px !important;}
+  /* ===== Leadrat story pass: points, infographics, story lines ===== */
+  :root{ --orange:#e4572e; --o-tint:#fdece6; --o-line:#f1c4b4; }
+  .sub-h{font-size:0.72rem; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--ink-faint); margin:46px 0 16px;}
+  .fine{font-size:0.9rem; color:var(--ink-faint); max-width:none; margin-top:12px;}
+  .lr-story{font-family:"Inter",sans-serif; font-style:normal; font-weight:500; font-size:1.1rem; line-height:1.55; letter-spacing:-0.015em; color:var(--ink-soft); max-width:none; margin:0 0 26px; padding-left:16px; border-left:3px solid var(--ink);}
+  figure.hero-shot.mac{background:transparent; border:0; border-radius:0; overflow:visible; max-width:100%; margin:0;}
+  figure.hero-shot.mac img{mix-blend-mode:multiply;}
+  /* meta panel as lists */
+  .meta{grid-template-columns:1fr 1fr 1fr 1.7fr;}
+  .meta .v-list{list-style:none; margin:0; padding:0;}
+  .meta .v-list li{position:relative; padding-left:16px; font-size:0.98rem; color:#111; line-height:1.5;}
+  .meta .v-list li + li{margin-top:8px;}
+  .meta .v-list li::before{content:""; position:absolute; left:0; top:0.62em; width:6px; height:6px; border-radius:50%; background:#111;}
+  @media (max-width:980px){ .meta{grid-template-columns:1fr 1fr;} .meta .col-tiles{grid-column:1 / -1;} }
+  @media (max-width:560px){ .meta{grid-template-columns:1fr;} }
+  /* comic */
+  figure.comic-img{margin:26px 0 6px; max-width:920px; border:2.5px solid var(--ink); border-radius:4px; overflow:hidden; background:var(--surface);}
+  figure.comic-img img{display:block; width:100%; height:auto;}
+  .comic-cap{font-size:0.84rem; color:var(--ink-faint); margin:10px 0 0; max-width:920px;}
+  .comic-tag{font-size:0.68rem; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--ink-faint); margin:26px 0 -12px;}
+  /* flow nodes */
+  .nd{background:var(--white); border:1px solid var(--line); border-radius:12px; padding:11px 16px; font-family:"Inter",sans-serif; font-weight:600; font-size:0.92rem; color:var(--ink); line-height:1.25; text-align:center;}
+  .nd small{display:block; font-family:"Work Sans",sans-serif; font-weight:400; font-size:0.78rem; color:var(--ink-faint); margin-top:4px; line-height:1.35;}
+  .nd.o{background:var(--o-tint); border-color:var(--o-line);}
+  .nd.k{background:var(--ink); border-color:var(--ink); color:#fff;}
+  .nd.k small{color:rgba(255,255,255,0.72);}
+  .ar{color:var(--ink-faintest); font-size:1rem; line-height:1; text-align:center; flex:none;}
+  .chain{display:flex; flex-wrap:wrap; align-items:center; gap:10px;}
+  .chain.v{flex-direction:column; align-items:stretch; gap:6px;}
+  .chain.v .nd{width:100%;}
+  .chips{display:flex; flex-wrap:wrap; gap:8px; margin:12px 0 0;}
+  .chips span{border:1px solid var(--line); background:var(--white); border-radius:999px; padding:7px 14px; font-size:0.88rem; color:var(--ink);}
+  /* bullet points */
+  .lr-pts{list-style:none; margin:0; padding:0;}
+  .lr-pts li{position:relative; padding:5px 0 5px 20px; font-size:0.97rem; line-height:1.5; color:var(--ink-soft);}
+  .lr-pts li::before{content:""; position:absolute; left:2px; top:0.9em; width:6px; height:6px; border-radius:50%; background:var(--ink);}
+  .callout .lr-pts li{color:var(--hl-ink);}
+  .compare-col.new .lr-pts li{color:var(--hl-ink);}
+  .walk-step .lr-pts li{font-size:0.98rem;}
+  .callout{align-items:flex-start;}
+  /* capacity bars */
+  .lr-cap{display:grid; grid-template-columns:1fr 1fr; gap:14px; max-width:860px;}
+  @media (max-width:700px){ .lr-cap{grid-template-columns:1fr;} }
+  .lr-person{background:var(--white); border:1px solid var(--line); border-radius:var(--r-md); padding:18px 20px;}
+  .lr-person .who{font-family:"Inter",sans-serif; font-weight:700; font-size:1rem; margin-bottom:12px;}
+  .b-row{display:grid; grid-template-columns:104px minmax(0,1fr) 74px; align-items:center; gap:10px; padding:5px 0; font-size:0.82rem; color:var(--ink-faint);}
+  .b-row i{display:block; height:12px; border-radius:6px; width:var(--w); background:#cfcfcb;}
+  .b-row i.c{background:var(--ink);}
+  .b-row em{font-style:normal; font-weight:700; color:var(--ink); text-align:right; font-size:0.86rem;}
+  .lr-trail .nd, .lr-algo .nd, .lr-deps .nd{flex:1 1 150px;}
+  /* four people */
+  .lr-four{display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px;}
+  @media (max-width:900px){ .lr-four{grid-template-columns:1fr 1fr;} }
+  @media (max-width:520px){ .lr-four{grid-template-columns:1fr;} }
+  .lr-four .f{background:var(--white); border:1px solid var(--line); border-radius:var(--r-md); padding:18px; display:flex; flex-direction:column; gap:6px;}
+  .lr-four .f i{font-size:1.5rem; color:var(--ink);}
+  .lr-four .f b{font-family:"Inter",sans-serif; font-size:1rem;}
+  .lr-four .f p{font-size:0.88rem; color:var(--ink-soft); line-height:1.45;}
+  .lr-four .f.me{background:var(--hl-bg); border-color:var(--hl-border);}
+  .lr-three{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px;}
+  @media (max-width:760px){ .lr-three{grid-template-columns:1fr;} }
+  .lr-three > div{background:var(--white); border:1px solid var(--line); border-radius:var(--r-md); padding:16px 18px; display:grid; grid-template-columns:34px 1fr; column-gap:12px; align-items:start;}
+  .lr-three i{grid-row:span 2; font-size:1.4rem; color:var(--ink); margin-top:2px;}
+  .lr-three b{font-family:"Inter",sans-serif; font-size:0.98rem;}
+  .lr-three p{font-size:0.88rem; color:var(--ink-soft); line-height:1.45;}
+  .lr-three.hide > div{border-style:dashed; background:transparent;}
+  /* five questions */
+  .lr-five{list-style:none; margin:0; padding:0; display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:10px; position:relative;}
+  @media (max-width:980px){ .lr-five{grid-template-columns:1fr 1fr;} }
+  @media (max-width:520px){ .lr-five{grid-template-columns:1fr;} }
+  .lr-five li{position:relative; background:var(--white); border:1px solid var(--line); border-radius:var(--r-md); padding:16px 14px 16px; display:flex; flex-direction:column; gap:6px;}
+  .lr-five .num{position:absolute; top:12px; right:12px; width:22px; height:22px; border-radius:50%; background:var(--ink); color:#fff; font:700 0.72rem/22px "Inter",sans-serif; text-align:center;}
+  .lr-five i{font-size:1.5rem; color:var(--ink);}
+  .lr-five b{font-family:"Inter",sans-serif; font-size:0.94rem; line-height:1.25; margin-top:4px;}
+  .lr-five small{font-size:0.8rem; color:var(--ink-faint); line-height:1.4;}
+  /* role grid */
+  .lr-role{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px;}
+  @media (max-width:900px){ .lr-role{grid-template-columns:1fr 1fr;} }
+  @media (max-width:520px){ .lr-role{grid-template-columns:1fr;} }
+  .lr-role > div{background:var(--white); border:1px solid var(--line); border-radius:var(--r-md); padding:18px; display:flex; flex-direction:column; gap:6px;}
+  .lr-role i{font-size:1.4rem; color:var(--ink);}
+  .lr-role b{font-family:"Inter",sans-serif; font-size:1rem;}
+  .lr-role p{font-size:0.88rem; color:var(--ink-soft); line-height:1.5;}
+  .compare-col .lr-pts li{font-size:0.95rem;}
+  .hero-shot-cap{margin-bottom:44px;}
+
+  /* use the full column for text, no italics */
+  *, *::before, *::after{font-style:normal !important;}
+  .sec-head h2, .prose, .prose p, .prose p.lede, .callout p, .walk-step p, .reflect-body, .flow-note, .lr-pts li, .nd small{max-width:none;}
+  .callout > div{flex:1; min-width:0;}
+  .walk-step .note{max-width:none;}
+  /* constraints: what the system says, so what the screen does */
+  .lr-rules{background:var(--white); border:1px solid var(--line); border-radius:var(--r-lg); overflow:hidden;}
+  .lr-rules .head, .lr-rules .r{display:grid; grid-template-columns:minmax(0,1fr) 36px minmax(0,1.1fr); gap:12px; align-items:center; padding:15px 22px;}
+  .lr-rules .head{background:var(--hl-bg); font-size:0.7rem; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--ink-faint); padding-block:11px;}
+  .lr-rules .r{border-top:1px solid var(--line-soft); font-size:0.98rem; color:var(--ink-soft);}
+  .lr-rules .r b{font-family:"Inter",sans-serif; font-weight:600; color:var(--ink);}
+  .lr-rules .r .ar{text-align:center;}
+  @media (max-width:640px){ .lr-rules .head{display:none;} .lr-rules .r{grid-template-columns:1fr; gap:4px;} .lr-rules .r .ar{display:none;} }
+  .lr-safe{display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px;}
+  @media (max-width:900px){ .lr-safe{grid-template-columns:1fr 1fr;} }
+  @media (max-width:520px){ .lr-safe{grid-template-columns:1fr;} }
+  .lr-safe > div{background:var(--white); border:1px solid var(--line); border-radius:var(--r-md); padding:16px 18px; display:flex; flex-direction:column; gap:6px;}
+  .lr-safe i{font-size:1.4rem; color:var(--ink);}
+  .lr-safe b{font-family:"Inter",sans-serif; font-size:0.98rem;}
+  .lr-safe p{font-size:0.88rem; color:var(--ink-soft); line-height:1.45;}
+  /* simple, card free layouts */
+  .lr-steps{list-style:none; margin:0; padding:0; border-top:1px solid var(--line);}
+  .lr-steps li{display:grid; grid-template-columns:44px minmax(0,1fr); gap:16px; align-items:start; padding:15px 0; border-bottom:1px solid var(--line); font-size:1.02rem; line-height:1.55; color:var(--ink-soft);}
+  .lr-steps li b{color:var(--ink); font-weight:600;}
+  .lr-steps .num{width:30px; height:30px; border-radius:50%; background:var(--ink); color:#fff; font:700 0.82rem/30px "Inter",sans-serif; text-align:center; margin-top:-1px;}
+  .lr-steps.small li{padding:11px 0; font-size:0.97rem; grid-template-columns:38px minmax(0,1fr); gap:12px;}
+  .lr-steps.small .num{width:26px; height:26px; font-size:0.74rem; line-height:26px;}
+  .compare-col .lr-steps{border-top:0;}
+  .compare-col .lr-steps li:last-child{border-bottom:0;}
+  .compare-col.new .lr-steps li{border-bottom-color:var(--hl-border); color:var(--hl-ink);}
+  .lr-def{margin:0; border-top:1px solid var(--line);}
+  .lr-def > div{display:grid; grid-template-columns:170px minmax(0,1fr); gap:20px; padding:14px 0; border-bottom:1px solid var(--line);}
+  .lr-def dt{font-family:"Inter",sans-serif; font-weight:700; font-size:1rem; color:var(--ink);}
+  .lr-def dd{margin:0; font-size:1.02rem; line-height:1.55; color:var(--ink-soft);}
+  .lr-def .me dd{color:var(--ink); font-weight:600;}
+  @media (max-width:640px){ .lr-def > div{grid-template-columns:1fr; gap:4px;} }
+  .lr-two{display:grid; grid-template-columns:1fr 1fr; gap:34px; margin-top:6px;}
+  @media (max-width:760px){ .lr-two{grid-template-columns:1fr;} }
+  .big-q{font-family:"Inter",sans-serif; font-weight:600; font-size:clamp(1.2rem,2.2vw,1.55rem); line-height:1.3; letter-spacing:-0.03em; color:var(--ink); margin-top:34px; padding-top:22px; border-top:2px solid var(--ink);}
+  .lr-plain{font-size:1.02rem; line-height:1.65; color:var(--ink-soft);}
+  .lr-person{background:transparent; border:0; border-top:2px solid var(--ink); border-radius:0; padding:12px 0 0;}
+  .lr-cap{gap:34px;}
+  .lr-pts li{font-size:1.02rem;}
+  /* sim: just play and reset */
+  #nextBtn{display:none;}
+  /* shipped flow recording */
+  figure.lr-video{margin:24px 0 8px; border:1px solid var(--line); border-radius:var(--r-md); overflow:hidden; background:var(--white);}
+  figure.lr-video video{display:block; width:100%; height:auto; background:#f4f4f2;}
+  figure.lr-video figcaption{padding:12px 16px 14px; font-size:0.9rem; color:var(--ink-soft); border-top:1px solid var(--line-soft);}
+  /* the ending */
+  .lr-quote{margin:46px 0 40px; padding:30px 0 0; border-top:2px solid var(--ink);}
+  .lr-quote p{font-family:"Inter",sans-serif; font-weight:600; font-size:clamp(1.5rem,3vw,2.2rem); line-height:1.2; letter-spacing:-0.035em; color:var(--ink); max-width:26em; margin:0;}
+  .lr-quote cite{display:block; margin-top:16px; font-size:0.86rem; color:var(--ink-faint);}
+  .lr-close{font-family:"Inter",sans-serif; font-weight:600; font-size:clamp(1.3rem,2.4vw,1.75rem); line-height:1.25; letter-spacing:-0.03em; color:var(--ink); max-width:28em; margin-top:40px; padding-top:22px; border-top:1px solid var(--line);}
+</style>
+</head>
+<body>
+<div class="cursor-glass" id="cursorGlass" aria-hidden="true"></div>
+<div class="cursor-plane" id="cursorPlane" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.7 2.3a1 1 0 0 0-1.03-.24L2.6 8.3a1 1 0 0 0-.07 1.87l7.56 3.1 3.1 7.56a1 1 0 0 0 1.87-.07l6.24-18.07a1 1 0 0 0-.24-1.03ZM11.1 12.9 5.6 10.64l12.73-4.4-7.23 6.66Zm2.3 7.3L11.14 14l6.66-7.23-4.4 12.73Z"/></svg></div>
+<div class="cursor-trail" id="cursorTrail" aria-hidden="true"></div>
+
+<header class="case-nav">
+  <a href="index.html" class="case-nav-mark">VEDANSHI<span>.</span></a>
+  <a href="index.html#work" class="case-nav-back">&larr; Back to portfolio</a>
+</header>
+
+<section class="title-screen">
+  <div class="title-inner">
+    <div class="tags">
+      <span class="tag">Product Design</span>
+      <span class="tag">B2B SaaS &middot; CRM</span>
+      <span class="tag">Lead Assignment &amp; Distribution</span>
+    </div>
+    <h1>Giving managers more control<br class="br"> over how leads are assigned</h1>
+    <p class="dek">Leadrat is a CRM used by real estate brokerages to manage their sales pipeline. Leads were automatically assigned one after another but some teams needed to distribute them differently based on their sales team's capacity. I designed a way to set those rules without manually assigning every lead.</p>
+
+    <div class="meta">
+      <div class="col"><div class="k">Role</div><ul class="v-list"><li>Product Designer</li><li>Sole designer on this feature</li></ul></div>
+      <div class="col"><div class="k">Key collaborators</div><ul class="v-list"><li>Product Manager</li><li>Engineering</li></ul></div>
+      <div class="col"><div class="k">Scope</div><ul class="v-list"><li>Lead assignment and distribution</li><li>Live in the product</li></ul></div>
+      <div class="col col-tiles">
+        <div class="k">What shipped</div>
+        <div class="tiles">
+          <div class="tile"><div class="num">4</div><div class="lbl">Places to set a rule</div></div>
+          <div class="tile"><div class="num">2</div><div class="lbl">Ways to share leads</div></div>
+          <div class="tile"><div class="num">5</div><div class="lbl">Questions to set a rule</div></div>
+          <div class="tile"><div class="num">1</div><div class="lbl">Rule, set once</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="scroll-cue">Scroll to read <i class="ph ph-arrow-down" aria-hidden="true"></i></div>
+  </div>
+</section>
+
+<div class="page">
+  <nav class="toc-wrap">
+    <p class="toc-eyebrow">Contents</p>
+    <ol class="toc" id="toc">
+      <li><a href="#s00" data-n="00"><span class="n">00</span>The Problem</a></li>
+      <li><a href="#s01" data-n="01"><span class="n">01</span>The Catch</a></li>
+      <li><a href="#s02" data-n="02"><span class="n">02</span>My Role</a></li>
+      <li><a href="#s03" data-n="03"><span class="n">03</span>Turn One</a></li>
+      <li><a href="#s04" data-n="04"><span class="n">04</span>Turn Two</a></li>
+      <li><a href="#s05" data-n="05"><span class="n">05</span>Shipped</a></li>
+      <li><a href="#s06" data-n="06"><span class="n">06</span>Constraints</a></li>
+      <li><a href="#s07" data-n="07"><span class="n">07</span>The Ending</a></li>
+    </ol>
+    <a class="toc-back" href="#" onclick="window.scrollTo({top:0,behavior:'smooth'});setTimeout(function(){if(window.scrollY>0)window.scrollTo(0,0)},1600);return false;"><i class="ph ph-arrow-up" aria-hidden="true"></i> Back to top</a>
+  </nav>
+
+  <main>
+
+    <figure class="hero-shot mac">
+      <img src="assets/case-study/leadrat-mac.webp" width="1560" height="1200" alt="The shipped Project Assignment modal on a desktop display: Serene Shores, Assignment Config, Sequential Based, Select User, eight users selected, with a Save and Assign button" loading="eager">
+    </figure>
+    <p class="hero-shot-cap">The shipped Project Assignment modal. One model, reused for users, teams, projects and properties.</p>
+
+    <section id="s00">
+      <div class="sec-head"><div class="eyebrow-row"><span class="n">00</span><span class="label">The Problem</span></div><h2>Equal distribution was easy for the system, but not how teams worked</h2></div>
+      <p class="lr-story">Leadrat handed out new leads in turns, one agent after another. Fair, and automatic. But a manager's team is never equal.</p>
+
+      <figure class="comic-img">
+        <img src="assets/case-study/leadrat-comic.webp" width="1536" height="1024" loading="lazy" alt="Six panel black and white comic. 1, a manager sees lead deficit numbers for four teams and does not know why. 2, leads are assigned one after another, but some teams need a different split based on capacity. 3, the manager assigns by hand or juggles spreadsheet numbers, which is time consuming, error prone and has no real time view. 4, the manager imagines setting the rules and letting the system distribute leads. 5, a configuration asks one question at a time, starting with what is being assigned. 6, the rule is saved and leads are distributed automatically, for example 50, 30 and 20 percent.">
+      </figure>
+
+      <div class="tension">
+        <div><span class="k">Round robin</span><p>Automatic, but equal</p></div>
+        <div><span class="k">Manual assignment</span><p>Flexible, but repetitive</p></div>
+        <div class="need"><span class="k">What managers needed</span><p>Controlled, but automatic</p></div>
+      </div>
+
+      <p class="sub-h">Why equal turns are not a useful split</p>
+      <div class="lr-cap">
+        <div class="lr-person">
+          <div class="who">Person A</div>
+          <div class="b-row"><span>Leads received</span><i style="--w:100%"></i><em>20</em></div>
+          <div class="b-row"><span>Closes a week</span><i class="c" style="--w:25%"></i><em>about 5</em></div>
+        </div>
+        <div class="lr-person">
+          <div class="who">Person B</div>
+          <div class="b-row"><span>Leads received</span><i style="--w:100%"></i><em>20</em></div>
+          <div class="b-row"><span>Closes a week</span><i class="c" style="--w:75%"></i><em>about 15</em></div>
+        </div>
+      </div>
+      <p class="fine">Round robin gives both the same share because it only alternates. A manager could not say "give B more and A less".</p>
+
+      <p class="sub-h">Where the need came from</p>
+      <ol class="lr-steps">
+        <li><span class="num">1</span><div><b>Customer success brought the request.</b></div></li>
+        <li><span class="num">2</span><div><b>One customer was already splitting leads by hand,</b> in percentages like 50 / 30 / 20.</div></li>
+        <li><span class="num">3</span><div><b>Three more clients asked for something similar,</b> two in India and one in Dubai. Their requirements were not identical.</div></li>
+        <li><span class="num">4</span><div><b>The common thread:</b> managers wanted to own the split, not just automate it.</div></li>
+      </ol>
+
+      <p class="big-q">So the question changed. How might we give managers control over lead distribution, without making them manually assign every lead?</p>
+    </section>
+
+    <section id="s01">
+      <div class="sec-head"><div class="eyebrow-row"><span class="n">01</span><span class="label">The Catch</span></div><h2>A split is easy to say, and hard to deliver</h2></div>
+      <p class="lr-story">A manager can say "Agent A gets 50 percent, B gets 30, C gets 20". The system has a harder job, because nobody knows how many leads will arrive today.</p>
+
+      <p class="sub-h">How the system keeps to the split</p>
+      <ol class="lr-steps">
+        <li><span class="num">1</span><div><b>The manager sets a target for each agent.</b> For example 50 / 30 / 20.</div></li>
+        <li><span class="num">2</span><div><b>Every new lead goes to whoever is furthest behind their target.</b> That gap is called the deficit.</div></li>
+        <li><span class="num">3</span><div><b>It repeats for every lead,</b> so the split holds whether 3 leads or 300 arrive in a day.</div></li>
+      </ol>
+      <p class="fine">Just giving every lead to the biggest share does not work, because the others would never get enough work.</p>
+
+      <p class="sub-h">Four people, four different problems</p>
+      <dl class="lr-def">
+        <div><dt>The customer</dt><dd>Wanted to split leads by percentage, as they already did by hand.</dd></div>
+        <div><dt>The product</dt><dd>Needed a model that works when future lead volume is unknown.</dd></div>
+        <div><dt>Engineering</dt><dd>Had to build the calculation, duplicate handling, tie breaking, conditions and toggles.</dd></div>
+        <div class="me"><dt>Me</dt><dd>How a manager sets all of that up without needing to understand any of it.</dd></div>
+      </dl>
+      <p class="fine">The PM described the backend as a long chain of conditions, yes or no checks and if else paths. I did not design that logic. I learned it with the PM and engineering, so the screen never promises something the system will not do.</p>
+
+      <p class="sub-h">Three design problems stood out</p>
+      <ul class="lr-pts">
+        <li><strong>Too many options</strong> were visible at once.</li>
+        <li><strong>The order of decisions</strong> was unclear.</li>
+        <li><strong>Assignment lived in Global Config,</strong> away from the project it was about.</li>
+      </ul>
+    </section>
+
+    <section id="s02">
+      <div class="sec-head"><div class="eyebrow-row"><span class="n">02</span><span class="label">My Role</span></div><h2>I owned the experience of setting the rule</h2></div>
+      <p class="lr-story">My part in the story: turning a complex assignment model into something a manager can understand.</p>
+
+      <dl class="lr-def">
+        <div><dt>Understand</dt><dd>Worked out what the system needed from incomplete requirements, and studied the backend logic with the PM and engineering.</dd></div>
+        <div><dt>Reframe</dt><dd>Challenged Global Config and moved assignment into the project and property context.</dd></div>
+        <div><dt>Structure</dt><dd>Replaced the everything visible screen with one decision at a time, and designed the five question sequence.</dd></div>
+        <div><dt>Design</dt><dd>Designed the UI for every base and type combination, including percentage allocation and the Save lock.</dd></div>
+        <div><dt>Edge cases</dt><dd>Low volume, concurrent edits, invalid combinations and permissions.</dd></div>
+        <div><dt>Collaborate</dt><dd>Worked with the PM on requirements and engineering on feasibility, supported handoff and refined the experience after launch.</dd></div>
+      </dl>
+      <p class="fine"><strong>What I did not own.</strong> The allocation algorithm and backend logic. Engineering built that. I designed how a manager configures it.</p>
+    </section>
+
+    <section id="s03">
+      <div class="sec-head"><div class="eyebrow-row"><span class="n">03</span><span class="label">Turn One</span></div><h2>Assignment belongs next to the project it is about</h2></div>
+      <p class="lr-story">My first direction put assignment in Global Config. It was a reasonable home for a system setting, and the wrong one for this.</p>
+
+      <div class="compare-grid">
+        <div class="compare-col">
+          <div class="k">Before, in Global Config</div>
+          <ol class="lr-steps small">
+            <li><span class="num">1</span><div>Open Global Config</div></li>
+            <li><span class="num">2</span><div>Find the assignment rules</div></li>
+            <li><span class="num">3</span><div>Work out which project this is for</div></li>
+            <li><span class="num">4</span><div>Decide how its leads are distributed</div></li>
+          </ol>
+        </div>
+        <div class="compare-col new">
+          <div class="k">After, in the project</div>
+          <ol class="lr-steps small">
+            <li><span class="num">1</span><div>Open the project or property</div></li>
+            <li><span class="num">2</span><div>See what is being configured</div></li>
+            <li><span class="num">3</span><div>Open assignment from there</div></li>
+            <li><span class="num">4</span><div>Decide how its leads are distributed</div></li>
+          </ol>
+        </div>
+      </div>
+
+      <figure class="sheet single">
+        <div class="sheet-frame"><img src="assets/case-study/early-dense-config.webp" width="2000" height="1125" alt="An earlier config screen showing Assignment settings, Additional Assignment options, Lead Rotation and a Percentage configuration table all open on one page" loading="lazy"></div>
+        <figcaption><span class="sheet-tag">THE FIRST DIRECTION, GLOBAL CONFIG</span>Settings, extra options, lead rotation and the percentage table, all open together. The PM called it too many options, and it was confusing. I agreed.</figcaption>
+      </figure>
+
+      <p class="sub-h">Why it mattered</p>
+      <ul class="lr-pts">
+        <li>A manager splitting leads needs to know what they are splitting first: project name, property type, location, lead source, lead quality, budget, or who already owns the relationship.</li>
+        <li>In Global Config the project was a step away from the decision, so the manager had to carry it in their head.</li>
+        <li>I moved the assignment action into project and property management. None of the rules changed. The question did, from "configure assignment" to "how should leads from this project be assigned".</li>
+        <li>The PM remembers this as one of the important changes in the project.</li>
+      </ul>
+    </section>
+
+    <section id="s04">
+      <div class="sec-head"><div class="eyebrow-row"><span class="n">04</span><span class="label">Turn Two</span></div><h2>Instead of configuring everything, decide one thing at a time</h2></div>
+      <p class="lr-story">A manager arrives with one decision to make. The first screen asked them to understand several concepts before they could finish it.</p>
+
+      <figure class="lr-video">
+        <video id="asgVid" src="assets/case-study/leadrat-assignment.mp4" poster="assets/case-study/leadrat-assignment-poster.webp" muted loop playsinline preload="none" controls aria-label="Screen recording of setting an assignment rule from a project, one question at a time"></video>
+        <figcaption><span class="sheet-tag">THE SHIPPED FLOW</span>Assignment opens from the project, then asks one question at a time.</figcaption>
+      </figure>
+
+      <p class="sub-h">The shipped model is five questions, in order</p>
+      <ol class="lr-steps">
+        <li><span class="num">1</span><div><b>What are we assigning?</b> A user, a team, a property or a project. This comes first because it decides who can be picked at all.</div></li>
+        <li><span class="num">2</span><div><b>How should leads be distributed?</b> Sequential or percentage based. They are two different ideas of fairness, and the answer decides which rules matter.</div></li>
+        <li><span class="num">3</span><div><b>Who receives them?</b> Only people the rule can actually use.</div></li>
+        <li><span class="num">4</span><div><b>How do allocation and rotation work?</b> Percentages, rotation and any extras for those people.</div></li>
+        <li><span class="num">5</span><div><b>What happens after saving?</b> The system distributes every new lead on its own.</div></li>
+      </ol>
+      <p class="fine">Each answer narrows what the next step can offer, so invalid choices disappear before they can be made.</p>
+
+      <p class="sub-h">What I kept out of the way</p>
+      <ul class="lr-pts">
+        <li>Percentage fields appear only once the strategy is percentage based.</li>
+        <li>Duplicate owners appear only once Real Time Duplicates is switched on.</li>
+        <li>The deficit calculation and the tie break never appear at all.</li>
+      </ul>
+    </section>
+
+    <section id="s05">
+      <div class="sec-head"><div class="eyebrow-row"><span class="n">05</span><span class="label">Shipped</span></div><h2>The system calculates. The manager decides</h2></div>
+      <p class="lr-story">Here is where the story landed, in the order a manager moves through it. These are the real shipped screens.</p>
+
+      <div class="walk-step">
+        <div>
+          <h4>Choose the base, then the type</h4>
+          <ul class="lr-pts">
+            <li>Sequential or percentage based comes first, because it decides which rules matter next.</li>
+            <li>The same model applies to a person, a team, a project or a property.</li>
+            <li>One shape instead of four, so a manager learns it once.</li>
+          </ul>
+        </div>
+        <figure class="sheet"><div class="sheet-frame"><img src="assets/case-study/sequential-team.png" width="1260" height="720" alt="Project Assignment modal, Sequential Based, Select Team, eight selected team members, lead rotation toggle visible" loading="lazy"></div><figcaption><span class="sheet-tag">SEQUENTIAL &middot; TEAM</span>The same model applied to a whole team, so there is nothing new to learn.</figcaption></figure>
+      </div>
+
+      <div class="walk-step">
+        <div>
+          <h4>Define allocation, then rotation</h4>
+          <ul class="lr-pts">
+            <li>The manager sets what share of incoming leads each person should get.</li>
+            <li>The system handles the deficit calculation behind the scenes.</li>
+            <li>Lead rotation is optional, and rotates leads within a team by shift timings.</li>
+          </ul>
+        </div>
+        <figure class="sheet"><div class="sheet-frame"><img src="assets/case-study/percentage-property-rotation.png" width="1260" height="720" alt="Percentage Based, Property, two selected users at 20 percent each, Lead rotation toggled on" loading="lazy"></div><figcaption><span class="sheet-tag">PERCENTAGE &middot; ROTATION ON</span>Quota fields and lead rotation are set in the same moment, so they share a screen.</figcaption></figure>
+      </div>
+
+
+
+      <div class="walk-step">
+        <div>
+          <h4>Save and assign</h4>
+          <ul class="lr-pts">
+            <li>Save stays disabled until a percentage split totals exactly 100.</li>
+            <li>An invalid rule cannot reach the assignment engine.</li>
+            <li>Real Time Duplicates adds exactly one new decision, who handles the duplicate. Not a second config screen.</li>
+          </ul>
+        </div>
+        <figure class="sheet"><div class="sheet-frame"><img src="assets/case-study/additional-config-duplicates-v2.png" width="1260" height="720" alt="Additional Config tab with Real Time Duplicates enabled, showing a list of duplicate owners" loading="lazy"></div><figcaption><span class="sheet-tag">ADDITIONAL CONFIG</span>Duplicates are a separate decision, so the owner list appears only once the setting is on.</figcaption></figure>
+      </div>
+    
+      <p class="sub-h">Try the rule</p>
+      <div class="sim">
+        <div class="sim-head">
+          <div><div class="eyebrow">Try the rule</div><div class="lead-count">Lead <span id="leadNum">0</span> of 10, 50 / 30 / 20 split</div></div>
+          <div class="sim-controls">
+            <button class="btn secondary" id="resetBtn" type="button"><i class="ph ph-arrow-counter-clockwise" aria-hidden="true"></i>Reset</button>
+            <button class="btn secondary" id="playBtn" type="button"><i class="ph ph-play" aria-hidden="true"></i>Play all</button>
+            <button class="btn" id="nextBtn" type="button">Assign next lead<i class="ph ph-arrow-right" aria-hidden="true"></i></button>
+          </div>
+        </div>
+        <div id="agentRows"></div>
+        <div class="sim-log" id="simLog">Press <b>Play all</b> to watch the rule run.</div>
+        <div class="sim-final" id="simFinal"></div>
+      </div>
+      <p class="fine">A teaching aid on this page, not a product screen. Each lead goes to whoever is furthest behind, recalculated every time, so the split holds whether 3 leads or 300 arrive in a day.</p>
+    </section>
+
+    <section id="s06">
+      <div class="sec-head"><div class="eyebrow-row"><span class="n">06</span><span class="label">Constraints</span></div><h2>I had to design within what the system could actually do</h2></div>
+      <p class="lr-story">The system had rules about what could go with what. Engineering raised real concerns, and the screen had to follow every one.</p>
+
+      <div class="lr-rules">
+        <div class="head"><span>The system says</span><span></span><span>So the screen does</span></div>
+        <div class="r"><span>The type decides who can be picked</span><i class="ar">&rarr;</i><b>Only valid people appear</b></div>
+        <div class="r"><span>The strategy decides which rules apply</span><i class="ar">&rarr;</i><b>Percentage fields show only for percentage based</b></div>
+        <div class="r"><span>Extra rules can combine</span><i class="ar">&rarr;</i><b>Each one appears only when switched on</b></div>
+        <div class="r"><span>A bad combination breaks the engine</span><i class="ar">&rarr;</i><b>Save stays locked until the rule is valid</b></div>
+      </div>
+
+      <p class="sub-h">Safeguards I designed in</p>
+      <ul class="lr-pts">
+        <li><strong>Input check.</strong> 0 to 100 only, and errors show as you type.</li>
+        <li><strong>Save is a lock.</strong> It stays disabled until the split totals exactly 100.</li>
+        <li><strong>Change isolation.</strong> A mid day edit only steers future leads.</li>
+        <li><strong>Low volume.</strong> The first lead of the day goes to the highest share.</li>
+      </ul>
+    </section>
+
+    <section id="s07">
+      <div class="sec-head"><div class="eyebrow-row"><span class="n">07</span><span class="label">The Ending</span></div><h2>What shipped, and what I learned</h2></div>
+      <p class="lr-story">The assignment feature is now live and being used by 240+ users, with no support tickets or complaints reported about the assignment flow.</p>
+
+      <div class="lr-two">
+        <div>
+          <p class="sub-h" style="margin-top:0">Shipped</p>
+          <ul class="lr-pts"><li>Percentage based and sequential lead distribution</li><li>Assignment by user, team, project and property</li><li>Rotation, duplicate handling and validation</li><li>Used by 240+ users in the product</li></ul>
+        </div>
+        <div>
+          <p class="sub-h" style="margin-top:0">Learned</p>
+          <ul class="lr-pts"><li>The setup was easy for managers to understand and use</li><li>Complex assignment logic does not have to mean a complex interface</li><li>Clear rules and progressive configuration can make a technical workflow feel simple</li><li>After launch, the experience kept working without reported assignment related issues</li></ul>
+        </div>
+      </div>
+
+      <p class="sub-h">What I would improve next</p>
+      <p class="lr-plain">The assignment logic was complex, and some decisions were not directly validated with users before launch. With more time, I would:</p>
+      <ul class="lr-pts">
+        <li>Test the flow with more admins before and after launch</li>
+        <li>Make the tie break logic visible when it affects an assignment</li>
+        <li>Keep monitoring feedback as more teams use the feature</li>
+      </ul>
+
+      <p class="sub-h">My biggest takeaway</p>
+      <p class="lr-close" style="margin-top:0; padding-top:0; border-top:0;">Complex workflows can be simple when the configuration is clear.</p>
+    </section>
+
+
+  </main>
+</div>
+
+<footer class="foot" id="contact">
+  <div class="case-nav" style="padding:0 28px;">
+    <div class="foot-grid" style="width:100%;">
+      <div>
+        <p class="foot-statement">Still asking why?</p>
+        <p class="foot-sub">It is how I start every project: keep asking until the brief turns into the real problem. If your team has one, I would like to hear it.</p>
+      </div>
+      <ul class="connect" aria-label="Ways to connect">
+        <li><a class="c-row c-main" href="mailto:vedanshis50@gmail.com"><span class="c-ic brand"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#4285F4" d="M2 7.2V18a1 1 0 001 1h3.5v-8.8z"/><path fill="#34A853" d="M22 7.2V18a1 1 0 01-1 1h-3.5v-8.8z"/><path fill="#FBBC04" d="M17.5 4.3L22 7.2v2.1l-4.5 1z"/><path fill="#EA4335" d="M2 6a2 2 0 012-2h.5L12 9.6 19.5 4H20a2 2 0 012 2v.6l-10 7.4L2 6.6z"/></svg></span><span class="c-t"><b>Email</b><small>vedanshis50@gmail.com</small></span><i class="ph ph-arrow-up-right c-go" aria-hidden="true"></i></a><button class="c-copy" type="button" data-copy="vedanshis50@gmail.com" aria-label="Copy email address"><i class="ph ph-copy" aria-hidden="true"></i></button></li>
+        <li><a class="c-row" href="tel:+917652006793"><span class="c-ic"><i class="ph ph-phone" aria-hidden="true"></i></span><span class="c-t"><b>Phone</b><small>+91 76520 06793</small></span><i class="ph ph-arrow-up-right c-go" aria-hidden="true"></i></a></li>
+        <li><a class="c-row" href="https://www.linkedin.com/in/vedanshis50" target="_blank" rel="noopener"><span class="c-ic brand"><svg viewBox="0 0 24 24" aria-hidden="true"><rect width="24" height="24" rx="4" fill="#0A66C2"/><path fill="#fff" d="M6.3 9.4h2.6v8.3H6.3zM7.6 5.4a1.5 1.5 0 110 3 1.5 1.5 0 010-3zM10.6 9.4h2.5v1.1h.04c.35-.66 1.2-1.36 2.47-1.36 2.64 0 3.13 1.74 3.13 4v4.56h-2.6v-4.05c0-.97-.02-2.21-1.35-2.21-1.35 0-1.56 1.05-1.56 2.14v4.12h-2.6z"/></svg></span><span class="c-t"><b>LinkedIn</b><small>Say hi, or send a role</small></span><i class="ph ph-arrow-up-right c-go" aria-hidden="true"></i></a></li>
+        <li><a class="c-row" href="assets/docs/vedanshi-singh-resume.pdf" target="_blank" rel="noopener"><span class="c-ic brand"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#E5252A" d="M6 2h8l5 5v13a2 2 0 01-2 2H6a2 2 0 01-2-2V4a2 2 0 012-2z"/><path fill="#fff" fill-opacity=".4" d="M14 2l5 5h-4a1 1 0 01-1-1z"/><text x="11.6" y="17.4" font-size="6.6" font-weight="700" fill="#fff" text-anchor="middle" font-family="Arial, sans-serif">PDF</text></svg></span><span class="c-t"><b>Resume</b><small>Download</small></span><i class="ph ph-arrow-down c-go" aria-hidden="true"></i></a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="foot-bottom" style="max-width:1320px;margin-inline:auto;padding-inline:28px;">
+    <span>Vedanshi Singh &middot; Bengaluru</span>
+    <a href="#" onclick="window.scrollTo({top:0,behavior:'smooth'});setTimeout(function(){if(window.scrollY>0)window.scrollTo(0,0)},1600);return false;">Back to top <i class="ph ph-arrow-up" aria-hidden="true"></i></a>
+  </div>
+</footer>
+<a id="top-anchor"></a>
+
+<script>
+(function(){
+  var fine = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+  var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var doc = document.documentElement;
+
+  var links = Array.prototype.slice.call(document.querySelectorAll('#toc a'));
+  var sections = links.map(function(a){ return document.querySelector(a.getAttribute('href')); }).filter(Boolean);
+  function onScroll(){
+    var pos = window.scrollY + 120, activeIdx = -1;
+    for(var i=0;i<sections.length;i++){ if(sections[i] && sections[i].offsetTop <= pos) activeIdx = i; }
+    links.forEach(function(a,i){ a.classList.toggle('active', i===activeIdx); });
+  }
+  document.addEventListener('scroll', onScroll, {passive:true});
+  onScroll();
+
+  /* custom cursor */
+  (function(){
+    var plane = document.getElementById('cursorPlane'), trail = document.getElementById('cursorTrail'), glass = document.getElementById('cursorGlass');
+    if(!plane || !fine) return;
+    doc.classList.add('has-plane-cursor');
+    var mx=-100,my=-100,px=-100,py=-100,angle=-40,on=false,raf;
+    var trailPts=[], MAXT=6;
+    addEventListener('pointermove', function(e){
+      mx=e.clientX; my=e.clientY;
+      if(glass){ glass.style.setProperty('--lx', mx+'px'); glass.style.setProperty('--ly', my+'px'); }
+      if(!on){ on=true; plane.classList.add('on'); trail.classList.add('on'); if(glass) glass.classList.add('on'); px=mx; py=my; }
+    }, {passive:true});
+    document.addEventListener('pointerleave', function(){ on=false; plane.classList.remove('on'); trail.classList.remove('on'); if(glass) glass.classList.remove('on'); });
+    function loop(){
+      var dx=mx-px, dy=my-py;
+      px+=dx*0.18; py+=dy*0.18;
+      if(dx*dx+dy*dy>4) angle=Math.atan2(dy,dx)*(180/Math.PI)+45;
+      plane.style.setProperty('--cx', px+'px'); plane.style.setProperty('--cy', py+'px'); plane.style.setProperty('--cr', angle+'deg');
+      trailPts.unshift({x:px,y:py}); if(trailPts.length>MAXT) trailPts.pop();
+      var tp = trailPts[Math.min(3, trailPts.length-1)];
+      if(tp){ trail.style.setProperty('--tx', tp.x+'px'); trail.style.setProperty('--ty', tp.y+'px'); }
+      raf = requestAnimationFrame(loop);
+    }
+    if(!reduced) raf = requestAnimationFrame(loop);
+  })();
+
+  /* footer copy email */
+  var copyBtn = document.querySelector('[data-copy]');
+  if(copyBtn){
+    copyBtn.addEventListener('click', function(){
+      var val = copyBtn.getAttribute('data-copy');
+      function ok(){ copyBtn.classList.add('is-copied'); setTimeout(function(){ copyBtn.classList.remove('is-copied'); }, 1600); }
+      try { navigator.clipboard.writeText(val).then(ok, function(){}); } catch(e){}
+    });
+  }
+
+  /* deficit simulator */
+  var AGENTS = [{name:'Agent A', pct:0.5, actual:0},{name:'Agent B', pct:0.3, actual:0},{name:'Agent C', pct:0.2, actual:0}];
+  var total = 0, MAXN = 10, playing = false, playTimer = null;
+  var rowsEl = document.getElementById('agentRows'), leadNumEl = document.getElementById('leadNum'), logEl = document.getElementById('simLog'), finalEl = document.getElementById('simFinal');
+  var nextBtn = document.getElementById('nextBtn'), resetBtn = document.getElementById('resetBtn'), playBtn = document.getElementById('playBtn');
+
+  function buildRows(){
+    rowsEl.innerHTML = '';
+    AGENTS.forEach(function(a, i){
+      var row = document.createElement('div');
+      row.className = 'agent-row';
+      row.innerHTML = '<div><span class="name">'+a.name+'</span><span class="pct">'+Math.round(a.pct*100)+'% target</span></div>'+
+        '<div class="track"><div class="tick" style="left:'+(a.pct*100)+'%"></div><div class="fill" id="fill-'+i+'"></div></div>'+
+        '<div class="stat"><span class="mono" id="actual-'+i+'">0</span> <span style="color:var(--ink-faint)">assigned</span><br><span class="deficit" id="deficit-'+i+'">+0.0</span></div>';
+      rowsEl.appendChild(row);
+    });
+  }
+  function render(){
+    leadNumEl.textContent = total;
+    AGENTS.forEach(function(a,i){
+      var expected = a.pct * total, deficit = expected - a.actual, pctOfMax = Math.min(100, (a.actual / MAXN) * 100);
+      var fillEl = document.getElementById('fill-'+i); if(fillEl) fillEl.style.width = pctOfMax + '%';
+      var actualEl = document.getElementById('actual-'+i); if(actualEl) actualEl.textContent = a.actual;
+      var defEl = document.getElementById('deficit-'+i);
+      if(defEl){ var sign = deficit >= 0 ? '+' : ''; defEl.textContent = sign + deficit.toFixed(1); defEl.className = 'deficit ' + (deficit > 0.001 ? 'pos' : (deficit < -0.001 ? 'neg' : '')); }
+    });
+  }
+  function flashRow(i){
+    var row = rowsEl.children[i]; if(!row) return;
+    row.classList.add('hit');
+    setTimeout(function(){ row.classList.remove('hit'); }, 700);
+  }
+  function setControls(disabled){
+    nextBtn.disabled = disabled || total >= MAXN;
+    resetBtn.disabled = disabled;
+  }
+  function nextLead(){
+    if(total >= MAXN) return;
+    total++;
+    var best = -1, bestDeficit = -Infinity, tiedWith = [];
+    AGENTS.forEach(function(a,i){
+      var expected = a.pct * total, deficit = expected - a.actual;
+      if(deficit > bestDeficit + 1e-9){ bestDeficit = deficit; best = i; tiedWith = [i]; }
+      else if(Math.abs(deficit - bestDeficit) <= 1e-9){ tiedWith.push(i); if(a.actual < AGENTS[best].actual) best = i; }
+    });
+    AGENTS[best].actual++;
+    render();
+    flashRow(best);
+    var a = AGENTS[best];
+    if(tiedWith.length > 1){
+      var others = tiedWith.filter(function(i){return i!==best;}).map(function(i){return AGENTS[i].name;}).join(' and ');
+      logEl.innerHTML = 'Lead <b>'+total+'</b>, a tie between <b>'+a.name+'</b> and <b>'+others+'</b>, goes to <b>'+a.name+'</b>, who has fewer total assignments so far.';
+    } else {
+      logEl.innerHTML = 'Lead <b>'+total+'</b> is assigned to <b>'+a.name+'</b>, the furthest behind its target.';
+    }
+    if(total >= MAXN){ finalEl.textContent = 'Final split after '+MAXN+' leads: ' + AGENTS.map(function(a){return a.name.replace('Agent ','')+'='+a.actual;}).join('  ') + '. Target ratio 50/30/20 held.'; }
+    else { finalEl.textContent = ''; }
+    setControls(playing);
+  }
+  function stopPlay(){
+    playing = false; clearInterval(playTimer); playTimer = null;
+    playBtn.innerHTML = '<i class="ph ph-play" aria-hidden="true"></i>Play all';
+    setControls(false);
+  }
+  function playAll(){
+    if(playing){ stopPlay(); return; }
+    if(total >= MAXN){ total = 0; AGENTS.forEach(function(a){ a.actual = 0; }); render(); }
+    playing = true; playBtn.innerHTML = '<i class="ph ph-stop" aria-hidden="true"></i>Stop';
+    setControls(true);
+    playTimer = setInterval(function(){
+      if(total >= MAXN){ stopPlay(); return; }
+      nextLead();
+    }, 750);
+  }
+  nextBtn.addEventListener('click', nextLead);
+  playBtn.addEventListener('click', playAll);
+  resetBtn.addEventListener('click', function(){
+    stopPlay();
+    total = 0; AGENTS.forEach(function(a){ a.actual = 0; }); render();
+    logEl.innerHTML = 'Press <b>Play all</b> to watch the rule run.';
+    finalEl.textContent = '';
+  });
+  buildRows(); render();
+})();
+</script>
+<script>
+(function(){var v=document.getElementById('asgVid');if(!v||!('IntersectionObserver' in window)||window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){var p=v.play();if(p&&p.catch)p.catch(function(){});}else v.pause();});},{threshold:0.5}).observe(v);})();
+</script>
+</body>
+</html>

@@ -1,0 +1,816 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>02 Moment: Last Mile, the 200 metres after the train — Vedanshi Singh</title>
+<meta name="description" content="Last Mile. Sixty seconds, 8% battery, KSR Bengaluru City station. Get to your ride using the prototype, then see why it works the way it does.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230c0d0f'/%3E%3Crect x='7' y='7' width='8' height='8' fill='%23f0a531'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,300..500;1,6..72,300..400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="fg.css">
+<style>
+/* ======================================================================
+   MOMENT: a station at night. The page is the platform; the phone is
+   the product. Amber is station signage. The phone keeps Last Mile's
+   own palette so the product reads as a separate object in the world.
+   ====================================================================== */
+body.mom { --ground: #0c0d0f; --ink: #ece6da; --ink-2: #b3ada2; --ink-3: #8c877d; --rule: #25272b; --rule-strong: #45474c; --accent: #f0a531; --bad: #ff7a59; }
+.mom .hdr { border-bottom-color: #1b1d20; }
+.mom .needs { background: #3a2410; color: #ffc48a; }
+
+/* the product's own palette (from the Last Mile style sheet) */
+.phone { --p-bg: #f5f1ec; --p-ink: #0f1b2d; --p-2: #4d5868; --p-3: #5f6878; --p-line: #e2ddd5; --p-rec: #0c8f84; --p-rec-t: #dff3f0; --p-warn: #a8570b; }
+
+/* ---------- top bar: the constraint, always in view ---------- */
+.bar { position: sticky; top: 0; z-index: 30; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--col-gap); align-items: center; padding: 12px var(--gut); background: rgba(12, 13, 15, 0.94); border-bottom: 1px solid #1b1d20; }
+.bar-l { grid-column: 1 / span 4; }
+.bar-l .meta { color: var(--ink-3); }
+.bar-l .meta b { color: var(--accent); font-weight: 500; }
+.timer { grid-column: 5 / span 4; justify-self: center; font-family: var(--mono); font-size: clamp(1.6rem, 3vw, 2.3rem); font-variant-numeric: tabular-nums; letter-spacing: -0.02em; line-height: 1; position: relative; transition: color 0.3s; }
+.timer.low { color: var(--bad); }
+.timer .pen { position: absolute; left: 100%; top: -2px; margin-left: 10px; font-size: 13px; color: var(--bad); white-space: nowrap; animation: pen 1.4s var(--ease) forwards; }
+@keyframes pen { 0% { opacity: 0; transform: translateY(6px); } 15% { opacity: 1; transform: none; } 80% { opacity: 1; } 100% { opacity: 0; transform: translateY(-6px); } }
+.batt { grid-column: 9 / span 4; justify-self: end; display: flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 12px; font-variant-numeric: tabular-nums; }
+.batt .cell { width: 26px; height: 12px; border: 1.5px solid var(--ink-2); border-radius: 2px; position: relative; padding: 1.5px; }
+.batt .cell::after { content: ""; position: absolute; right: -4px; top: 3px; width: 2px; height: 5px; background: var(--ink-2); }
+.batt .cell i { display: block; height: 100%; background: var(--bad); border-radius: 1px; transition: width 0.5s; }
+@media (max-width: 640px) { .bar-l { grid-column: 1 / span 5; } .bar-l span { display: none; } .timer { grid-column: 6 / span 3; } .batt { grid-column: 9 / span 4; } }
+
+/* ---------- the stage ---------- */
+.stage { min-height: calc(100svh - 58px); padding-block: clamp(20px, 3vw, 40px) clamp(30px, 4vw, 56px); align-items: start; }
+.world { grid-column: 1 / span 6; display: grid; gap: 22px; align-content: start; padding-top: clamp(8px, 2vw, 30px); }
+.phone-wrap { grid-column: 8 / span 5; justify-self: start; }
+@media (max-width: 980px) {
+  .stage { min-height: 0; }
+  .world { grid-column: 1 / -1; gap: 14px; padding-top: 0; }
+  .phone-wrap { grid-column: 1 / -1; justify-self: center; margin-top: 18px; width: 100%; max-width: 400px; }
+}
+
+.where { font-family: var(--mono); font-size: 12px; letter-spacing: 0.05em; text-transform: uppercase; color: var(--ink-3); }
+.where b { color: var(--ink); font-weight: 500; }
+.task { font-family: var(--serif); font-weight: 340; font-size: clamp(1.4rem, 2.4vw, 2.1rem); line-height: 1.12; letter-spacing: -0.015em; max-width: 22ch; }
+.task em { font-style: italic; font-weight: 300; color: var(--accent); }
+
+/* signage: the physical choices live in the world, not in the phone */
+.signs { display: grid; gap: 10px; }
+.signs[hidden] { display: none; }
+.signs .prompt { font-family: var(--mono); font-size: 12px; letter-spacing: 0.05em; text-transform: uppercase; color: var(--ink-2); }
+.signs .row { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 8px; }
+.sign { text-align: left; padding: 14px 16px 16px; background: #16171a; border: 1px solid #2e3034; color: var(--ink); font-family: var(--mono); font-size: 13px; line-height: 1.35; letter-spacing: 0.02em; min-height: 64px; transition: background 0.2s, border-color 0.2s, transform 0.2s var(--ease); }
+.sign b { display: block; font-family: var(--sans); font-size: 17px; font-weight: 600; letter-spacing: 0; margin-bottom: 4px; color: var(--accent); }
+.sign:hover { background: #1d1f23; border-color: var(--accent); }
+.sign:active { transform: scale(0.98); }
+.sign.is-wrong { border-color: var(--bad); background: #2a1612; }
+.sign.is-wrong b { color: var(--bad); }
+.sign:disabled { opacity: 0.4; cursor: default; }
+.signs.arrive .row { animation: signIn 0.45s var(--ease); }
+@keyframes signIn { from { opacity: 0; transform: translateY(8px); } }
+
+.noise { display: grid; gap: 8px; border-top: 1px solid var(--rule); padding-top: 14px; min-height: 7.5em; }
+.noise li { font-family: var(--mono); font-size: 12px; line-height: 1.5; color: var(--ink-3); animation: signIn 0.5s var(--ease); }
+.noise li b { color: var(--ink-2); font-weight: 400; }
+.noise li.hot { color: var(--bad); }
+@media (max-width: 980px) { .noise { min-height: 0; max-height: 4.6em; overflow: hidden; } .noise li:nth-child(n+3) { display: none; } }
+
+/* intro + outro panels share the world column */
+.intro h1 { font-size: clamp(3.2rem, 8vw, 7.4rem); }
+.intro .kick { margin-top: 14px; font-family: var(--mono); font-size: clamp(0.95rem, 1.4vw, 1.15rem); letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); }
+.intro .setup { margin-top: clamp(22px, 3vw, 36px); display: grid; gap: 4px; font-family: var(--serif); font-size: clamp(1.25rem, 1.9vw, 1.6rem); font-weight: 340; line-height: 1.3; }
+.intro .setup p:last-child { margin-top: 14px; font-family: var(--sans); font-weight: 600; font-size: clamp(1.05rem, 1.4vw, 1.2rem); letter-spacing: 0.06em; text-transform: uppercase; }
+.go { margin-top: 28px; display: flex; flex-wrap: wrap; gap: 12px 20px; align-items: center; }
+.start { font-family: var(--mono); font-size: 15px; font-weight: 500; letter-spacing: 0.12em; padding: 16px 34px; background: var(--accent); color: #111; transition: transform 0.2s var(--ease), background 0.2s; }
+.start:hover { background: #ffb948; }
+.start:active { transform: scale(0.97); }
+.alt { font-size: 14px; color: var(--ink-2); text-decoration: underline; text-underline-offset: 3px; }
+.alt:hover { color: var(--ink); }
+.fine { margin-top: 20px; font-size: 13px; color: var(--ink-3); max-width: 46ch; }
+
+.outro h2 { font-family: var(--serif); font-weight: 340; font-size: clamp(2rem, 4vw, 3.4rem); line-height: 1.02; letter-spacing: -0.02em; max-width: 16ch; }
+.outro h2 em { font-style: italic; font-weight: 300; color: var(--accent); }
+.run-stats { margin-top: 22px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border-top: 1px solid var(--rule-strong); max-width: 520px; }
+.run-stats div { padding: 12px 0; border-bottom: 1px solid var(--rule); }
+.run-stats dt { font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-3); }
+.run-stats dd { font-family: var(--mono); font-size: 18px; font-variant-numeric: tabular-nums; margin-top: 2px; }
+.outro .cmp { margin-top: 16px; color: var(--ink-2); max-width: 46ch; }
+.outro .go a.start { text-decoration: none; }
+
+/* ---------- the phone: the product itself ---------- */
+.phone { width: 352px; max-width: 100%; aspect-ratio: 352 / 720; max-height: calc(100svh - 120px); min-height: 560px; border-radius: 40px; padding: 10px; background: #1c1d20; border: 1px solid #34363a; box-shadow: 0 30px 80px -30px rgba(240, 165, 49, 0.18); position: relative; transition: filter 0.8s; }
+.phone.low { filter: brightness(0.82) saturate(0.9); }
+.phone.off .screen { opacity: 0.25; }
+.screen { height: 100%; border-radius: 31px; overflow: hidden; background: var(--p-bg); color: var(--p-ink); display: flex; flex-direction: column; transition: opacity 0.5s; }
+.sb { display: flex; justify-content: space-between; align-items: center; padding: 12px 22px 8px; font-family: var(--sans); font-size: 12px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.sb .off { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 500; padding: 3px 8px; border-radius: 20px; background: #e7e2d9; color: var(--p-2); }
+.sb .off i { width: 6px; height: 6px; border-radius: 50%; background: var(--p-rec); }
+.sb .pb { color: #c2352b; }
+.app { flex: 1; overflow-y: auto; padding: 8px 18px 20px; font-family: var(--sans); scrollbar-width: thin; }
+.app:focus { outline: none; }
+.scr { animation: scrIn 0.35s var(--ease); }
+@keyframes scrIn { from { opacity: 0; transform: translateX(14px); } }
+.ap-meta { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--p-3); }
+.ap-h { font-family: var(--sans); font-size: 24px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.1; margin-top: 2px; }
+.ap-sub { font-size: 13px; color: var(--p-2); margin-top: 2px; }
+.ap-back { font-size: 13px; color: var(--p-2); padding: 4px 0 8px; display: inline-flex; gap: 4px; }
+.ap-back:hover { color: var(--p-ink); }
+.ap-search { display: flex; gap: 8px; align-items: center; margin-top: 16px; padding: 11px 14px; border-radius: 12px; background: #fff; border: 1px solid var(--p-line); }
+.ap-search span { color: var(--p-3); }
+.ap-search input { flex: 1; min-width: 0; border: 0; font: inherit; font-size: 15px; color: var(--p-ink); background: none; outline: none; }
+.ap-lbl { margin: 18px 0 6px; font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--p-3); }
+.ap-dests li + li { border-top: 1px solid var(--p-line); }
+.ap-dests button { width: 100%; display: grid; grid-template-columns: 1fr auto; align-items: center; padding: 12px 2px; text-align: left; }
+.ap-dests b { font-size: 16px; font-weight: 600; }
+.ap-dests small { display: block; font-size: 12.5px; color: var(--p-3); }
+.ap-dests button > span:last-child { color: var(--p-3); font-size: 18px; }
+.ap-dests button:hover b { text-decoration: underline; text-underline-offset: 3px; }
+.ap-none { padding: 14px 2px; font-size: 14px; color: var(--p-2); }
+.ap-none b { display: block; color: var(--p-ink); }
+.card { display: block; width: 100%; text-align: left; margin-top: 10px; padding: 12px 14px; border-radius: 14px; background: #fff; border: 1px solid var(--p-line); transition: border-color 0.2s, transform 0.15s; }
+.card:hover { border-color: var(--p-ink); }
+.card:active { transform: scale(0.99); }
+.card.rec { border: 1.5px solid var(--p-rec); }
+.card .badge { display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--p-rec); background: var(--p-rec-t); padding: 2px 7px; border-radius: 4px; margin-bottom: 6px; }
+.card .top { display: grid; grid-template-columns: 1fr auto; gap: 8px; }
+.card .m { font-size: 16px; font-weight: 700; }
+.card .s { font-size: 12px; color: var(--p-3); }
+.card .p { font-size: 17px; font-weight: 700; text-align: right; font-variant-numeric: tabular-nums; }
+.card .t { font-size: 12px; color: var(--p-3); text-align: right; }
+.card .w { margin-top: 9px; padding-top: 8px; border-top: 1px dashed var(--p-line); font-size: 12.5px; color: var(--p-2); line-height: 1.4; }
+.card .w::before { content: "Walk · "; font-weight: 600; color: var(--p-ink); }
+.info { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); margin-top: 12px; border: 1px solid var(--p-line); border-radius: 12px; background: #fff; }
+.info div { padding: 8px 8px; }
+.info div + div { border-left: 1px solid var(--p-line); }
+.info dt { font-size: 9.5px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--p-3); }
+.info dd { font-size: 13px; font-weight: 700; font-variant-numeric: tabular-nums; margin-top: 1px; }
+.steps { margin-top: 14px; counter-reset: s; }
+.steps li { position: relative; padding: 10px 0 12px 36px; border-top: 1px solid var(--p-line); color: var(--p-3); transition: color 0.3s; }
+.steps li::before { counter-increment: s; content: counter(s); position: absolute; left: 0; top: 10px; width: 24px; height: 24px; border-radius: 50%; border: 1.5px solid var(--p-line); display: grid; place-items: center; font-size: 12px; font-weight: 700; }
+.steps li b { display: block; font-size: 15px; font-weight: 700; line-height: 1.3; }
+.steps li p { font-size: 13px; line-height: 1.4; margin-top: 2px; }
+.steps li.now { color: var(--p-ink); }
+.steps li.now::before { background: var(--p-ink); border-color: var(--p-ink); color: #fff; }
+.steps li.now p { color: var(--p-2); }
+.steps li.done { color: var(--p-3); }
+.steps li.done::before { content: "✓"; background: var(--p-rec); border-color: var(--p-rec); color: #fff; }
+.steps li.done b { text-decoration: line-through; text-decoration-thickness: 1px; font-weight: 600; }
+.steps li:not(.now) p { display: none; }
+.act { margin-top: 10px; display: flex; gap: 8px; align-items: center; }
+.ap-btn { font-size: 14px; font-weight: 700; padding: 10px 16px; border-radius: 10px; background: var(--p-ink); color: #fff; }
+.ap-btn:disabled { opacity: 0.5; }
+.look { font-size: 12.5px; font-weight: 600; color: var(--p-warn); }
+.spin { display: inline-block; width: 12px; height: 12px; border: 2px solid var(--p-line); border-top-color: var(--p-ink); border-radius: 50%; animation: spin 0.8s linear infinite; vertical-align: -2px; margin-right: 6px; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.ap-tip { margin-top: 12px; padding: 9px 11px; border-radius: 10px; background: #efe9df; font-size: 12.5px; color: var(--p-2); }
+.ap-done { padding-top: 30px; }
+.ap-done .tick { width: 44px; height: 44px; border-radius: 50%; background: var(--p-rec); color: #fff; display: grid; place-items: center; font-size: 22px; }
+.ap-done h3 { margin-top: 14px; font-size: 22px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.15; }
+.ap-done p { margin-top: 8px; font-size: 14px; color: var(--p-2); }
+.phone-idle { height: 100%; display: grid; place-items: center; text-align: center; padding: 30px; color: var(--p-3); font-size: 13px; }
+.phone-idle b { display: block; font-size: 22px; font-weight: 700; letter-spacing: -0.02em; color: var(--p-ink); margin-bottom: 6px; }
+@media (max-width: 980px) {
+  .phone { width: 100%; aspect-ratio: auto; height: auto; min-height: 0; max-height: none; border-radius: 28px; padding: 8px; }
+  .screen { border-radius: 22px; min-height: 480px; }
+}
+
+/* ---------- THAT WAS THE PRODUCT ---------- */
+.reveal { border-top: 1px solid var(--rule); padding-block: clamp(70px, 11vw, 170px) clamp(40px, 6vw, 80px); }
+.reveal .meta { grid-column: 1 / span 3; padding-top: 1em; }
+.reveal h2 { grid-column: 1 / -1; font-size: clamp(3rem, 10vw, 10.4rem); }
+.reveal h2 span { display: block; }
+.reveal h2 span + span { padding-left: calc((100% + var(--col-gap)) / 12 * 4); font-style: italic; font-weight: 300; color: var(--accent); }
+@media (max-width: 700px) { .reveal h2 span + span { padding-left: 0.6em; } }
+
+/* ---------- why: the reader's own run, annotated ---------- */
+.why-head { padding-bottom: clamp(24px, 3vw, 40px); }
+.why-head .h2 { grid-column: 4 / span 8; }
+.why-head p { grid-column: 4 / span 5; margin-top: 16px; color: var(--ink-2); }
+@media (max-width: 900px) { .why-head .h2, .why-head p { grid-column: 1 / -1; } }
+.trace { border-top: 1px solid var(--ink); }
+.trace > li { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--col-gap); padding: clamp(22px, 3vw, 36px) var(--gut); border-bottom: 1px solid var(--rule); }
+.tr-no { grid-column: 1; font-family: var(--mono); font-size: 11.5px; color: var(--ink-3); padding-top: 4px; }
+.tr-you { grid-column: 2 / span 3; font-family: var(--mono); font-size: 12.5px; line-height: 1.55; color: var(--accent); padding-top: 3px; }
+.tr-you small { display: block; color: var(--ink-3); font-size: 10.5px; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 4px; }
+.tr-body { grid-column: 6 / span 6; }
+.tr-body h3 { font-family: var(--serif); font-weight: 360; font-size: clamp(1.5rem, 2.4vw, 2.1rem); line-height: 1.08; letter-spacing: -0.015em; }
+.tr-body p { margin-top: 10px; color: var(--ink-2); max-width: 58ch; }
+.tr-body p b { color: var(--ink); font-weight: 500; }
+@media (max-width: 900px) { .tr-no { grid-column: 1 / span 2; } .tr-you { grid-column: 3 / -1; } .tr-body { grid-column: 1 / -1; margin-top: 14px; } }
+
+/* ---------- field notes: the lights come on ---------- */
+.notes { --ground: #efebe3; --ink: #17150f; --ink-2: #4f4b42; --ink-3: #6a655a; --rule: #d7d1c4; --rule-strong: #a9a292; --accent: #8f5200; background: var(--ground); color: var(--ink); }
+.notes .needs { background: #fbe3cf; color: #9a3b12; }
+.n-sec { padding-block: clamp(56px, 7vw, 100px); border-top: 1px solid var(--rule); }
+.n-sec:first-child { border-top: 0; }
+.n-sec .sec-no { grid-column: 1 / span 2; }
+.n-sec .h2 { grid-column: 3 / span 8; }
+.n-sec .prose { grid-column: 3 / span 6; margin-top: 18px; }
+@media (max-width: 900px) { .n-sec .sec-no, .n-sec .h2, .n-sec .prose { grid-column: 1 / -1; } .n-sec .h2 { margin-top: 12px; } }
+
+.fieldlog { grid-column: 3 / span 10; margin-top: clamp(28px, 4vw, 44px); display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-top: 1px solid var(--ink); }
+.fieldlog li { padding: 14px 18px 4px 0; }
+.fieldlog li + li { padding-left: 16px; border-left: 1px solid var(--rule); }
+.fieldlog time { font-family: var(--mono); font-size: 12px; color: var(--accent); }
+.fieldlog p { margin-top: 8px; font-family: var(--serif); font-size: 1.15rem; line-height: 1.3; }
+.fieldlog small { display: block; margin-top: 8px; font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.05em; text-transform: uppercase; color: var(--ink-3); }
+@media (max-width: 900px) { .fieldlog { grid-column: 1 / -1; grid-template-columns: 1fr; } .fieldlog li { padding-left: 0 !important; border-left: 0 !important; padding-bottom: 14px; } .fieldlog li + li { border-top: 1px solid var(--rule); } }
+
+.said { grid-column: 3 / span 10; margin-top: clamp(30px, 4vw, 50px); }
+.said-h { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: var(--col-gap); border-bottom: 1px solid var(--ink); padding-bottom: 8px; }
+.said li { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: var(--col-gap); padding: 14px 0; border-bottom: 1px solid var(--rule); }
+.said q { font-family: var(--serif); font-style: italic; font-size: 1.12rem; line-height: 1.35; }
+.said span { font-size: 14.5px; font-weight: 500; }
+.said-foot { margin-top: 12px; font-size: 13px; color: var(--ink-3); }
+@media (max-width: 900px) { .said { grid-column: 1 / -1; } }
+@media (max-width: 600px) { .said-h { display: none; } .said li { grid-template-columns: 1fr; row-gap: 6px; } }
+
+.iter { grid-column: 3 / span 10; margin-top: clamp(28px, 4vw, 44px); display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--col-gap); }
+.iter li { border-top: 2px solid var(--rule-strong); padding-top: 12px; }
+.iter li.keep { border-top-color: var(--ink); }
+.iter .v { font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-3); }
+.iter li.keep .v { color: var(--ink); }
+.iter h3 { margin-top: 6px; font-family: var(--serif); font-weight: 400; font-size: 1.3rem; line-height: 1.15; }
+.iter li:not(.keep) h3 { text-decoration: line-through; text-decoration-thickness: 1px; color: var(--ink-2); }
+.iter p { margin-top: 8px; font-size: 14px; color: var(--ink-2); }
+@media (max-width: 800px) { .iter { grid-column: 1 / -1; grid-template-columns: 1fr; row-gap: 22px; } }
+
+.cut { grid-column: 3 / span 10; margin-top: clamp(28px, 4vw, 44px); display: grid; grid-template-columns: 1fr 1fr; gap: var(--col-gap); }
+.cut h3 { font-family: var(--mono); font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; padding-bottom: 8px; border-bottom: 1px solid var(--ink); }
+.cut li { padding: 9px 0; border-bottom: 1px solid var(--rule); font-size: 15px; }
+.cut .out li { color: var(--ink-3); }
+.cut .out li s { text-decoration-thickness: 1px; }
+.cut-note { grid-column: 3 / span 6; margin-top: 18px; font-family: var(--serif); font-style: italic; font-size: 1.2rem; line-height: 1.35; }
+@media (max-width: 900px) { .cut, .cut-note { grid-column: 1 / -1; } }
+@media (max-width: 540px) { .cut { grid-template-columns: 1fr; row-gap: 22px; } }
+
+.edges { grid-column: 3 / span 10; margin-top: clamp(28px, 4vw, 44px); display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(22px, 3vw, 36px) var(--col-gap); }
+.edge h3 { font-family: var(--mono); font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-3); }
+.edge .say { margin-top: 10px; padding: 12px 14px; background: #f8f5ef; border: 1px solid var(--rule); border-left: 3px solid var(--accent); font-family: var(--sans); font-size: 14px; line-height: 1.45; color: var(--ink); }
+.edge .say small { display: block; font-size: 12.5px; color: var(--ink-2); margin-top: 2px; }
+.edge p { margin-top: 10px; font-size: 14px; color: var(--ink-2); }
+.edge p b { color: var(--ink); font-weight: 500; }
+@media (max-width: 900px) { .edges { grid-column: 1 / -1; } }
+@media (max-width: 640px) { .edges { grid-template-columns: 1fr; } }
+
+.n-ledger { grid-column: 3 / span 10; margin-top: clamp(28px, 4vw, 44px); }
+@media (max-width: 900px) { .n-ledger { grid-column: 1 / -1; } }
+.wrong { grid-column: 3 / span 10; margin-top: clamp(28px, 4vw, 44px); display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--col-gap); }
+.wrong li { border-top: 1px solid var(--ink); padding-top: 12px; }
+.wrong b { display: block; font-family: var(--serif); font-weight: 400; font-size: 1.25rem; line-height: 1.2; }
+.wrong p { margin-top: 8px; font-size: 14.5px; color: var(--ink-2); }
+.nexts { grid-column: 3 / span 10; margin-top: clamp(28px, 4vw, 44px); counter-reset: n; }
+.nexts li { display: grid; grid-template-columns: 2.4em minmax(0, 1fr); padding: 12px 0; border-top: 1px solid var(--rule); font-size: 15px; color: var(--ink-2); }
+.nexts li::before { counter-increment: n; content: "T" counter(n); font-family: var(--mono); font-size: 11.5px; color: var(--ink-3); padding-top: 3px; }
+.nexts li b { color: var(--ink); font-weight: 500; }
+@media (max-width: 900px) { .wrong, .nexts { grid-column: 1 / -1; } }
+@media (max-width: 640px) { .wrong { grid-template-columns: 1fr; row-gap: 20px; } }
+
+.closing { padding-block: clamp(70px, 10vw, 150px); border-top: 1px solid var(--rule); }
+.closing .meta { grid-column: 1 / span 2; padding-top: 1em; }
+.closing blockquote { grid-column: 3 / span 9; }
+.closing blockquote p:first-child { font-family: var(--serif); font-weight: 340; font-size: clamp(2.2rem, 5.4vw, 5rem); line-height: 1; letter-spacing: -0.025em; }
+.closing blockquote p:first-child em { font-style: italic; font-weight: 300; }
+.closing blockquote p + p { margin-top: 26px; max-width: 54ch; color: var(--ink-2); font-size: 1.05rem; }
+.closing .datanote { grid-column: 3 / span 7; margin-top: 40px; font-size: 13px; color: var(--ink-3); }
+@media (max-width: 900px) { .closing .meta, .closing blockquote, .closing .datanote { grid-column: 1 / -1; } .closing blockquote { margin-top: 14px; } }
+.notes .next { border-top-color: var(--rule); }
+.notes .foot { border-top-color: var(--rule); }
+</style>
+</head>
+<body class="mom">
+<a class="skip" href="#why">Skip the experience and read why it works this way</a>
+
+<header class="hdr">
+  <a class="hdr-name" href="index.html">Vedanshi Singh <span>/ field guide</span></a>
+  <nav class="hdr-index" aria-label="Investigations">
+    <a href="system.html" style="--mk: var(--c-system)"><i>01</i> System</a>
+    <a href="moment.html" aria-current="page" style="--mk: var(--c-moment)"><i>02</i> Moment</a>
+    <a href="work.html#decision" class="is-pending" style="--mk: var(--c-decision)"><i>03</i> Decision</a>
+    <a href="work.html#commitment" class="is-pending" style="--mk: var(--c-commitment)"><i>04</i> Commitment</a>
+  </nav>
+  <nav class="hdr-links" aria-label="Site">
+    <a href="work.html">Work</a>
+    <a href="index.html#about">About</a>
+    <a href="index.html#contact">Contact</a>
+  </nav>
+  <p class="hdr-here"><a href="work.html">Index</a> / 02 of 04 / Moment</p>
+</header>
+
+<main>
+  <div class="bar" aria-label="Constraints">
+    <p class="bar-l meta"><b>02 / Moment</b><span> · Last Mile</span></p>
+    <p class="timer" id="timer" aria-hidden="true"><span id="tDigits">1:00</span></p>
+    <p class="batt" aria-hidden="true"><span class="cell"><i id="battBar" style="width: 8%"></i></span><span id="battTxt">8%</span></p>
+  </div>
+  <p class="vh" id="live" aria-live="polite"></p>
+
+  <section class="stage g" id="stage" aria-label="Last Mile, a 60 second experience">
+    <!-- the world: where you are, what's around you, what you have to physically choose -->
+    <div class="world" id="world">
+      <div class="intro" id="intro">
+        <p class="where">KSR Bengaluru City · Platform 6 · 21:38</p>
+        <h1 class="display" style="margin-top: 18px">Last Mile</h1>
+        <p class="kick">60 seconds. One decision.</p>
+        <div class="setup">
+          <p>You just stepped off a 14-hour train.</p>
+          <p>Your phone is at 8%.</p>
+          <p>You're somewhere unfamiliar, meeting a friend off 100 Feet Road, Indiranagar.</p>
+          <p>Get to your ride.</p>
+        </div>
+        <div class="go">
+          <button class="start" id="start" type="button">START</button>
+          <button class="alt" id="untimed" type="button">Play without the timer</button>
+        </div>
+        <p class="fine">The 60 seconds is this page's constraint, borrowed from the product's design goal. It isn't a claim about how long real travellers take.</p>
+      </div>
+
+      <div id="run" hidden>
+        <p class="where" id="whereRun">KSR Bengaluru City · <b>Platform 6</b></p>
+        <p class="task" style="margin-top: 10px">Meet a friend off 100 Feet Road, <em>Indiranagar.</em></p>
+        <div class="signs" id="signs" hidden>
+          <p class="prompt" id="signPrompt"></p>
+          <div class="row" id="signRow"></div>
+        </div>
+        <ol class="noise" id="noise" aria-label="Around you"></ol>
+      </div>
+
+      <div class="outro" id="outro" hidden tabindex="-1">
+        <p class="where" id="outWhere"></p>
+        <h2 id="outH" style="margin-top: 14px"></h2>
+        <dl class="run-stats" id="outStats"></dl>
+        <p class="cmp" id="outCmp"></p>
+        <div class="go">
+          <a class="start" href="#product">WHY DOES IT WORK THIS WAY? ↓</a>
+          <button class="alt" id="again" type="button">Run it again</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- the product -->
+    <div class="phone-wrap">
+      <div class="phone" id="phone">
+        <div class="screen">
+          <div class="sb" aria-hidden="true"><span>21:38</span><span class="off"><i></i>Offline</span><span class="pb" id="pBatt">8%</span></div>
+          <div class="app" id="app" tabindex="-1" aria-label="Last Mile app">
+            <div class="phone-idle"><div><b>Last Mile</b>Know your ride before you land.</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ the turn ============ -->
+  <section class="reveal g" id="product" aria-labelledby="twp">
+    <h2 id="twp" class="display"><span>That was</span><span>the product.</span></h2>
+  </section>
+
+  <section class="sec" id="why" aria-labelledby="whyH" style="padding-top: 0">
+    <div class="why-head g">
+      <h2 id="whyH" class="h2">Why does it work this way?</h2>
+      <p id="whyLede">Everything you just did was a design decision. Here's your run, annotated.</p>
+    </div>
+    <ol class="trace" id="trace"></ol>
+  </section>
+
+  <!-- ============ field notes: the lights come on ============ -->
+  <div class="notes">
+    <section class="n-sec g" aria-labelledby="n1">
+      <p class="sec-no">02.1</p>
+      <h2 id="n1" class="h2">Where it came from: <em>watching people arrive.</em></h2>
+      <div class="prose">
+        <p>I kept seeing the same thing at KSR: people arriving in Bengaluru for the first time and paying ₹300 to ₹400 for a cab when a direct bus left from nearby for under ₹20. They weren't careless. <b>They didn't know which exit to take.</b></p>
+        <p>The information exists. It's spread across five apps, and none of them know where you're physically standing. Maps assumes you know which exit. Ride-hailing shows one option, its own. The bus app shows a map, not which side of the road to stand on.</p>
+      </div>
+      <ol class="fieldlog" aria-label="Field log, KSR Bengaluru">
+        <li><time>21:14 · Platform 7</time><p>"Which gate for the Majestic bus?" A couple asked three people. Each pointed a different way.</p><small>Observed</small></li>
+        <li><time>21:38 · Exit 1</time><p>₹350 cab to Indiranagar. A ₹20 bus ran from the south side, 90 seconds' walk away. The passenger never saw it.</p><small>Overheard at the forecourt</small></li>
+        <li><time>22:02 · Gate 2</time><p>"Phone's at 8%." A solo traveller opening Maps, then Uber, then Maps again, looking for the same thing in three apps.</p><small>Observed</small></li>
+      </ol>
+      <div class="said">
+        <div class="said-h meta" aria-hidden="true"><span>What people said</span><span>What it told me</span></div>
+        <ul>
+          <li><q>I downloaded the BMTC app, then deleted it. It just shows me a map.</q><span>The job isn't routing. It's reassurance.</span></li>
+          <li><q>I always take a cab from KSR. ₹300 is fine, I don't want to think.</q><span>The cab is bought as anxiety insurance, not transport.</span></li>
+          <li><q>My mother visits. I just send her an Uber. The bus is impossible to explain.</q><span>It has to be shareable, not just usable.</span></li>
+          <li><q>I don't know which side of the road the 401 stops on.</q><span>Direction of travel is the missing piece.</span></li>
+        </ul>
+        <p class="said-foot">3 field sessions at KSR, 4 stations observed, 12+ intercept conversations. Informal, not a sample.</p>
+      </div>
+    </section>
+
+    <section class="n-sec g" aria-labelledby="n2">
+      <p class="sec-no">02.2</p>
+      <h2 id="n2" class="h2">I started with the screens. <em>I should have started with the sentence.</em></h2>
+      <div class="prose">
+        <p>My first version treated Last Mile like any transit app. It was built around a map and search. The breakthrough was realising the product is <b>mostly a piece of writing.</b> The visual design is there to make the writing feel trustworthy.</p>
+      </div>
+      <ol class="iter">
+        <li><p class="v">First</p><h3>Search on top, modes in tabs</h3><p>Search was hard to reach one-handed. Tabs forced a mode choice before comparison. The step-by-step guide was two taps deep.</p></li>
+        <li><p class="v">Then</p><h3>Mode first</h3><p>Asked "which transport?" before "where to?". People don't think in modes. They think "I need to get to Indiranagar."</p></li>
+        <li class="keep"><p class="v">Kept</p><h3>Destination first, all modes side by side</h3><p>Popular destinations before any typing. Four stacked cards to compare. The walk guide promoted to its own screen.</p></li>
+      </ol>
+      <div class="prose" style="margin-top: 20px"><p><span class="needs">NEEDS REAL INPUT: my drafts disagree on whether these versions were tested with commuters (one says five people at Majestic, another lists station testing as the next step). Pick one before publishing.</span></p></div>
+    </section>
+
+    <section class="n-sec g" aria-labelledby="n3">
+      <p class="sec-no">02.3</p>
+      <h2 id="n3" class="h2">One station, <em>one moment.</em></h2>
+      <div class="prose"><p>Most travel apps fail because they try to cover every moment. I picked one, the first minutes after stepping off the train at KSR, and verified every exit, auto stand and bus stop on foot. None of it was online. That's the moat, and the reason not to scale yet.</p></div>
+      <div class="cut">
+        <div><h3>In</h3><ul><li>KSR Bengaluru City only</li><li>Metro, bus, auto, cab</li><li>Fare, time and a walk guide</li><li>15–20 destinations people actually go to</li><li>Works offline</li></ul></div>
+        <div class="out"><h3>Out, for now</h3><ul><li><s>Other stations and cities</s></li><li><s>Booking and ticketing</s></li><li><s>Real-time arrivals</s></li><li><s>Accounts, IRCTC integration</s></li><li><s>Trip planning, hotels, food</s></li></ul></div>
+      </div>
+      <p class="cut-note">Every "out" item is something I wanted to build. A version that does six things well beats one that does sixty badly, especially for someone tired, lost and at 8%.</p>
+    </section>
+
+    <section class="n-sec g" aria-labelledby="n4">
+      <p class="sec-no">02.4</p>
+      <h2 id="n4" class="h2">When it goes wrong, <em>say so plainly.</em></h2>
+      <div class="edges">
+        <div class="edge"><h3>Late night</h3><p class="say">Metro · Closed<small>Resumes at 05:00 tomorrow. Available now: auto, cab.</small></p><p>Closed options stay visible with the time they reopen. <b>Hiding them would look cleaner and cost trust.</b></p></div>
+        <div class="edge"><h3>No connection</h3><p class="say">Showing your saved guide from 14:32<small>Fares may have changed.</small></p><p>The limitation is worded as capability. The app fails quietly and the traveller keeps moving.</p></div>
+        <div class="edge"><h3>Not covered yet</h3><p class="say">Not covered yet. Try a nearby landmark.<small>Suggest this destination →</small></p><p>A dead end becomes a contribution, and grows coverage from what people actually search for.</p></div>
+        <div class="edge"><h3>Nowhere sensible to go</h3><p class="say">An auto is your only sensible option here.<small>Expect ₹120–160. Insist on the meter.</small></p><p>One honest card instead of an empty list. <b>Telling the truth is the feature.</b></p></div>
+      </div>
+    </section>
+
+    <section class="n-sec g" aria-labelledby="n5">
+      <p class="sec-no">02.5</p>
+      <h2 id="n5" class="h2">What's proven, <em>and what's a guess.</em></h2>
+      <div class="n-ledger ledger">
+        <div class="l-measured"><h4>Measured</h4><p class="empty">Nothing yet. No one has used it at the station.</p></div>
+        <div class="l-validated"><h4>Validated</h4><p><span class="needs">NEEDS REAL INPUT: see 02.2</span></p></div>
+        <div class="l-target"><h4>Design target</h4><p><b>A travel decision in under 60 seconds,</b> then walking to the right boarding point without backtracking.</p><p>Mode chosen within 10 seconds.</p><p>Platform to the correct vehicle in 3 minutes or less.</p></div>
+        <div class="l-hyp"><h4>Hypothesis</h4><p>Today it takes 6–11 minutes from platform to the right vehicle, with about 1.4 wrong-gate errors a trip. Only about 22% of first-timers pick transit on an easy route.</p><p>These are estimates from field observation and conversations, not a validated sample.</p></div>
+      </div>
+      <ul class="wrong">
+        <li><b>Where I expect to be wrong: the walk line is too dense.</b><p>"Exit Gate 2 · Platform 3 · Route 401" reads well in Figma. At 8% with a backpack it might be two things too many. The strongest version may be one landmark and one instruction.</p></li>
+        <li><b>And the sort order.</b><p>"Recommended" comes from walk distance, number of decisions and time-of-day risk. That weighting is an assumption. With luggage, people may care about time far more than distance.</p></li>
+      </ul>
+      <ol class="nexts">
+        <li><span><b>A moderated test at KSR</b> with five people who have actually just arrived, against a Google Maps control. I expect the median platform-to-vehicle time to drop by four minutes or more.</span></li>
+        <li><span><b>A "send to mum" link.</b> Interviews kept surfacing it. Test whether a static shareable page beats forwarding an Uber link.</span></li>
+        <li><span><b>The night warning in the wild.</b> Does the "closed" state change what people choose, or do they skip it like terms of service?</span></li>
+        <li><span><b>A second station only after KSR works.</b> Same depth, same checking on foot.</span></li>
+      </ol>
+    </section>
+
+    <section class="closing g" aria-labelledby="close">
+      <p class="meta">02.6</p>
+      <blockquote id="close">
+        <p>Confidence is a <em>designable material.</em></p>
+        <p>Most apps in this category ship more data to fix what is really a reassurance problem, and people answer by paying for a cab to make the uncertainty go away. The opportunity isn't another routing engine. It's the 200 metres of human-readable instruction after the routing ends.</p>
+      </blockquote>
+      <p class="datanote">Gates, fares and timings in the experience come from the prototype's dataset, surveyed on foot in 2025. <span class="needs">VERIFY against current signage: drafts disagree on some gate numbers</span></p>
+    </section>
+
+    <a class="next" href="work.html#decision">
+      <span class="meta">Next · 03 / Decision · being written up</span>
+      <span class="next-t">The room <em>where an idea gets argued with</em> →</span>
+    </a>
+    <footer class="foot">
+      <p class="meta">Vedanshi Singh · Bengaluru</p>
+      <p class="meta">Last Mile · solo, self-initiated</p>
+    </footer>
+  </div>
+</main>
+
+<script>
+(function () {
+  /* ------------------------------------------------------------------
+     Data: the prototype's own dataset for KSR → Indiranagar.
+     Each step either asks you to act in the world (signs) or just
+     to confirm. Wrong signs cost seconds: that's backtracking.
+     ------------------------------------------------------------------ */
+  var GATES = function (ok, why) {
+    var all = [
+      { k: 1, b: 'Gate 1', t: 'South exit · Main road · Bus stops' },
+      { k: 2, b: 'Gate 2', t: 'East exit · Pre-paid autos · App cabs' },
+      { k: 3, b: 'Gate 3', t: 'North exit · Metro' }
+    ];
+    return all.map(function (g) { return { b: g.b, t: g.t, ok: g.k === ok, why: why[g.k], cost: 8 }; });
+  };
+  var MODES = {
+    metro: {
+      name: 'Metro', sub: 'Purple Line → Indiranagar', price: '₹40', fare: 40, time: '~28 min', rec: true,
+      walk: 'Exit Gate 3 · walk straight 200 m · Platform 1 towards Whitefield',
+      info: [['Fare', '₹40'], ['Time', '25–32m'], ['Walk', '200 m'], ['Runs', '5–23h']],
+      tip: 'A smart card is ₹36. Machines take cash and UPI.',
+      end: 'You\'re on the Purple Line towards Whitefield.',
+      steps: [
+        { b: 'Leave your platform by the underpass', d: 'Follow "Metro" signs from Platform 6. Don\'t exit the station yet.',
+          where: 'Platform 6', prompt: 'Two ways off the platform',
+          signs: [{ b: '↓ Underpass', t: 'Metro · Other platforms', ok: true }, { b: '↑ Footbridge', t: 'Main road · Exit 1', why: 'You come out on the road side. Walk back down.', cost: 6 }] },
+        { b: 'Take Gate 3, signed "Metro / North exit"', d: 'About 200 m, past the ticket counters.',
+          where: 'Main concourse', prompt: 'Three gates',
+          signs: GATES(3, { 1: 'Gate 1 opens onto the main road. The metro is on the north side.', 2: 'Autos and cabs. Not the metro.' }) },
+        { b: 'Buy a token: ₹40', d: 'Machines at the entrance take cash and UPI.', where: 'KSR metro station' },
+        { b: 'Platform 1, towards Whitefield', d: 'Take the escalator down.',
+          where: 'Metro concourse', prompt: 'Two platforms, two directions',
+          signs: [{ b: 'Platform 1', t: '→ Whitefield', ok: true }, { b: 'Platform 2', t: '→ Challaghatta', why: 'Wrong direction. Cross over.', cost: 8 }] },
+        { b: 'Board. Get off at Indiranagar', d: 'Exit 2 for 100 Feet Road.', where: 'Platform 1' }
+      ]
+    },
+    bus: {
+      name: 'City bus', sub: 'BMTC route 401', price: '₹12', fare: 12, time: '~50 min',
+      walk: 'Exit Gate 1 · cross the road · Bus Stop A on your left',
+      info: [['Fare', '₹12'], ['Time', '45–60m'], ['Walk', '300 m'], ['Runs', '5:30–22:30']],
+      end: 'You\'re on the 401.',
+      steps: [
+        { b: 'Exit by Gate 1, the south exit', d: 'The main road-facing exit. Walk towards the auto stand, then left.',
+          where: 'Main concourse', prompt: 'Three gates',
+          signs: GATES(1, { 2: 'Pre-paid autos. The buses are on the south side.', 3: 'This is the metro side.' }) },
+        { b: 'Cross at the traffic signal', d: 'About a minute.', where: 'Station forecourt' },
+        { b: 'Bus Stop A, on your left', d: 'The blue shelter marked "Majestic / KSR".',
+          where: 'Across the road', prompt: 'Two shelters',
+          signs: [{ b: '← Left', t: 'Blue shelter · Stop A', ok: true }, { b: 'Right →', t: 'Grey shelter · Stop B', why: 'Stop B serves other routes. Back to the left.', cost: 6 }] },
+        { b: 'Board route 401. Pay ₹12 on board.', d: 'Every 15–20 minutes. Tell the conductor "Indiranagar".',
+          where: 'Bus Stop A', prompt: 'Two buses pull in',
+          signs: [{ b: '401', t: 'Indiranagar', ok: true }, { b: '401E', t: 'Same number, different route', why: '401E goes somewhere else. This is the exact confusion people described.', cost: 10 }] }
+      ]
+    },
+    auto: {
+      name: 'Auto rickshaw', sub: 'Pre-paid counter · Gate 2', price: '₹90–130', fare: 110, time: '~40 min',
+      walk: 'Exit Gate 2 · pre-paid counter 50 m ahead on your right',
+      info: [['Fare', '₹90–130'], ['Time', '35–50m'], ['Walk', '50 m'], ['Runs', 'All day']],
+      tip: 'Use the pre-paid counter. Autos outside the gate charge more.',
+      end: 'You\'re in an auto, receipt in hand.',
+      steps: [
+        { b: 'Exit by Gate 2, following "Pre-paid auto"', d: 'Don\'t exit towards the main road.',
+          where: 'Main concourse', prompt: 'Three gates',
+          signs: GATES(2, { 1: 'The main road. The pre-paid counter is on the east side.', 3: 'This is the metro side.' }) },
+        { b: 'Go to the pre-paid counter', d: 'A green booth 50 m from Gate 2, inside the station boundary.',
+          where: 'Outside Gate 2', prompt: 'Someone steps in front of you: "Auto? Indiranagar, 400."',
+          signs: [{ b: 'Walk on', t: 'To the green pre-paid booth', ok: true }, { b: 'Take it', t: 'It\'s right here', ok: true, tout: true }] },
+        { b: 'Say "Indiranagar, 100 Feet Road"', d: 'Keep the receipt. Hand it to the driver at the end, not before.', where: 'Pre-paid counter' }
+      ]
+    },
+    cab: {
+      name: 'Cab / ride-hailing', sub: 'Ola · Uber · Rapido', price: '₹180–240', fare: 210, time: '~35 min',
+      walk: 'Exit Gate 2 · pickup bay on the right, past the auto stand',
+      info: [['Fare', '₹180–240'], ['Time', '30–45m'], ['Walk', '100 m'], ['Runs', 'All day']],
+      tip: 'Book before you walk out. Pickup spots fill up at peak hours.',
+      end: 'You\'re at the pickup bay. The driver is 4 minutes away.',
+      steps: [
+        { b: 'Book before you walk out', d: 'Set pickup to "KSR Railway Station, Gate 2".', where: 'Platform 6', net: true },
+        { b: 'Exit by Gate 2', d: 'Pickup bay is signed "App cabs", past the auto stand.',
+          where: 'Main concourse', prompt: 'Three gates',
+          signs: GATES(2, { 1: 'The main road. App cabs pick up on the east side.', 3: 'This is the metro side.' }) },
+        { b: 'Check the name and number plate', d: 'Match both to the app before you get in.', where: 'Pickup bay' }
+      ]
+    }
+  };
+  var ORDER = ['metro', 'bus', 'auto', 'cab'];
+  var DESTS = [
+    ['indiranagar', 'Indiranagar', 'Residential · 9 km'],
+    ['mgroad', 'MG Road', 'Commercial · 6 km'],
+    ['koramangala', 'Koramangala', 'Lifestyle · 11 km'],
+    ['whitefield', 'Whitefield', 'IT corridor · 18 km'],
+    ['ecity', 'Electronic City', 'Tech hub · 22 km'],
+    ['airport', 'Kempegowda Airport', 'Airport · 40 km']
+  ];
+  var NOISE = [
+    [3, 'A crowd pushes towards the <b>footbridge</b>.'],
+    [11, 'At the door: <b>"Auto? Auto? Where to?"</b>'],
+    [21, 'An announcement in Kannada, then Hindi. You catch <b>"Platform 6"</b>.'],
+    [33, 'Your screen dims. <b>Low power mode.</b>', 'hot'],
+    [45, 'A message from your friend: <b>"Reached?"</b>'],
+    [53, 'The platform is nearly empty now.']
+  ];
+
+  /* ------------------------------------------------------------------ state */
+  var $ = function (id) { return document.getElementById(id); };
+  var app = $('app'), phone = $('phone'), timerEl = $('timer'), tDigits = $('tDigits'), live = $('live');
+  var S;
+  function fresh(timed) {
+    return { timed: timed, phase: 'run', left: 60, elapsed: 0, batt: 8, screen: 'dest', mode: null, step: 0,
+      tDest: null, tOptions: null, tMode: null, typed: false, wrongDest: 0, wrong: 0, pen: 0, touted: false,
+      waiting: false, done: false, stepsDone: 0, noiseIx: 0, changedMode: 0 };
+  }
+  var raf = null, last = 0;
+
+  function say(t) { live.textContent = ''; setTimeout(function () { live.textContent = t; }, 30); }
+  function fmtT(s) { s = Math.max(0, Math.ceil(s)); return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0'); }
+  function sec(x) { return x < 1 ? 'under a second' : (Math.round(x * 10) / 10).toFixed(1) + ' s'; }
+
+  function tick() {
+    var now = performance.now(), dt = Math.min(0.25, (now - last) / 1000); last = now;
+    if (S.phase !== 'run') return;
+    S.elapsed += dt; if (S.timed) S.left -= dt;
+    // battery: 8% → 3% across the minute
+    var b = Math.max(3, 8 - Math.floor(S.elapsed / 12));
+    if (b !== S.batt) { S.batt = b; setBatt(); }
+    // the world keeps talking
+    while (S.noiseIx < NOISE.length && S.elapsed >= NOISE[S.noiseIx][0]) { addNoise(NOISE[S.noiseIx][1], NOISE[S.noiseIx][2]); S.noiseIx++; }
+    tDigits.textContent = S.timed ? fmtT(S.left) : fmtT(S.elapsed);
+    timerEl.classList.toggle('low', S.timed && S.left <= 10);
+    if (S.timed && Math.ceil(S.left) === 30 && !S.said30) { S.said30 = true; say('30 seconds left.'); }
+    if (S.timed && Math.ceil(S.left) === 10 && !S.said10) { S.said10 = true; say('10 seconds left.'); }
+    if (S.timed && S.left <= 0) { finish(false); return; }
+  }
+  function setBatt() {
+    $('battTxt').textContent = S.batt + '%'; $('pBatt').textContent = S.batt + '%';
+    $('battBar').style.width = (S.batt * 1.6) + '%';
+    phone.classList.toggle('low', S.batt <= 5);
+  }
+  function penalise(s, msg) {
+    S.pen += s; S.wrong += 1;
+    if (S.timed) S.left -= s; else S.elapsed += s;
+    var p = document.createElement('span'); p.className = 'pen'; p.textContent = '−' + s + ' s';
+    timerEl.appendChild(p); setTimeout(function () { p.remove(); }, 1400);
+    say('Wrong way. ' + msg + ' Minus ' + s + ' seconds.');
+  }
+  function addNoise(html, cls) {
+    var li = document.createElement('li'); li.innerHTML = html; if (cls) li.className = cls;
+    var n = $('noise'); n.insertBefore(li, n.firstChild);
+  }
+
+  /* ------------------------------------------------------------------ screens */
+  function show(html, focus) {
+    app.innerHTML = '<div class="scr">' + html + '</div>';
+    app.scrollTop = 0;
+    if (focus !== false) { var h = app.querySelector('.ap-h'); if (h) { h.tabIndex = -1; h.focus({ preventScroll: true }); } }
+  }
+  function destScreen(q) {
+    S.screen = 'dest';
+    var list = DESTS.filter(function (d) { return !q || (d[1] + ' ' + d[2]).toLowerCase().indexOf(q.toLowerCase()) > -1; });
+    var items = list.length ? list.map(function (d) {
+      return '<li><button type="button" data-dest="' + d[0] + '"><span><b>' + d[1] + '</b><small>' + d[2] + '</small></span><span aria-hidden="true">›</span></button></li>';
+    }).join('') : '<li class="ap-none"><b>Not covered yet.</b>Try a nearby landmark.</li>';
+    if (q !== undefined && app.querySelector('.ap-dests')) { app.querySelector('.ap-dests').innerHTML = items; app.querySelector('.ap-lbl').textContent = q ? (list.length ? 'Results' : 'No results') : 'Popular from here'; bindDests(); return; }
+    show('<p class="ap-meta">Just arrived</p><h3 class="ap-h">KSR Bengaluru City</h3><p class="ap-sub">Platform 6 · guide saved on your phone</p>' +
+      '<label class="ap-search"><span aria-hidden="true">⌕</span><input type="search" id="q" placeholder="Where to?" aria-label="Search destination" autocomplete="off"></label>' +
+      '<p class="ap-lbl">Popular from here</p><ul class="ap-dests">' + items + '</ul>');
+    $('q').addEventListener('input', function () { S.typed = true; destScreen(this.value); });
+    bindDests();
+  }
+  function bindDests() {
+    app.querySelectorAll('[data-dest]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        if (b.dataset.dest !== 'indiranagar') { S.wrongDest++; addNoise('Your friend\'s message says <b>Indiranagar</b>, off 100 Feet Road.', 'hot'); say('Your friend is in Indiranagar.'); return; }
+        if (S.tDest === null) S.tDest = S.elapsed;
+        optionsScreen();
+      });
+    });
+  }
+  function optionsScreen() {
+    S.screen = 'options'; S.tOptions = S.elapsed; clearSigns();
+    var cards = ORDER.map(function (k) {
+      var m = MODES[k];
+      return '<button type="button" class="card' + (m.rec ? ' rec' : '') + '" data-mode="' + k + '">' + (m.rec ? '<span class="badge">Recommended</span>' : '') +
+        '<span class="top"><span><span class="m">' + m.name + '</span><br><span class="s">' + m.sub + '</span></span><span><span class="p">' + m.price + '</span><br><span class="t">' + m.time + '</span></span></span>' +
+        '<span class="w" style="display:block">' + m.walk + '</span></button>';
+    }).join('');
+    show('<button type="button" class="ap-back" id="back">‹ Change destination</button><p class="ap-meta">From KSR · Platform 6</p><h3 class="ap-h">Indiranagar</h3><p class="ap-sub">9 km · 4 ways to get there</p>' + cards);
+    $('back').addEventListener('click', function () { destScreen(); });
+    app.querySelectorAll('[data-mode]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        if (S.mode) S.changedMode++;
+        S.mode = b.dataset.mode; S.step = 0; S.tMode = S.elapsed - S.tOptions; guideScreen();
+      });
+    });
+    say('Indiranagar. Four ways to get there.');
+  }
+  function guideScreen() {
+    S.screen = 'guide';
+    var m = MODES[S.mode];
+    var info = '<dl class="info">' + m.info.map(function (r) { return '<div><dt>' + r[0] + '</dt><dd>' + r[1] + '</dd></div>'; }).join('') + '</dl>';
+    var steps = m.steps.map(function (st, i) {
+      var cls = i < S.step ? 'done' : i === S.step ? 'now' : '';
+      var act = '';
+      if (i === S.step) {
+        if (st.signs) act = '<div class="act"><span class="look">' + (window.innerWidth > 980 ? '← Look around you: choose on the left' : '↑ Look around you: choose above') + '</span></div>';
+        else if (st.net) act = '<div class="act"><button type="button" class="ap-btn" id="stepBtn">Book cab</button></div>';
+        else act = '<div class="act"><button type="button" class="ap-btn" id="stepBtn">' + (i === m.steps.length - 1 ? 'Done, I\'m on' : 'Done') + '</button></div>';
+      }
+      return '<li class="' + cls + '"><b>' + st.b + '</b><p>' + st.d + '</p>' + act + '</li>';
+    }).join('');
+    var first = S.step === 0 && !app.querySelector('.steps');
+    show('<button type="button" class="ap-back" id="back">‹ All options</button><p class="ap-meta">Step by step from your platform</p><h3 class="ap-h">' + m.name + '</h3><p class="ap-sub">' + m.sub + '</p>' + info + '<ol class="steps">' + steps + '</ol>' + (m.tip && S.step === 0 ? '<p class="ap-tip">' + m.tip + '</p>' : ''), first);
+    $('back').addEventListener('click', function () { clearSigns(); optionsScreen(); });
+    var btn = $('stepBtn');
+    var st = m.steps[S.step];
+    $('whereRun').innerHTML = 'KSR Bengaluru City · <b>' + st.where + '</b>';
+    if (btn && st.net) {
+      btn.addEventListener('click', function () {
+        btn.disabled = true; btn.innerHTML = '<span class="spin"></span>One bar of signal…'; S.waiting = true;
+        addNoise('Inside the station: <b>one bar.</b> The booking spins.', 'hot'); say('Booking. One bar of signal.');
+        var run = S; setTimeout(function () { if (S !== run || S.phase !== 'run' || S.mode !== 'cab' || S.step !== 0 || S.screen !== 'guide') return; S.waiting = false; addNoise('Driver assigned. <b>6 minutes away.</b>'); advance(); }, 5200);
+      });
+    } else if (btn) {
+      btn.addEventListener('click', advance);
+      if (!first) btn.focus({ preventScroll: true });
+    }
+    if (st.signs) showSigns(st); else clearSigns();
+  }
+  function advance() {
+    var m = MODES[S.mode];
+    S.step++; S.stepsDone = Math.max(S.stepsDone, S.step);
+    if (S.step >= m.steps.length) { finish(true); return; }
+    guideScreen();
+    say('Step ' + (S.step + 1) + '. ' + m.steps[S.step].b);
+  }
+
+  /* ------------------------------------------------------------------ the world's signs */
+  function showSigns(st) {
+    var box = $('signs'); box.hidden = false;
+    box.classList.remove('arrive'); void box.offsetWidth; box.classList.add('arrive');
+    $('signPrompt').textContent = st.prompt;
+    $('signRow').innerHTML = st.signs.map(function (s, i) { return '<button type="button" class="sign" data-i="' + i + '"><b>' + s.b + '</b>' + s.t + '</button>'; }).join('');
+    $('signRow').querySelectorAll('.sign').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var s = st.signs[+btn.dataset.i];
+        if (s.ok) {
+          if (s.tout) { S.touted = true; addNoise('₹400. <b>About ₹270 more</b> than the pre-paid fare.', 'hot'); }
+          advance();
+        } else {
+          btn.classList.add('is-wrong'); btn.disabled = true;
+          addNoise(s.why, 'hot'); penalise(s.cost || 8, s.why);
+        }
+      });
+    });
+    if (window.innerWidth > 980) $('signRow').querySelector('.sign').focus({ preventScroll: true });
+    say(st.prompt + '. Choose where to go.');
+  }
+  function clearSigns() { $('signs').hidden = true; $('signRow').innerHTML = ''; }
+
+  /* ------------------------------------------------------------------ start / finish */
+  function start(timed) {
+    S = fresh(timed);
+    $('intro').hidden = true; $('outro').hidden = true; $('run').hidden = false;
+    $('noise').innerHTML = ''; clearSigns(); setBatt(); phone.classList.remove('off'); timerEl.querySelectorAll('.pen').forEach(function (p) { p.remove(); });
+    tDigits.textContent = timed ? '1:00' : '0:00';
+    destScreen();
+    if (window.innerWidth <= 980) { var st = $('stage'); window.scrollTo({ top: st.getBoundingClientRect().top + window.scrollY - document.querySelector('.bar').offsetHeight, behavior: 'instant' }); }
+    say(timed ? 'Sixty seconds. Go.' : 'Untimed. Go.');
+    last = performance.now(); clearInterval(raf); raf = setInterval(tick, 100);
+  }
+  function finish(ok) {
+    S.phase = 'done'; S.done = ok; clearInterval(raf);
+    clearSigns(); $('run').hidden = true;
+    var m = S.mode ? MODES[S.mode] : null;
+    var used = S.timed ? Math.min(60, 60 - Math.max(0, S.left)) : S.elapsed;
+    if (ok) {
+      show('<div class="ap-done"><div class="tick" aria-hidden="true">✓</div><h3 class="ap-h" style="font-size:22px">' + m.end + '</h3><p>Guide saved. Works offline.</p></div>');
+    } else {
+      phone.classList.add('off');
+    }
+    $('outWhere').textContent = ok ? 'KSR Bengaluru City · ' + (S.mode === 'metro' ? 'Metro, Platform 1' : S.mode === 'bus' ? 'Bus Stop A' : S.mode === 'auto' ? 'Pre-paid counter' : 'Pickup bay') : 'KSR Bengaluru City · still here';
+    $('outH').innerHTML = ok ? (S.mode === 'cab' ? 'You made it to the bay. <em>Now you wait.</em>' : 'You made it. <em>' + m.end + '</em>')
+      : 'Time\'s up. <em>' + (m ? 'You were at step ' + (S.step + 1) + ' of ' + m.steps.length + '.' : S.tDest === null ? 'You were still on the first screen.' : 'You hadn\'t picked a way yet.') + '</em>';
+    var paid = !m ? '—' : S.touted ? '₹400' : m.price;
+    $('outStats').innerHTML = [
+      [S.timed ? 'Time used' : 'Time taken', fmtT(used)],
+      ['Wrong turns', S.wrong + (S.pen ? ' (−' + S.pen + ' s)' : '')],
+      ['Way chosen', m ? m.name : 'None'],
+      ['Fare', paid]
+    ].map(function (r) { return '<div><dt>' + r[0] + '</dt><dd>' + r[1] + '</dd></div>'; }).join('');
+    $('outCmp').textContent = !ok ? 'This is the point where a ₹300 cab starts to feel reasonable. The bus was ₹12.'
+      : S.mode === 'cab' ? 'The metro from Gate 3 was ₹40. The bus was ₹12. The cab is what you pay to stop thinking, and you still have to wait for it.'
+      : S.touted ? 'The pre-paid counter was 50 metres further. Same auto, about ₹270 less.'
+      : S.mode === 'bus' ? 'The cheapest way there, and invisible unless you already know to look.'
+      : 'The cab was ₹180–240. You paid ₹40.';
+    $('outro').hidden = false; $('outro').focus({ preventScroll: true });
+    say(ok ? 'Done. ' + $('outH').textContent : 'Time is up.');
+    buildTrace();
+  }
+
+  /* ------------------------------------------------------------------ the annotated run */
+  function buildTrace() {
+    var played = !!S;
+    var m = played && S.mode ? MODES[S.mode] : null;
+    var you = function (t) { return '<p class="tr-you"><small>' + (played ? 'Your run' : 'In the product') + '</small>' + t + '</p>'; };
+    var dT = played && S.tDest !== null ? 'You picked Indiranagar in ' + sec(S.tDest) + (S.typed ? ', after typing.' : ', without typing a letter.') + (S.wrongDest ? ' You tapped another place first; your friend\'s message set you straight.' : '')
+      : played ? 'You never got past the first screen.' : 'Popular destinations appear before any typing.';
+    var mT = m ? 'You saw ₹12 and ₹180–240 on one screen and chose ' + m.name.toLowerCase() + ' in ' + sec(S.tMode) + '.' + (S.changedMode ? ' You went back and changed your mind; nothing was lost.' : '')
+      : played ? 'You didn\'t reach the comparison.' : 'Four ways side by side, cheapest to most expensive visible at once.';
+    var gT = m ? 'You were told "' + (S.mode === 'metro' ? 'Gate 3' : S.mode === 'bus' ? 'Gate 1' : 'Gate 2') + '", never shown a map. ' + (S.wrong ? 'You still took ' + S.wrong + ' wrong turn' + (S.wrong > 1 ? 's' : '') + ', and paid ' + S.pen + ' s walking back.' : 'No wrong turns.')
+      : 'Every step names a gate, a sign or a side of the road.';
+    var sT = m ? 'Steps came one at a time. You finished ' + Math.min(S.stepsDone, m.steps.length) + ' of ' + m.steps.length + '.' : 'Numbered steps, one in focus at a time.';
+    var oT = played ? 'The phone said "Offline" the whole time.' + (S.mode === 'cab' ? ' The only thing that waited on a network was the cab booking.' : ' Nothing waited on a network.') : 'Everything is on the phone before you arrive.';
+    var bT = !played ? 'Two screens and a guide. Nothing else.' : S.batt < 8 ? 'Your battery went from 8% to ' + S.batt + '%.' : 'Your battery held at 8%. Here it drops a point every 12 seconds.';
+    var items = [
+      [dT, 'Decision before search.', 'An empty search bar puts the work on someone at the exact moment they\'re least able to think. Most trips from KSR end in one of a small set of places, so those come first. <b>My first version asked "which transport?" before "where to?".</b> People don\'t think that way. They think "I need to get to Indiranagar."'],
+      [mT, 'Comparison, not default.', 'A ride-hailing app shows one option: its own. Here the ₹12 bus sits next to the ₹200 cab and <b>can never be invisible.</b> "Recommended" gives a tired person a default without taking the others away. It balances cost, reliability and ease, not just the cheapest.'],
+      [gT, 'Physical before digital.', 'A map asks you to orient yourself and wait for a GPS fix. <b>"Exit Gate 3, walk 200 m straight" works with one bar of signal.</b> Landmarks over coordinates. The seconds you lost to a wrong gate are what the couple at Platform 7 lost asking three strangers.'],
+      [sT, 'Format follows context.', 'Someone walking through a crowd with a bag reads differently from someone at a desk. A numbered step can be read in a glance. A paragraph means stopping in the middle of the concourse.'],
+      [oT, 'Offline-first was a decision, not a constraint.', 'Exits, stops and usual fares don\'t change hour to hour. Signal inside the platforms is patchy, and many travellers from other states don\'t have working data when they land. <b>"A wrong bus number at midnight is worse than no app at all."</b> Offline made it trustworthy.'],
+      [bT, 'Two screens, one job.', 'Every extra screen is another step taken on a crowded platform. Booking, live tracking, accounts and other cities were all cut. What\'s left does one thing: gets you from the train door to the right ride.']
+    ];
+    $('whyLede').textContent = played ? 'Everything you just did was a design decision. Here\'s your run, annotated.' : 'Everything in that experience is a design decision. Run it first and this section fills in with what you did.';
+    $('trace').innerHTML = items.map(function (it, i) {
+      return '<li><span class="tr-no">0' + (i + 1) + '</span>' + you(it[0]) + '<div class="tr-body"><h3>' + it[1] + '</h3><p>' + it[2] + '</p></div></li>';
+    }).join('');
+  }
+
+  $('start').addEventListener('click', function () { start(true); });
+  $('untimed').addEventListener('click', function () { start(false); });
+  $('again').addEventListener('click', function () {
+    $('stage').scrollIntoView({ block: 'start' });
+    start(S ? S.timed : true);
+  });
+  buildTrace();
+})();
+</script>
+</body>
+</html>

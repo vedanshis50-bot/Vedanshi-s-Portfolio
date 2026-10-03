@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 560">
+  <defs>
+    <filter id="grain-b"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2"/><feColorMatrix type="saturate" values="0"/></filter>
+    <linearGradient id="bg-b" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#9C90BE"/>
+      <stop offset="100%" stop-color="#6f63a0"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="560" fill="url(#bg-b)"/>
+  <rect width="800" height="560" filter="url(#grain-b)" opacity="0.06"/>
+  <circle cx="700" cy="470" r="170" fill="#0E0E0D" opacity="0.08"/>
+  <circle cx="60" cy="60" r="100" fill="#F6F3EC" opacity="0.08"/>
+
+  <!-- table, top-down -->
+  <ellipse cx="400" cy="300" rx="190" ry="120" fill="#F6F3EC" opacity="0.95"/>
+  <ellipse cx="400" cy="300" rx="190" ry="120" fill="none" stroke="#2A2925" stroke-opacity="0.1" stroke-width="2"/>
+
+  <!-- people dots around table -->
+  <g fill="#2A2925">
+    <circle cx="400" cy="150" r="16" opacity="0.75"/>
+    <circle cx="560" cy="220" r="16" fill="#6F7D52"/>
+    <circle cx="600" cy="330" r="16" opacity="0.75"/>
+    <circle cx="500" cy="430" r="16" opacity="0.75"/>
+    <circle cx="300" cy="430" r="16" opacity="0.75"/>
+    <circle cx="200" cy="330" r="16" opacity="0.75"/>
+    <circle cx="240" cy="220" r="16" opacity="0.75"/>
+  </g>
+
+  <!-- idea bubbles on table -->
+  <g transform="translate(330,250)">
+    <rect width="86" height="56" rx="12" fill="#0E0E0D"/>
+    <path d="M14,56 l0,16 l16,-16 z" fill="#0E0E0D"/>
+    <text x="43" y="34" font-family="Georgia, serif" font-size="26" fill="#F6F3EC" text-anchor="middle">?</text>
+  </g>
+  <g transform="translate(440,300)">
+    <rect width="70" height="50" rx="12" fill="#6F7D52"/>
+    <path d="M14,50 l0,14 l14,-14 z" fill="#6F7D52"/>
+    <path d="M18,26 l10,10 l24,-22" stroke="#F6F3EC" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+
+  <!-- decision tree lines fading out -->
+  <g stroke="#2A2925" stroke-opacity="0.18" stroke-width="2" fill="none">
+    <path d="M400,300 L400,470"/>
+    <path d="M400,470 L340,520"/>
+    <path d="M400,470 L460,520"/>
+  </g>
+
+  <text x="40" y="530" font-family="monospace" font-size="15" letter-spacing="2" fill="#F6F3EC" opacity="0.9">BOARDROOM AI — DECISION DESIGN</text>
+</svg>
