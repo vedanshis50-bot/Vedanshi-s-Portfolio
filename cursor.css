@@ -1,0 +1,13 @@
+/* ---- custom cursor: a paper plane that banks into its direction of travel, leaving a
+   trail of dashes that fade out behind it. Shared by every page; cursor.js builds the
+   markup, so a page only needs this stylesheet and that script. ---- */
+.cursor-plane { position: fixed; left: 0; top: 0; z-index: 900; width: 32px; height: 32px; pointer-events: none; opacity: 0; transition: opacity 0.3s; transform: translate(var(--cx, -100px), var(--cy, -100px)) translate(-50%, -50%) rotate(var(--cr, 98deg)); will-change: transform; }
+.cursor-plane.on { opacity: 1; }
+.cursor-plane img { display: block; width: 100%; height: 100%; filter: drop-shadow(0 2px 3px rgba(32, 34, 31, 0.22)); }
+.cursor-trail { position: fixed; inset: 0; z-index: 899; width: 100%; height: 100%; pointer-events: none; opacity: 0; transition: opacity 0.5s; }
+.cursor-trail.on { opacity: 1; }
+/* currentColor inherits the page's own text colour, so the dashes contrast on both the
+   cream pages and the dark ones without having to sniff the background */
+.cursor-trail line { stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
+@media (hover: none), (pointer: coarse) { .cursor-plane, .cursor-trail { display: none; } }
+@media (hover: hover) and (pointer: fine) { html.has-plane-cursor, html.has-plane-cursor a, html.has-plane-cursor button, html.has-plane-cursor summary { cursor: none; } }

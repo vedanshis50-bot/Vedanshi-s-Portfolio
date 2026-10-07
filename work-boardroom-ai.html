@@ -348,13 +348,6 @@
   .foot-bottom a{display:inline-flex; gap:6px; align-items:center; text-decoration:none; color:inherit;}
 
   /* paper plane cursor, as on the other pages */
-  .cursor-plane{position:fixed; left:0; top:0; z-index:900; width:26px; height:26px; pointer-events:none; opacity:0; transition:opacity .3s; transform:translate(var(--cx,-100px),var(--cy,-100px)) translate(-50%,-50%) rotate(var(--cr,-40deg)); will-change:transform;}
-  .cursor-plane.on{opacity:1;}
-  .cursor-plane svg{width:100%; height:100%; color:var(--text); filter:drop-shadow(0 3px 6px rgba(0,0,0,0.6));}
-  .cursor-trail{position:fixed; left:0; top:0; z-index:899; width:4px; height:4px; border-radius:50%; background:var(--accent); pointer-events:none; opacity:0; transform:translate(var(--tx,-100px),var(--ty,-100px)) translate(-50%,-50%); transition:opacity .5s;}
-  .cursor-trail.on{opacity:0.5;}
-  @media (hover:none),(pointer:coarse){ .cursor-plane,.cursor-trail{display:none;} }
-  @media (hover:hover) and (pointer:fine){ html.has-plane-cursor,html.has-plane-cursor a,html.has-plane-cursor button,html.has-plane-cursor summary{cursor:none;} }
   @media (prefers-reduced-motion:reduce){ *,*::before,*::after{animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important; scroll-behavior:auto !important;} .js .reveal{opacity:1; transform:none;} }
 
   /* header stays put */
@@ -395,11 +388,10 @@
   .opt .tagai{color:var(--text2); border-color:var(--line2);}
   .shift{color:var(--text2); background:var(--tile);}
   .mnav-row .n{color:var(--muted);}</style>
+<link rel="stylesheet" href="cursor.css?v=4">
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
-<div class="cursor-plane" id="cursorPlane" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.7 2.3a1 1 0 0 0-1.03-.24L2.6 8.3a1 1 0 0 0-.07 1.87l7.56 3.1 3.1 7.56a1 1 0 0 0 1.87-.07l6.24-18.07a1 1 0 0 0-.24-1.03ZM11.1 12.9 5.6 10.64l12.73-4.4-7.23 6.66Zm2.3 7.3L11.14 14l6.66-7.23-4.4 12.73Z"/></svg></div>
-<div class="cursor-trail" id="cursorTrail" aria-hidden="true"></div>
 
 <div class="mnav" id="mnav" aria-hidden="true"><div class="mnav-row"><span class="n" id="mnavN">01</span><span id="mnavL">The Moment</span></div><div class="mnav-bar"><i id="mnavBar"></i></div></div>
 
@@ -771,24 +763,6 @@
     $$('.reveal').forEach(function(el){ io.observe(el); });
   } else { $$('.reveal').forEach(function(el){ el.classList.add('in'); }); }
 
-  /* cursor */
-  (function(){
-    var plane = $('#cursorPlane'), trail = $('#cursorTrail'), doc = document.documentElement;
-    if(!plane || !fine) return;
-    doc.classList.add('has-plane-cursor');
-    var mx=-100,my=-100,px=-100,py=-100,angle=-40,on=false, pts=[];
-    addEventListener('pointermove', function(e){ mx=e.clientX; my=e.clientY; if(!on){ on=true; plane.classList.add('on'); trail.classList.add('on'); px=mx; py=my; } }, {passive:true});
-    document.addEventListener('pointerleave', function(){ on=false; plane.classList.remove('on'); trail.classList.remove('on'); });
-    function loop(){
-      var dx=mx-px, dy=my-py; px+=dx*0.18; py+=dy*0.18;
-      if(dx*dx+dy*dy>4) angle=Math.atan2(dy,dx)*(180/Math.PI)+45;
-      plane.style.setProperty('--cx',px+'px'); plane.style.setProperty('--cy',py+'px'); plane.style.setProperty('--cr',angle+'deg');
-      pts.unshift({x:px,y:py}); if(pts.length>6) pts.pop();
-      var tp = pts[Math.min(3, pts.length-1)]; if(tp){ trail.style.setProperty('--tx',tp.x+'px'); trail.style.setProperty('--ty',tp.y+'px'); }
-      requestAnimationFrame(loop);
-    }
-    if(!reduced) requestAnimationFrame(loop);
-  })();
 
   var copyBtn = $('[data-copy]');
   if(copyBtn) copyBtn.addEventListener('click', function(){
@@ -797,5 +771,6 @@
   });
 })();
 </script>
+<script src="cursor.js?v=4" defer></script>
 </body>
 </html>

@@ -49,30 +49,7 @@
     });
   });
 
-  /* ---------- custom cursor: a colourless glass lens locked to the pointer, plus a paper plane that eases behind it and banks into its heading ---------- */
-  (function () {
-    var plane = q("#cursorPlane"), trail = q("#cursorTrail"), glass = q("#cursorGlass"); if (!plane || !fine) return;
-    doc.classList.add("has-plane-cursor");
-    var mx = -100, my = -100, px = -100, py = -100, angle = -40, on = false, raf;
-    var trailPts = [], MAXT = 6;
-    addEventListener("pointermove", function (e) {
-      mx = e.clientX; my = e.clientY;
-      if (glass) { glass.style.setProperty("--lx", mx + "px"); glass.style.setProperty("--ly", my + "px"); }
-      if (!on) { on = true; plane.classList.add("on"); trail.classList.add("on"); if (glass) glass.classList.add("on"); px = mx; py = my; }
-    }, { passive: true });
-    document.addEventListener("pointerleave", function () { on = false; plane.classList.remove("on"); trail.classList.remove("on"); if (glass) glass.classList.remove("on"); });
-    function loop() {
-      var dx = mx - px, dy = my - py;
-      px += dx * 0.18; py += dy * 0.18;
-      if (dx * dx + dy * dy > 4) angle = Math.atan2(dy, dx) * (180 / Math.PI) + 45;
-      plane.style.setProperty("--cx", px + "px"); plane.style.setProperty("--cy", py + "px"); plane.style.setProperty("--cr", angle + "deg");
-      trailPts.unshift({ x: px, y: py }); if (trailPts.length > MAXT) trailPts.pop();
-      var tp = trailPts[Math.min(3, trailPts.length - 1)];
-      if (tp) { trail.style.setProperty("--tx", tp.x + "px"); trail.style.setProperty("--ty", tp.y + "px"); }
-      raf = requestAnimationFrame(loop);
-    }
-    if (!reduced) raf = requestAnimationFrame(loop);
-  })();
+  /* custom cursor lives in cursor.js */
   /* ---------- copy email + toast ---------- */
   var toast = q(".toast");
   function say(msg) { if (!toast) return; toast.textContent = msg; toast.classList.add("show"); clearTimeout(say.t); say.t = setTimeout(function () { toast.classList.remove("show"); }, 1900); }

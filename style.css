@@ -240,7 +240,8 @@ em { font-style: normal; color: var(--accent-text); }
 .work-head h2 { font-size: clamp(2rem, 4.2vw, 3.6rem); max-width: 16em; text-wrap: balance; }
 .work-head p { margin-top: 18px; color: var(--text-soft); max-width: 46ch; }
 .stack-card { min-height: 100dvh; display: flex; align-items: center; padding: 84px 0 30px; }
-.stack-card[data-world="leadrat"] { align-items: flex-start; padding-top: clamp(20px, 3vw, 36px); }
+/* leadrat used to sit flush to the card top, which put its tags behind the fixed nav once
+   the card pinned; it now locks at the same height as the other cards */
 .card-grid { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: clamp(26px, 4.5vw, 64px); align-items: center; }
 .card-copy { display: flex; flex-direction: column; align-items: flex-start; gap: 14px; }
 .tags { display: flex; gap: 6px; flex-wrap: wrap; }
@@ -361,22 +362,7 @@ html.static .pa-arrow, html.static .pa-pin-ring, html.static .pa-q { animation: 
 .hero-status i { width: 8px; height: 8px; border-radius: 50%; background: var(--ok); box-shadow: 0 0 0 4px color-mix(in srgb, var(--ok) 25%, transparent); }
 @media (max-width: 900px) { .hero { align-items: center; padding: 160px 0 60px; } }
 
-/* ---- custom cursor: a small colourless glass lens that clarifies whatever is underneath, plus a paper plane that banks into its direction of travel ---- */
-.cursor-glass {
-  position: fixed; left: 0; top: 0; z-index: 650; width: 150px; height: 150px; pointer-events: none; opacity: 0; transition: opacity 0.35s;
-  transform: translate(var(--lx, -200px), var(--ly, -200px)) translate(-50%, -50%);
-  border-radius: 50%; -webkit-mask-image: radial-gradient(circle, #000 60%, transparent 100%); mask-image: radial-gradient(circle, #000 60%, transparent 100%);
-  backdrop-filter: contrast(1.12) saturate(1.1); -webkit-backdrop-filter: contrast(1.12) saturate(1.1);
-  box-shadow: inset 0 0 0 1px rgba(32, 34, 31, 0.06);
-}
-.cursor-glass.on { opacity: 1; }
-.cursor-plane { position: fixed; left: 0; top: 0; z-index: 900; width: 26px; height: 26px; pointer-events: none; opacity: 0; transition: opacity 0.3s; transform: translate(var(--cx, -100px), var(--cy, -100px)) translate(-50%, -50%) rotate(var(--cr, -40deg)); will-change: transform; }
-.cursor-plane.on { opacity: 1; }
-.cursor-plane svg { width: 100%; height: 100%; color: var(--text); filter: drop-shadow(0 3px 6px rgba(32, 34, 31, 0.3)); }
-.cursor-trail { position: fixed; left: 0; top: 0; z-index: 899; width: 4px; height: 4px; border-radius: 50%; background: #fff; box-shadow: 0 0 4px rgba(32, 34, 31, 0.2); pointer-events: none; opacity: 0; transform: translate(var(--tx, -100px), var(--ty, -100px)) translate(-50%, -50%); transition: opacity 0.5s; }
-.cursor-trail.on { opacity: 0.55; }
-@media (hover: none), (pointer: coarse) { .cursor-glass, .cursor-plane, .cursor-trail { display: none; } }
-@media (hover: hover) and (pointer: fine) { html.has-plane-cursor, html.has-plane-cursor a, html.has-plane-cursor button { cursor: none; } }
+/* custom cursor lives in cursor.css */
 
 /* ======================================================================
    LEADRAT demo: the problem, then the fix
