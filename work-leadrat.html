@@ -5,7 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Leadrat: Lead Assignment & Distribution | Vedanshi Singh</title>
 <meta name="description" content="Case study: designing how managers configure percentage based lead assignment in Leadrat, a B2B real estate CRM, and turning a complex allocation system into a flow people can understand.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%233155B7'/%3E%3Ctext x='16' y='23' font-family='Arial,sans-serif' font-weight='800' font-size='20' fill='%23ffffff' text-anchor='middle'%3E%3F%3C/text%3E%3C/svg%3E">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/img/favicon-180.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Work+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
@@ -86,8 +87,16 @@
   .tiles{display:grid; grid-template-columns:1fr 1fr; gap:22px 18px; padding-top:6px;}
   .tile{position:relative; background:#fff; padding:22px 20px 18px; border-radius:2px; box-shadow:0 2px 8px rgba(0,0,0,0.08), 0 0 0 1px rgba(0,0,0,0.03); transform:rotate(-0.7deg);}
   .tile:nth-child(even){transform:rotate(0.6deg);}
-  .tile::before{content:""; position:absolute; top:-9px; left:calc(50% - 20px); width:40px; height:15px; background:#d9d9d9; opacity:0.9; transform:rotate(-2deg);}
+  /* each tile gets its own tape tint so the four numbers read as four separate notes
+     pinned up, not one block. tints are desaturated versions of colours already in
+     this page (accent, orange, positive, note yellow) kept translucent so they still
+     read as tape over paper rather than as four new accent colours */
+  .tile::before{content:""; position:absolute; top:-9px; left:calc(50% - 20px); width:40px; height:15px; background:#d9d9d9; opacity:0.85; transform:rotate(-2deg);}
   .tile:nth-child(even)::before{transform:rotate(2deg);}
+  .tile:nth-child(1)::before{background:#c3cfe9;}
+  .tile:nth-child(2)::before{background:#f2dd96;}
+  .tile:nth-child(3)::before{background:#f0c3b0;}
+  .tile:nth-child(4)::before{background:#bcd2c2;}
   .tile .num{font-family:"Inter",sans-serif; font-size:1.7rem; font-weight:500; letter-spacing:-0.03em; line-height:1.1; color:#111;}
   .tile .num small{font-size:0.62em; font-weight:500; letter-spacing:0;}
   .tile .lbl{font-size:0.66rem; letter-spacing:0.07em; text-transform:uppercase; color:#444; margin-top:10px; line-height:1.4; font-weight:500;}
